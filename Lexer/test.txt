@@ -1,0 +1,20 @@
+push back
+pop back
+pop front
+do until
+integer name := -423423
+if afa then else
+string sfd := "fsfsdfsd"
+boolean dfdf := "fsdfgsdf"
+vector of
+    do begin
+        do begin
+            if my_vector[j] < my_vector[j+1] begin
+                temp := my_vector[j+1]
+                my_vector[j+1] := my_vector[j]
+                my_vector[j] := temp
+                end
+            j := j + 1
+            end until j < size-1
+        i := i + 1
+    end until i < size-1
