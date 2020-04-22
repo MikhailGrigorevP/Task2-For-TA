@@ -1,8 +1,0 @@
-function of integer application () begin
-    integer a := 4
-    string str := "Happy MEPhi", dog, cat := 'SNOW'
-    end
-integer a := 4
-string str := "Happy MEPhi", dog, cat := 'SNOW'
-if 4 < 5 then a := 3
-

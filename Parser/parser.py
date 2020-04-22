@@ -38,11 +38,24 @@ class parser(object):
     @staticmethod
     def p_statements_group(p):
         """statements_group : BEGIN statements END
-                            | statement"""
+                            | inner_statement"""
         if len(p) == 4:
             p[0] = p[2]
         else:
             p[0] = p[1]
+
+    @staticmethod
+    def p_inner_statement(p):
+        """inner_statement : declaration
+                     | assignment
+                     | while
+                     | if
+                     | command
+                     | function
+                     | call
+                     | RETURN
+                     | empty"""
+        p[0] = p[1]
 
     @staticmethod
     def p_statements(p):
@@ -251,7 +264,7 @@ class parser(object):
         return self._functions
 
 if __name__ == '__main__':
-    f = open("test.txt")
+    f = open("../Tests For Parser/test.txt")
     text = f.read()
     f.close()
 

@@ -104,7 +104,7 @@ class lexer(object):
 
 
 if __name__ == '__main__':
-    f = open('..\\Parser\\test.txt')
+    f = open('../Tests For Parser/test.txt')
     data = f.read()
     f.close()
     lexer = lexer()
