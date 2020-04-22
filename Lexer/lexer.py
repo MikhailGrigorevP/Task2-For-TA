@@ -1,3 +1,5 @@
+import sys
+
 import ply.lex as lex
 
 reserved = {
@@ -84,7 +86,8 @@ class MyLexer(object):
         return t
 
     def t_error(self, t):
-        print("Illegal character '%s'" % t.value[0])
+        sys.stderr.write(f'Illegal character: {t.value[0]} at line {t.lexer.lineno}\n')
+        t.lexer.skip(1)
 
     t_ignore = ' \t'
 
