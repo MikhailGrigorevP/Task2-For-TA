@@ -40,7 +40,7 @@ reserved = {
 }
 
 
-class MyLexer(object):
+class lexer(object):
 
     def __init__(self):
         self.lexer = lex.lex(module=self)
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     f = open('test.txt')
     data = f.read()
     f.close()
-    lexer = MyLexer()
+    lexer = lexer()
     lexer.input(data)
     while True:
         token = lexer.token()
