@@ -8,34 +8,37 @@
     робота есть ограниченные возможности разрушать препятствия (см. соответствующий раздел)"""
 
 """
-    1. Знаковые целочисленные литералы в десятичной форме
-    2. false, true, undefined
-    3. "String" or 'String'
-    4. boolean <name> [:=false] [, <name2> [:= smth]];
-    5. string <name> [:=     ...
-    6. integer <name> [:=   ...
-    7. vector of <TYPE> <arr> [, <arr2>...]
-        1. arr[0]
-        2. <arr> push/pop back/front <smth>
-    8. <smth> to <TYPE>
-    9 <smth1> to <smth2>
+    + 1. Знаковые целочисленные литералы в десятичной форме
+    + 2. false, true, undefined
+    + 3. "String" or 'String'
+    
+    # declaration
+    
+    + 4. boolean <name> [:=false] [, <name2> [:= smth]];
+    + 5. string <name> [:=     ...
+    + 6. integer <name> [:=   ...
+    + 7. vector of <TYPE> <arr> [, <arr2>...]
+    +    1. arr[0]
+    +    2. <arr> push/pop back/front <smth>
+    + 8. <smth> to <TYPE>
+    + 9 <smth1> to <smth2>
 
     ---------
 
-    10. <var> := <smth>
-    11. <smth> +/- <smth>
-    12. <smth> (<,>, =, <>) <smth>
-    13. begin, end
-    14. do <sentence(s)> until <logical>
+    + 10. <var> := <smth>
+    + 11. <smth> +/- <smth>
+    + 12. <smth> (<,>, =, <>) <smth>
+    + 13. begin, end
+    + 14. do <sentence(s)> until <logical>
     15. if <logical> then <sentence(s)> [else <sentence(s)>]
 
     ---- ROBOT ----
 
-    1. right, left, forward, back  
-    2. rotate_right, rotate_left
-    3. lms
-    4. reflect
-    5. drill 
+    + 1. right, left, forward, back  
+    + 2. rotate_right, rotate_left
+    + 3. lms
+    + 4. reflect
+    + 5. drill 
 
     ----------------
 

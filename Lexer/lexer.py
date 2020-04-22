@@ -10,11 +10,8 @@ reserved = {
     'string': 'STRING',
     'integer': 'INTEGER',
     'vector': 'VECTOR',
+    'function': 'FUNCTION',
     'of': 'OF',
-    'push': 'PUSH',
-    'pop': 'POP',
-    'back': 'BACK',
-    'front': 'FRONT',
     'to': 'TO',
     'begin': 'BEGIN',
     'end': 'END',
@@ -23,20 +20,28 @@ reserved = {
     'if': 'IF',
     'then': 'THEN',
     'else': 'ELSE',
-    'function of': 'FUNCTION_OF',
     'return': 'RETURN',
-    'application': 'APPLICATION',
     
     # robot
+    'push': 'PUSH',
+    'back': 'BACK',
+    'pop': 'POP',
+    'front': 'FRONT',
     'right': 'RIGHT',
     'left': 'LEFT',
     'forward': 'FORWARD',
-    # 'back': 'BACK',
     'rotate_right': 'ROTATE_RIGHT',
     'rotate_left': 'ROTATE_LEFT',
     'lms': 'LMS',
     'reflect': 'REFLECT',
     'drill': 'DRILL',
+    # material
+    '"GLASS"': 'GLASS',
+    '"STEEL"': 'STEEL',
+    '"WOOD': 'WOOD',
+    '"PLASTIC"': 'PLASTIC',
+    '"CONCRETE"': 'CONCRETE',
+    '"EXIT"': 'EXIT',
 }
 
 
@@ -45,22 +50,22 @@ class lexer(object):
     def __init__(self):
         self.lexer = lex.lex(module=self)
 
-    tokens = ['INT_DEX',  'VARIABLE',
-              'ASSIGMENT', 'PLUS', 'MINUS',
+    tokens = ['DECIMAL',  'VARIABLE',
+              'ASSIGNMENT', 'PLUS', 'MINUS',
               'LBRACKET', 'RBRACKET',
-              'DOUBLE_QUOTE', 'QUOTE',  'SPACE',
+              'DOUBLE_QUOTE', 'QUOTE',
               'LESS', 'GREATER', 'EQ', 'NOTEQ',
               'R_QBRACKET', 'L_QBRACKET',
               'CONTINUE', 'COMMA', 'NEWLINE'] + list(reserved.values())
 
-    t_ASSIGMENT = r'\:\='
+    t_ASSIGNMENT = r'\:\='
     t_PLUS = r'\+'
     t_MINUS = r'\-'
     t_LBRACKET = r'\('
     t_RBRACKET = r'\)'
     t_DOUBLE_QUOTE = r'\"'
     t_QUOTE = r'\''
-    t_SPACE = r'\ '
+    #t_SPACE = r'\ ' 'SPACE'
     t_LESS = r'\<'
     t_GREATER = r'\>'
     t_EQ = r'\='
@@ -75,7 +80,7 @@ class lexer(object):
         t.type = reserved.get(t.value, 'VARIABLE')
         return t
 
-    def t_INT_DEX(self, t):
+    def t_DECIMAL(self, t):
         r'\d+'
         t.value = int(t.value)
         return t
@@ -99,7 +104,7 @@ class lexer(object):
 
 
 if __name__ == '__main__':
-    f = open('test.txt')
+    f = open('..\\Parser\\test.txt')
     data = f.read()
     f.close()
     lexer = lexer()

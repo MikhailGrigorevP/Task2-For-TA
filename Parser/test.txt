@@ -1,1 +1,10 @@
-a
+function of integer application () begin
+    integer a := 4
+    string str := "Happy MEPhi", dog, cat := 'SNOW'
+    end
+integer a := 4
+string str := "Happy MEPhi", dog, cat := 'SNOW'
+a := 5
+if 4 < 5 then begin
+    a := 3
+    end else a := 6
