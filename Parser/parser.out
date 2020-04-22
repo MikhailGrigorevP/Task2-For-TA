@@ -13,7 +13,7 @@ Rule 7     inner_statement -> if
 Rule 8     inner_statement -> command
 Rule 9     inner_statement -> function
 Rule 10    inner_statement -> call
-Rule 11    inner_statement -> RETURN
+Rule 11    inner_statement -> RETURN expression
 Rule 12    inner_statement -> empty
 Rule 13    statements -> statements statement
 Rule 14    statements -> statement
@@ -24,7 +24,7 @@ Rule 18    statement -> if NEWLINE
 Rule 19    statement -> command NEWLINE
 Rule 20    statement -> function NEWLINE
 Rule 21    statement -> call NEWLINE
-Rule 22    statement -> RETURN NEWLINE
+Rule 22    statement -> RETURN expression NEWLINE
 Rule 23    statement -> empty NEWLINE
 Rule 24    declaration -> type variables
 Rule 25    type -> INTEGER
@@ -163,7 +163,7 @@ const                : 37
 converting_command   : 68
 declaration          : 4 15
 empty                : 12 23 89
-expression           : 33 34 55 55 56 56 57 58 58 59 59 60 60 61 61 62 63 64 69 70 70 71 72 73 74 90 91
+expression           : 11 22 33 34 55 55 56 56 57 58 58 59 59 60 60 61 61 62 63 64 69 70 70 71 72 73 74 90 91
 function             : 9 20
 if                   : 7 18
 inner_statement      : 3
@@ -197,7 +197,7 @@ state 0
     (19) statement -> . command NEWLINE
     (20) statement -> . function NEWLINE
     (21) statement -> . call NEWLINE
-    (22) statement -> . RETURN NEWLINE
+    (22) statement -> . RETURN expression NEWLINE
     (23) statement -> . empty NEWLINE
     (24) declaration -> . type variables
     (33) assignment -> . variable ASSIGNMENT expression
@@ -301,10 +301,10 @@ state 0
     command                        shift and go to state 8
     function                       shift and go to state 9
     call                           shift and go to state 10
-    empty                          shift and go to state 12
-    type                           shift and go to state 13
-    variable                       shift and go to state 14
-    expression                     shift and go to state 15
+    expression                     shift and go to state 12
+    empty                          shift and go to state 13
+    type                           shift and go to state 14
+    variable                       shift and go to state 15
     vector_command                 shift and go to state 18
     robot_command                  shift and go to state 19
     converting_command             shift and go to state 20
@@ -329,7 +329,7 @@ state 2
     (19) statement -> . command NEWLINE
     (20) statement -> . function NEWLINE
     (21) statement -> . call NEWLINE
-    (22) statement -> . RETURN NEWLINE
+    (22) statement -> . RETURN expression NEWLINE
     (23) statement -> . empty NEWLINE
     (24) declaration -> . type variables
     (33) assignment -> . variable ASSIGNMENT expression
@@ -432,10 +432,10 @@ state 2
     command                        shift and go to state 8
     function                       shift and go to state 9
     call                           shift and go to state 10
-    empty                          shift and go to state 12
-    type                           shift and go to state 13
-    variable                       shift and go to state 14
-    expression                     shift and go to state 15
+    expression                     shift and go to state 12
+    empty                          shift and go to state 13
+    type                           shift and go to state 14
+    variable                       shift and go to state 15
     vector_command                 shift and go to state 18
     robot_command                  shift and go to state 19
     converting_command             shift and go to state 20
@@ -544,51 +544,58 @@ state 10
 
 state 11
 
-    (22) statement -> RETURN . NEWLINE
-
-    NEWLINE         shift and go to state 62
-
-
-state 12
-
-    (23) statement -> empty . NEWLINE
-
-    NEWLINE         shift and go to state 63
-
-
-state 13
-
-    (24) declaration -> type . variables
-    (29) variables -> . variable COMMA variables
-    (30) variables -> . assignment COMMA variables
-    (31) variables -> . variable
-    (32) variables -> . assignment
+    (22) statement -> RETURN . expression NEWLINE
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
     (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
     (35) variable -> . VARIABLE
-    (33) assignment -> . variable ASSIGNMENT expression
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 67
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
 
-    variables                      shift and go to state 64
-    variable                       shift and go to state 65
-    assignment                     shift and go to state 66
+    expression                     shift and go to state 62
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
 
-state 14
-
-    (33) assignment -> variable . ASSIGNMENT expression
-    (36) expression -> variable .
-
-    ASSIGNMENT      shift and go to state 68
-    TO              reduce using rule 36 (expression -> variable .)
-    PLUS            reduce using rule 36 (expression -> variable .)
-    MINUS           reduce using rule 36 (expression -> variable .)
-    LESS            reduce using rule 36 (expression -> variable .)
-    GREATER         reduce using rule 36 (expression -> variable .)
-    EQ              reduce using rule 36 (expression -> variable .)
-    NOTEQ           reduce using rule 36 (expression -> variable .)
-
-
-state 15
+state 12
 
     (69) converting_command -> expression . TO type
     (70) converting_command -> expression . TO expression
@@ -599,13 +606,52 @@ state 15
     (60) math_expression -> expression . EQ expression
     (61) math_expression -> expression . NOTEQ expression
 
-    TO              shift and go to state 69
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    TO              shift and go to state 66
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
+
+
+state 13
+
+    (23) statement -> empty . NEWLINE
+
+    NEWLINE         shift and go to state 73
+
+
+state 14
+
+    (24) declaration -> type . variables
+    (29) variables -> . variable COMMA variables
+    (30) variables -> . assignment COMMA variables
+    (31) variables -> . variable
+    (32) variables -> . assignment
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (33) assignment -> . variable ASSIGNMENT expression
+
+    VARIABLE        shift and go to state 77
+
+    variables                      shift and go to state 74
+    variable                       shift and go to state 75
+    assignment                     shift and go to state 76
+
+state 15
+
+    (33) assignment -> variable . ASSIGNMENT expression
+    (36) expression -> variable .
+
+    ASSIGNMENT      shift and go to state 78
+    TO              reduce using rule 36 (expression -> variable .)
+    PLUS            reduce using rule 36 (expression -> variable .)
+    MINUS           reduce using rule 36 (expression -> variable .)
+    LESS            reduce using rule 36 (expression -> variable .)
+    GREATER         reduce using rule 36 (expression -> variable .)
+    EQ              reduce using rule 36 (expression -> variable .)
+    NOTEQ           reduce using rule 36 (expression -> variable .)
 
 
 state 16
@@ -620,7 +666,7 @@ state 16
     (8) inner_statement -> . command
     (9) inner_statement -> . function
     (10) inner_statement -> . call
-    (11) inner_statement -> . RETURN
+    (11) inner_statement -> . RETURN expression
     (12) inner_statement -> . empty
     (24) declaration -> . type variables
     (33) assignment -> . variable ASSIGNMENT expression
@@ -679,8 +725,8 @@ state 16
     (60) math_expression -> . expression EQ expression
     (61) math_expression -> . expression NOTEQ expression
 
-    BEGIN           shift and go to state 77
-    RETURN          shift and go to state 86
+    BEGIN           shift and go to state 80
+    RETURN          shift and go to state 89
     DO              shift and go to state 16
     IF              shift and go to state 17
     FUNCTION        shift and go to state 21
@@ -715,19 +761,19 @@ state 16
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    statements_group               shift and go to state 76
-    expression                     shift and go to state 15
-    inner_statement                shift and go to state 78
-    declaration                    shift and go to state 79
-    assignment                     shift and go to state 80
-    while                          shift and go to state 81
-    if                             shift and go to state 82
-    command                        shift and go to state 83
-    function                       shift and go to state 84
-    call                           shift and go to state 85
-    empty                          shift and go to state 87
-    type                           shift and go to state 13
-    variable                       shift and go to state 14
+    statements_group               shift and go to state 79
+    expression                     shift and go to state 12
+    inner_statement                shift and go to state 81
+    declaration                    shift and go to state 82
+    assignment                     shift and go to state 83
+    while                          shift and go to state 84
+    if                             shift and go to state 85
+    command                        shift and go to state 86
+    function                       shift and go to state 87
+    call                           shift and go to state 88
+    empty                          shift and go to state 90
+    type                           shift and go to state 14
+    variable                       shift and go to state 15
     vector_command                 shift and go to state 18
     robot_command                  shift and go to state 19
     converting_command             shift and go to state 20
@@ -767,7 +813,7 @@ state 17
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -782,12 +828,12 @@ state 17
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 88
-    variable                       shift and go to state 89
+    expression                     shift and go to state 91
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
 state 18
 
@@ -988,11 +1034,11 @@ state 38
     GREATER         reduce using rule 37 (expression -> const .)
     EQ              reduce using rule 37 (expression -> const .)
     NOTEQ           reduce using rule 37 (expression -> const .)
-    THEN            reduce using rule 37 (expression -> const .)
     NEWLINE         reduce using rule 37 (expression -> const .)
-    COMMA           reduce using rule 37 (expression -> const .)
+    THEN            reduce using rule 37 (expression -> const .)
     UNTIL           reduce using rule 37 (expression -> const .)
     ELSE            reduce using rule 37 (expression -> const .)
+    COMMA           reduce using rule 37 (expression -> const .)
     RBRACKET        reduce using rule 37 (expression -> const .)
     CONTINUE        reduce using rule 37 (expression -> const .)
     L_QBRACKET      reduce using rule 37 (expression -> const .)
@@ -1009,11 +1055,11 @@ state 39
     GREATER         reduce using rule 38 (expression -> qstring .)
     EQ              reduce using rule 38 (expression -> qstring .)
     NOTEQ           reduce using rule 38 (expression -> qstring .)
-    THEN            reduce using rule 38 (expression -> qstring .)
     NEWLINE         reduce using rule 38 (expression -> qstring .)
-    COMMA           reduce using rule 38 (expression -> qstring .)
+    THEN            reduce using rule 38 (expression -> qstring .)
     UNTIL           reduce using rule 38 (expression -> qstring .)
     ELSE            reduce using rule 38 (expression -> qstring .)
+    COMMA           reduce using rule 38 (expression -> qstring .)
     RBRACKET        reduce using rule 38 (expression -> qstring .)
     CONTINUE        reduce using rule 38 (expression -> qstring .)
     L_QBRACKET      reduce using rule 38 (expression -> qstring .)
@@ -1030,11 +1076,11 @@ state 40
     GREATER         reduce using rule 39 (expression -> math_expression .)
     EQ              reduce using rule 39 (expression -> math_expression .)
     NOTEQ           reduce using rule 39 (expression -> math_expression .)
-    THEN            reduce using rule 39 (expression -> math_expression .)
     NEWLINE         reduce using rule 39 (expression -> math_expression .)
-    COMMA           reduce using rule 39 (expression -> math_expression .)
+    THEN            reduce using rule 39 (expression -> math_expression .)
     UNTIL           reduce using rule 39 (expression -> math_expression .)
     ELSE            reduce using rule 39 (expression -> math_expression .)
+    COMMA           reduce using rule 39 (expression -> math_expression .)
     RBRACKET        reduce using rule 39 (expression -> math_expression .)
     CONTINUE        reduce using rule 39 (expression -> math_expression .)
     L_QBRACKET      reduce using rule 39 (expression -> math_expression .)
@@ -1051,11 +1097,11 @@ state 41
     GREATER         reduce using rule 45 (const -> TRUE .)
     EQ              reduce using rule 45 (const -> TRUE .)
     NOTEQ           reduce using rule 45 (const -> TRUE .)
-    THEN            reduce using rule 45 (const -> TRUE .)
     NEWLINE         reduce using rule 45 (const -> TRUE .)
-    COMMA           reduce using rule 45 (const -> TRUE .)
+    THEN            reduce using rule 45 (const -> TRUE .)
     UNTIL           reduce using rule 45 (const -> TRUE .)
     ELSE            reduce using rule 45 (const -> TRUE .)
+    COMMA           reduce using rule 45 (const -> TRUE .)
     RBRACKET        reduce using rule 45 (const -> TRUE .)
     CONTINUE        reduce using rule 45 (const -> TRUE .)
     L_QBRACKET      reduce using rule 45 (const -> TRUE .)
@@ -1072,11 +1118,11 @@ state 42
     GREATER         reduce using rule 46 (const -> FALSE .)
     EQ              reduce using rule 46 (const -> FALSE .)
     NOTEQ           reduce using rule 46 (const -> FALSE .)
-    THEN            reduce using rule 46 (const -> FALSE .)
     NEWLINE         reduce using rule 46 (const -> FALSE .)
-    COMMA           reduce using rule 46 (const -> FALSE .)
+    THEN            reduce using rule 46 (const -> FALSE .)
     UNTIL           reduce using rule 46 (const -> FALSE .)
     ELSE            reduce using rule 46 (const -> FALSE .)
+    COMMA           reduce using rule 46 (const -> FALSE .)
     RBRACKET        reduce using rule 46 (const -> FALSE .)
     CONTINUE        reduce using rule 46 (const -> FALSE .)
     L_QBRACKET      reduce using rule 46 (const -> FALSE .)
@@ -1093,11 +1139,11 @@ state 43
     GREATER         reduce using rule 47 (const -> UNDEFINED .)
     EQ              reduce using rule 47 (const -> UNDEFINED .)
     NOTEQ           reduce using rule 47 (const -> UNDEFINED .)
-    THEN            reduce using rule 47 (const -> UNDEFINED .)
     NEWLINE         reduce using rule 47 (const -> UNDEFINED .)
-    COMMA           reduce using rule 47 (const -> UNDEFINED .)
+    THEN            reduce using rule 47 (const -> UNDEFINED .)
     UNTIL           reduce using rule 47 (const -> UNDEFINED .)
     ELSE            reduce using rule 47 (const -> UNDEFINED .)
+    COMMA           reduce using rule 47 (const -> UNDEFINED .)
     RBRACKET        reduce using rule 47 (const -> UNDEFINED .)
     CONTINUE        reduce using rule 47 (const -> UNDEFINED .)
     L_QBRACKET      reduce using rule 47 (const -> UNDEFINED .)
@@ -1114,11 +1160,11 @@ state 44
     GREATER         reduce using rule 48 (const -> DECIMAL .)
     EQ              reduce using rule 48 (const -> DECIMAL .)
     NOTEQ           reduce using rule 48 (const -> DECIMAL .)
-    THEN            reduce using rule 48 (const -> DECIMAL .)
     NEWLINE         reduce using rule 48 (const -> DECIMAL .)
-    COMMA           reduce using rule 48 (const -> DECIMAL .)
+    THEN            reduce using rule 48 (const -> DECIMAL .)
     UNTIL           reduce using rule 48 (const -> DECIMAL .)
     ELSE            reduce using rule 48 (const -> DECIMAL .)
+    COMMA           reduce using rule 48 (const -> DECIMAL .)
     RBRACKET        reduce using rule 48 (const -> DECIMAL .)
     CONTINUE        reduce using rule 48 (const -> DECIMAL .)
     L_QBRACKET      reduce using rule 48 (const -> DECIMAL .)
@@ -1135,11 +1181,11 @@ state 45
     GREATER         reduce using rule 49 (const -> EXIT .)
     EQ              reduce using rule 49 (const -> EXIT .)
     NOTEQ           reduce using rule 49 (const -> EXIT .)
-    THEN            reduce using rule 49 (const -> EXIT .)
     NEWLINE         reduce using rule 49 (const -> EXIT .)
-    COMMA           reduce using rule 49 (const -> EXIT .)
+    THEN            reduce using rule 49 (const -> EXIT .)
     UNTIL           reduce using rule 49 (const -> EXIT .)
     ELSE            reduce using rule 49 (const -> EXIT .)
+    COMMA           reduce using rule 49 (const -> EXIT .)
     RBRACKET        reduce using rule 49 (const -> EXIT .)
     CONTINUE        reduce using rule 49 (const -> EXIT .)
     L_QBRACKET      reduce using rule 49 (const -> EXIT .)
@@ -1156,11 +1202,11 @@ state 46
     GREATER         reduce using rule 50 (const -> WOOD .)
     EQ              reduce using rule 50 (const -> WOOD .)
     NOTEQ           reduce using rule 50 (const -> WOOD .)
-    THEN            reduce using rule 50 (const -> WOOD .)
     NEWLINE         reduce using rule 50 (const -> WOOD .)
-    COMMA           reduce using rule 50 (const -> WOOD .)
+    THEN            reduce using rule 50 (const -> WOOD .)
     UNTIL           reduce using rule 50 (const -> WOOD .)
     ELSE            reduce using rule 50 (const -> WOOD .)
+    COMMA           reduce using rule 50 (const -> WOOD .)
     RBRACKET        reduce using rule 50 (const -> WOOD .)
     CONTINUE        reduce using rule 50 (const -> WOOD .)
     L_QBRACKET      reduce using rule 50 (const -> WOOD .)
@@ -1177,11 +1223,11 @@ state 47
     GREATER         reduce using rule 51 (const -> STEEL .)
     EQ              reduce using rule 51 (const -> STEEL .)
     NOTEQ           reduce using rule 51 (const -> STEEL .)
-    THEN            reduce using rule 51 (const -> STEEL .)
     NEWLINE         reduce using rule 51 (const -> STEEL .)
-    COMMA           reduce using rule 51 (const -> STEEL .)
+    THEN            reduce using rule 51 (const -> STEEL .)
     UNTIL           reduce using rule 51 (const -> STEEL .)
     ELSE            reduce using rule 51 (const -> STEEL .)
+    COMMA           reduce using rule 51 (const -> STEEL .)
     RBRACKET        reduce using rule 51 (const -> STEEL .)
     CONTINUE        reduce using rule 51 (const -> STEEL .)
     L_QBRACKET      reduce using rule 51 (const -> STEEL .)
@@ -1198,11 +1244,11 @@ state 48
     GREATER         reduce using rule 52 (const -> GLASS .)
     EQ              reduce using rule 52 (const -> GLASS .)
     NOTEQ           reduce using rule 52 (const -> GLASS .)
-    THEN            reduce using rule 52 (const -> GLASS .)
     NEWLINE         reduce using rule 52 (const -> GLASS .)
-    COMMA           reduce using rule 52 (const -> GLASS .)
+    THEN            reduce using rule 52 (const -> GLASS .)
     UNTIL           reduce using rule 52 (const -> GLASS .)
     ELSE            reduce using rule 52 (const -> GLASS .)
+    COMMA           reduce using rule 52 (const -> GLASS .)
     RBRACKET        reduce using rule 52 (const -> GLASS .)
     CONTINUE        reduce using rule 52 (const -> GLASS .)
     L_QBRACKET      reduce using rule 52 (const -> GLASS .)
@@ -1219,11 +1265,11 @@ state 49
     GREATER         reduce using rule 53 (const -> CONCRETE .)
     EQ              reduce using rule 53 (const -> CONCRETE .)
     NOTEQ           reduce using rule 53 (const -> CONCRETE .)
-    THEN            reduce using rule 53 (const -> CONCRETE .)
     NEWLINE         reduce using rule 53 (const -> CONCRETE .)
-    COMMA           reduce using rule 53 (const -> CONCRETE .)
+    THEN            reduce using rule 53 (const -> CONCRETE .)
     UNTIL           reduce using rule 53 (const -> CONCRETE .)
     ELSE            reduce using rule 53 (const -> CONCRETE .)
+    COMMA           reduce using rule 53 (const -> CONCRETE .)
     RBRACKET        reduce using rule 53 (const -> CONCRETE .)
     CONTINUE        reduce using rule 53 (const -> CONCRETE .)
     L_QBRACKET      reduce using rule 53 (const -> CONCRETE .)
@@ -1240,11 +1286,11 @@ state 50
     GREATER         reduce using rule 54 (const -> PLASTIC .)
     EQ              reduce using rule 54 (const -> PLASTIC .)
     NOTEQ           reduce using rule 54 (const -> PLASTIC .)
-    THEN            reduce using rule 54 (const -> PLASTIC .)
     NEWLINE         reduce using rule 54 (const -> PLASTIC .)
-    COMMA           reduce using rule 54 (const -> PLASTIC .)
+    THEN            reduce using rule 54 (const -> PLASTIC .)
     UNTIL           reduce using rule 54 (const -> PLASTIC .)
     ELSE            reduce using rule 54 (const -> PLASTIC .)
+    COMMA           reduce using rule 54 (const -> PLASTIC .)
     RBRACKET        reduce using rule 54 (const -> PLASTIC .)
     CONTINUE        reduce using rule 54 (const -> PLASTIC .)
     L_QBRACKET      reduce using rule 54 (const -> PLASTIC .)
@@ -1301,7 +1347,7 @@ state 53
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -1317,11 +1363,11 @@ state 53
     MINUS           shift and go to state 53
 
     expression                     shift and go to state 103
-    variable                       shift and go to state 89
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
 state 54
 
@@ -1661,47 +1707,472 @@ state 61
 
 state 62
 
-    (22) statement -> RETURN NEWLINE .
+    (22) statement -> RETURN expression . NEWLINE
+    (55) math_expression -> expression . PLUS expression
+    (56) math_expression -> expression . MINUS expression
+    (58) math_expression -> expression . LESS expression
+    (59) math_expression -> expression . GREATER expression
+    (60) math_expression -> expression . EQ expression
+    (61) math_expression -> expression . NOTEQ expression
 
-    RETURN          reduce using rule 22 (statement -> RETURN NEWLINE .)
-    DO              reduce using rule 22 (statement -> RETURN NEWLINE .)
-    IF              reduce using rule 22 (statement -> RETURN NEWLINE .)
-    FUNCTION        reduce using rule 22 (statement -> RETURN NEWLINE .)
-    VARIABLE        reduce using rule 22 (statement -> RETURN NEWLINE .)
-    INTEGER         reduce using rule 22 (statement -> RETURN NEWLINE .)
-    STRING          reduce using rule 22 (statement -> RETURN NEWLINE .)
-    BOOL            reduce using rule 22 (statement -> RETURN NEWLINE .)
-    VECTOR          reduce using rule 22 (statement -> RETURN NEWLINE .)
-    PUSH            reduce using rule 22 (statement -> RETURN NEWLINE .)
-    POP             reduce using rule 22 (statement -> RETURN NEWLINE .)
-    LEFT            reduce using rule 22 (statement -> RETURN NEWLINE .)
-    RIGHT           reduce using rule 22 (statement -> RETURN NEWLINE .)
-    FORWARD         reduce using rule 22 (statement -> RETURN NEWLINE .)
-    BACK            reduce using rule 22 (statement -> RETURN NEWLINE .)
-    ROTATE_RIGHT    reduce using rule 22 (statement -> RETURN NEWLINE .)
-    ROTATE_LEFT     reduce using rule 22 (statement -> RETURN NEWLINE .)
-    LMS             reduce using rule 22 (statement -> RETURN NEWLINE .)
-    REFLECT         reduce using rule 22 (statement -> RETURN NEWLINE .)
-    DRILL           reduce using rule 22 (statement -> RETURN NEWLINE .)
-    TRUE            reduce using rule 22 (statement -> RETURN NEWLINE .)
-    FALSE           reduce using rule 22 (statement -> RETURN NEWLINE .)
-    UNDEFINED       reduce using rule 22 (statement -> RETURN NEWLINE .)
-    DECIMAL         reduce using rule 22 (statement -> RETURN NEWLINE .)
-    EXIT            reduce using rule 22 (statement -> RETURN NEWLINE .)
-    WOOD            reduce using rule 22 (statement -> RETURN NEWLINE .)
-    STEEL           reduce using rule 22 (statement -> RETURN NEWLINE .)
-    GLASS           reduce using rule 22 (statement -> RETURN NEWLINE .)
-    CONCRETE        reduce using rule 22 (statement -> RETURN NEWLINE .)
-    PLASTIC         reduce using rule 22 (statement -> RETURN NEWLINE .)
-    DOUBLE_QUOTE    reduce using rule 22 (statement -> RETURN NEWLINE .)
-    QUOTE           reduce using rule 22 (statement -> RETURN NEWLINE .)
-    MINUS           reduce using rule 22 (statement -> RETURN NEWLINE .)
-    NEWLINE         reduce using rule 22 (statement -> RETURN NEWLINE .)
-    $end            reduce using rule 22 (statement -> RETURN NEWLINE .)
-    END             reduce using rule 22 (statement -> RETURN NEWLINE .)
+    NEWLINE         shift and go to state 104
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
 state 63
+
+    (36) expression -> variable .
+
+    NEWLINE         reduce using rule 36 (expression -> variable .)
+    PLUS            reduce using rule 36 (expression -> variable .)
+    MINUS           reduce using rule 36 (expression -> variable .)
+    LESS            reduce using rule 36 (expression -> variable .)
+    GREATER         reduce using rule 36 (expression -> variable .)
+    EQ              reduce using rule 36 (expression -> variable .)
+    NOTEQ           reduce using rule 36 (expression -> variable .)
+    THEN            reduce using rule 36 (expression -> variable .)
+    TO              reduce using rule 36 (expression -> variable .)
+    UNTIL           reduce using rule 36 (expression -> variable .)
+    ELSE            reduce using rule 36 (expression -> variable .)
+    COMMA           reduce using rule 36 (expression -> variable .)
+    RBRACKET        reduce using rule 36 (expression -> variable .)
+    CONTINUE        reduce using rule 36 (expression -> variable .)
+    L_QBRACKET      reduce using rule 36 (expression -> variable .)
+
+
+state 64
+
+    (40) expression -> call .
+
+    NEWLINE         reduce using rule 40 (expression -> call .)
+    PLUS            reduce using rule 40 (expression -> call .)
+    MINUS           reduce using rule 40 (expression -> call .)
+    LESS            reduce using rule 40 (expression -> call .)
+    GREATER         reduce using rule 40 (expression -> call .)
+    EQ              reduce using rule 40 (expression -> call .)
+    NOTEQ           reduce using rule 40 (expression -> call .)
+    THEN            reduce using rule 40 (expression -> call .)
+    TO              reduce using rule 40 (expression -> call .)
+    UNTIL           reduce using rule 40 (expression -> call .)
+    ELSE            reduce using rule 40 (expression -> call .)
+    COMMA           reduce using rule 40 (expression -> call .)
+    RBRACKET        reduce using rule 40 (expression -> call .)
+    CONTINUE        reduce using rule 40 (expression -> call .)
+    L_QBRACKET      reduce using rule 40 (expression -> call .)
+
+
+state 65
+
+    (34) variable -> VARIABLE . R_QBRACKET expression L_QBRACKET
+    (35) variable -> VARIABLE .
+    (84) call -> VARIABLE . LBRACKET parameters RBRACKET
+
+    R_QBRACKET      shift and go to state 94
+    NEWLINE         reduce using rule 35 (variable -> VARIABLE .)
+    PLUS            reduce using rule 35 (variable -> VARIABLE .)
+    MINUS           reduce using rule 35 (variable -> VARIABLE .)
+    LESS            reduce using rule 35 (variable -> VARIABLE .)
+    GREATER         reduce using rule 35 (variable -> VARIABLE .)
+    EQ              reduce using rule 35 (variable -> VARIABLE .)
+    NOTEQ           reduce using rule 35 (variable -> VARIABLE .)
+    THEN            reduce using rule 35 (variable -> VARIABLE .)
+    TO              reduce using rule 35 (variable -> VARIABLE .)
+    UNTIL           reduce using rule 35 (variable -> VARIABLE .)
+    ELSE            reduce using rule 35 (variable -> VARIABLE .)
+    COMMA           reduce using rule 35 (variable -> VARIABLE .)
+    RBRACKET        reduce using rule 35 (variable -> VARIABLE .)
+    CONTINUE        reduce using rule 35 (variable -> VARIABLE .)
+    L_QBRACKET      reduce using rule 35 (variable -> VARIABLE .)
+    LBRACKET        shift and go to state 93
+
+
+state 66
+
+    (69) converting_command -> expression TO . type
+    (70) converting_command -> expression TO . expression
+    (25) type -> . INTEGER
+    (26) type -> . STRING
+    (27) type -> . BOOL
+    (28) type -> . VECTOR OF type
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
+
+    INTEGER         shift and go to state 23
+    STRING          shift and go to state 24
+    BOOL            shift and go to state 25
+    VECTOR          shift and go to state 26
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
+
+    expression                     shift and go to state 105
+    type                           shift and go to state 106
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
+
+state 67
+
+    (55) math_expression -> expression PLUS . expression
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
+
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
+
+    expression                     shift and go to state 107
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
+
+state 68
+
+    (56) math_expression -> expression MINUS . expression
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
+
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
+
+    expression                     shift and go to state 108
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
+
+state 69
+
+    (58) math_expression -> expression LESS . expression
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
+
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
+
+    expression                     shift and go to state 109
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
+
+state 70
+
+    (59) math_expression -> expression GREATER . expression
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
+
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
+
+    expression                     shift and go to state 110
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
+
+state 71
+
+    (60) math_expression -> expression EQ . expression
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
+
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
+
+    expression                     shift and go to state 111
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
+
+state 72
+
+    (61) math_expression -> expression NOTEQ . expression
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
+
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
+
+    expression                     shift and go to state 112
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
+
+state 73
 
     (23) statement -> empty NEWLINE .
 
@@ -1743,7 +2214,7 @@ state 63
     END             reduce using rule 23 (statement -> empty NEWLINE .)
 
 
-state 64
+state 74
 
     (24) declaration -> type variables .
 
@@ -1752,31 +2223,31 @@ state 64
     ELSE            reduce using rule 24 (declaration -> type variables .)
 
 
-state 65
+state 75
 
     (29) variables -> variable . COMMA variables
     (31) variables -> variable .
     (33) assignment -> variable . ASSIGNMENT expression
 
-    COMMA           shift and go to state 104
+    COMMA           shift and go to state 113
     NEWLINE         reduce using rule 31 (variables -> variable .)
     UNTIL           reduce using rule 31 (variables -> variable .)
     ELSE            reduce using rule 31 (variables -> variable .)
-    ASSIGNMENT      shift and go to state 68
+    ASSIGNMENT      shift and go to state 78
 
 
-state 66
+state 76
 
     (30) variables -> assignment . COMMA variables
     (32) variables -> assignment .
 
-    COMMA           shift and go to state 105
+    COMMA           shift and go to state 114
     NEWLINE         reduce using rule 32 (variables -> assignment .)
     UNTIL           reduce using rule 32 (variables -> assignment .)
     ELSE            reduce using rule 32 (variables -> assignment .)
 
 
-state 67
+state 77
 
     (34) variable -> VARIABLE . R_QBRACKET expression L_QBRACKET
     (35) variable -> VARIABLE .
@@ -1789,7 +2260,7 @@ state 67
     ELSE            reduce using rule 35 (variable -> VARIABLE .)
 
 
-state 68
+state 78
 
     (33) assignment -> variable ASSIGNMENT . expression
     (36) expression -> . variable
@@ -1820,7 +2291,7 @@ state 68
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -1835,402 +2306,21 @@ state 68
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    variable                       shift and go to state 89
-    expression                     shift and go to state 106
+    variable                       shift and go to state 63
+    expression                     shift and go to state 115
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
-state 69
-
-    (69) converting_command -> expression TO . type
-    (70) converting_command -> expression TO . expression
-    (25) type -> . INTEGER
-    (26) type -> . STRING
-    (27) type -> . BOOL
-    (28) type -> . VECTOR OF type
-    (36) expression -> . variable
-    (37) expression -> . const
-    (38) expression -> . qstring
-    (39) expression -> . math_expression
-    (40) expression -> . call
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (45) const -> . TRUE
-    (46) const -> . FALSE
-    (47) const -> . UNDEFINED
-    (48) const -> . DECIMAL
-    (49) const -> . EXIT
-    (50) const -> . WOOD
-    (51) const -> . STEEL
-    (52) const -> . GLASS
-    (53) const -> . CONCRETE
-    (54) const -> . PLASTIC
-    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
-    (42) qstring -> . QUOTE string QUOTE
-    (55) math_expression -> . expression PLUS expression
-    (56) math_expression -> . expression MINUS expression
-    (57) math_expression -> . MINUS expression
-    (58) math_expression -> . expression LESS expression
-    (59) math_expression -> . expression GREATER expression
-    (60) math_expression -> . expression EQ expression
-    (61) math_expression -> . expression NOTEQ expression
-    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
-
-    INTEGER         shift and go to state 23
-    STRING          shift and go to state 24
-    BOOL            shift and go to state 25
-    VECTOR          shift and go to state 26
-    VARIABLE        shift and go to state 91
-    TRUE            shift and go to state 41
-    FALSE           shift and go to state 42
-    UNDEFINED       shift and go to state 43
-    DECIMAL         shift and go to state 44
-    EXIT            shift and go to state 45
-    WOOD            shift and go to state 46
-    STEEL           shift and go to state 47
-    GLASS           shift and go to state 48
-    CONCRETE        shift and go to state 49
-    PLASTIC         shift and go to state 50
-    DOUBLE_QUOTE    shift and go to state 51
-    QUOTE           shift and go to state 52
-    MINUS           shift and go to state 53
-
-    expression                     shift and go to state 107
-    type                           shift and go to state 108
-    variable                       shift and go to state 89
-    const                          shift and go to state 38
-    qstring                        shift and go to state 39
-    math_expression                shift and go to state 40
-    call                           shift and go to state 90
-
-state 70
-
-    (55) math_expression -> expression PLUS . expression
-    (36) expression -> . variable
-    (37) expression -> . const
-    (38) expression -> . qstring
-    (39) expression -> . math_expression
-    (40) expression -> . call
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (45) const -> . TRUE
-    (46) const -> . FALSE
-    (47) const -> . UNDEFINED
-    (48) const -> . DECIMAL
-    (49) const -> . EXIT
-    (50) const -> . WOOD
-    (51) const -> . STEEL
-    (52) const -> . GLASS
-    (53) const -> . CONCRETE
-    (54) const -> . PLASTIC
-    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
-    (42) qstring -> . QUOTE string QUOTE
-    (55) math_expression -> . expression PLUS expression
-    (56) math_expression -> . expression MINUS expression
-    (57) math_expression -> . MINUS expression
-    (58) math_expression -> . expression LESS expression
-    (59) math_expression -> . expression GREATER expression
-    (60) math_expression -> . expression EQ expression
-    (61) math_expression -> . expression NOTEQ expression
-    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
-
-    VARIABLE        shift and go to state 91
-    TRUE            shift and go to state 41
-    FALSE           shift and go to state 42
-    UNDEFINED       shift and go to state 43
-    DECIMAL         shift and go to state 44
-    EXIT            shift and go to state 45
-    WOOD            shift and go to state 46
-    STEEL           shift and go to state 47
-    GLASS           shift and go to state 48
-    CONCRETE        shift and go to state 49
-    PLASTIC         shift and go to state 50
-    DOUBLE_QUOTE    shift and go to state 51
-    QUOTE           shift and go to state 52
-    MINUS           shift and go to state 53
-
-    expression                     shift and go to state 109
-    variable                       shift and go to state 89
-    const                          shift and go to state 38
-    qstring                        shift and go to state 39
-    math_expression                shift and go to state 40
-    call                           shift and go to state 90
-
-state 71
-
-    (56) math_expression -> expression MINUS . expression
-    (36) expression -> . variable
-    (37) expression -> . const
-    (38) expression -> . qstring
-    (39) expression -> . math_expression
-    (40) expression -> . call
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (45) const -> . TRUE
-    (46) const -> . FALSE
-    (47) const -> . UNDEFINED
-    (48) const -> . DECIMAL
-    (49) const -> . EXIT
-    (50) const -> . WOOD
-    (51) const -> . STEEL
-    (52) const -> . GLASS
-    (53) const -> . CONCRETE
-    (54) const -> . PLASTIC
-    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
-    (42) qstring -> . QUOTE string QUOTE
-    (55) math_expression -> . expression PLUS expression
-    (56) math_expression -> . expression MINUS expression
-    (57) math_expression -> . MINUS expression
-    (58) math_expression -> . expression LESS expression
-    (59) math_expression -> . expression GREATER expression
-    (60) math_expression -> . expression EQ expression
-    (61) math_expression -> . expression NOTEQ expression
-    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
-
-    VARIABLE        shift and go to state 91
-    TRUE            shift and go to state 41
-    FALSE           shift and go to state 42
-    UNDEFINED       shift and go to state 43
-    DECIMAL         shift and go to state 44
-    EXIT            shift and go to state 45
-    WOOD            shift and go to state 46
-    STEEL           shift and go to state 47
-    GLASS           shift and go to state 48
-    CONCRETE        shift and go to state 49
-    PLASTIC         shift and go to state 50
-    DOUBLE_QUOTE    shift and go to state 51
-    QUOTE           shift and go to state 52
-    MINUS           shift and go to state 53
-
-    expression                     shift and go to state 110
-    variable                       shift and go to state 89
-    const                          shift and go to state 38
-    qstring                        shift and go to state 39
-    math_expression                shift and go to state 40
-    call                           shift and go to state 90
-
-state 72
-
-    (58) math_expression -> expression LESS . expression
-    (36) expression -> . variable
-    (37) expression -> . const
-    (38) expression -> . qstring
-    (39) expression -> . math_expression
-    (40) expression -> . call
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (45) const -> . TRUE
-    (46) const -> . FALSE
-    (47) const -> . UNDEFINED
-    (48) const -> . DECIMAL
-    (49) const -> . EXIT
-    (50) const -> . WOOD
-    (51) const -> . STEEL
-    (52) const -> . GLASS
-    (53) const -> . CONCRETE
-    (54) const -> . PLASTIC
-    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
-    (42) qstring -> . QUOTE string QUOTE
-    (55) math_expression -> . expression PLUS expression
-    (56) math_expression -> . expression MINUS expression
-    (57) math_expression -> . MINUS expression
-    (58) math_expression -> . expression LESS expression
-    (59) math_expression -> . expression GREATER expression
-    (60) math_expression -> . expression EQ expression
-    (61) math_expression -> . expression NOTEQ expression
-    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
-
-    VARIABLE        shift and go to state 91
-    TRUE            shift and go to state 41
-    FALSE           shift and go to state 42
-    UNDEFINED       shift and go to state 43
-    DECIMAL         shift and go to state 44
-    EXIT            shift and go to state 45
-    WOOD            shift and go to state 46
-    STEEL           shift and go to state 47
-    GLASS           shift and go to state 48
-    CONCRETE        shift and go to state 49
-    PLASTIC         shift and go to state 50
-    DOUBLE_QUOTE    shift and go to state 51
-    QUOTE           shift and go to state 52
-    MINUS           shift and go to state 53
-
-    expression                     shift and go to state 111
-    variable                       shift and go to state 89
-    const                          shift and go to state 38
-    qstring                        shift and go to state 39
-    math_expression                shift and go to state 40
-    call                           shift and go to state 90
-
-state 73
-
-    (59) math_expression -> expression GREATER . expression
-    (36) expression -> . variable
-    (37) expression -> . const
-    (38) expression -> . qstring
-    (39) expression -> . math_expression
-    (40) expression -> . call
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (45) const -> . TRUE
-    (46) const -> . FALSE
-    (47) const -> . UNDEFINED
-    (48) const -> . DECIMAL
-    (49) const -> . EXIT
-    (50) const -> . WOOD
-    (51) const -> . STEEL
-    (52) const -> . GLASS
-    (53) const -> . CONCRETE
-    (54) const -> . PLASTIC
-    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
-    (42) qstring -> . QUOTE string QUOTE
-    (55) math_expression -> . expression PLUS expression
-    (56) math_expression -> . expression MINUS expression
-    (57) math_expression -> . MINUS expression
-    (58) math_expression -> . expression LESS expression
-    (59) math_expression -> . expression GREATER expression
-    (60) math_expression -> . expression EQ expression
-    (61) math_expression -> . expression NOTEQ expression
-    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
-
-    VARIABLE        shift and go to state 91
-    TRUE            shift and go to state 41
-    FALSE           shift and go to state 42
-    UNDEFINED       shift and go to state 43
-    DECIMAL         shift and go to state 44
-    EXIT            shift and go to state 45
-    WOOD            shift and go to state 46
-    STEEL           shift and go to state 47
-    GLASS           shift and go to state 48
-    CONCRETE        shift and go to state 49
-    PLASTIC         shift and go to state 50
-    DOUBLE_QUOTE    shift and go to state 51
-    QUOTE           shift and go to state 52
-    MINUS           shift and go to state 53
-
-    expression                     shift and go to state 112
-    variable                       shift and go to state 89
-    const                          shift and go to state 38
-    qstring                        shift and go to state 39
-    math_expression                shift and go to state 40
-    call                           shift and go to state 90
-
-state 74
-
-    (60) math_expression -> expression EQ . expression
-    (36) expression -> . variable
-    (37) expression -> . const
-    (38) expression -> . qstring
-    (39) expression -> . math_expression
-    (40) expression -> . call
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (45) const -> . TRUE
-    (46) const -> . FALSE
-    (47) const -> . UNDEFINED
-    (48) const -> . DECIMAL
-    (49) const -> . EXIT
-    (50) const -> . WOOD
-    (51) const -> . STEEL
-    (52) const -> . GLASS
-    (53) const -> . CONCRETE
-    (54) const -> . PLASTIC
-    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
-    (42) qstring -> . QUOTE string QUOTE
-    (55) math_expression -> . expression PLUS expression
-    (56) math_expression -> . expression MINUS expression
-    (57) math_expression -> . MINUS expression
-    (58) math_expression -> . expression LESS expression
-    (59) math_expression -> . expression GREATER expression
-    (60) math_expression -> . expression EQ expression
-    (61) math_expression -> . expression NOTEQ expression
-    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
-
-    VARIABLE        shift and go to state 91
-    TRUE            shift and go to state 41
-    FALSE           shift and go to state 42
-    UNDEFINED       shift and go to state 43
-    DECIMAL         shift and go to state 44
-    EXIT            shift and go to state 45
-    WOOD            shift and go to state 46
-    STEEL           shift and go to state 47
-    GLASS           shift and go to state 48
-    CONCRETE        shift and go to state 49
-    PLASTIC         shift and go to state 50
-    DOUBLE_QUOTE    shift and go to state 51
-    QUOTE           shift and go to state 52
-    MINUS           shift and go to state 53
-
-    expression                     shift and go to state 113
-    variable                       shift and go to state 89
-    const                          shift and go to state 38
-    qstring                        shift and go to state 39
-    math_expression                shift and go to state 40
-    call                           shift and go to state 90
-
-state 75
-
-    (61) math_expression -> expression NOTEQ . expression
-    (36) expression -> . variable
-    (37) expression -> . const
-    (38) expression -> . qstring
-    (39) expression -> . math_expression
-    (40) expression -> . call
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (45) const -> . TRUE
-    (46) const -> . FALSE
-    (47) const -> . UNDEFINED
-    (48) const -> . DECIMAL
-    (49) const -> . EXIT
-    (50) const -> . WOOD
-    (51) const -> . STEEL
-    (52) const -> . GLASS
-    (53) const -> . CONCRETE
-    (54) const -> . PLASTIC
-    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
-    (42) qstring -> . QUOTE string QUOTE
-    (55) math_expression -> . expression PLUS expression
-    (56) math_expression -> . expression MINUS expression
-    (57) math_expression -> . MINUS expression
-    (58) math_expression -> . expression LESS expression
-    (59) math_expression -> . expression GREATER expression
-    (60) math_expression -> . expression EQ expression
-    (61) math_expression -> . expression NOTEQ expression
-    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
-
-    VARIABLE        shift and go to state 91
-    TRUE            shift and go to state 41
-    FALSE           shift and go to state 42
-    UNDEFINED       shift and go to state 43
-    DECIMAL         shift and go to state 44
-    EXIT            shift and go to state 45
-    WOOD            shift and go to state 46
-    STEEL           shift and go to state 47
-    GLASS           shift and go to state 48
-    CONCRETE        shift and go to state 49
-    PLASTIC         shift and go to state 50
-    DOUBLE_QUOTE    shift and go to state 51
-    QUOTE           shift and go to state 52
-    MINUS           shift and go to state 53
-
-    expression                     shift and go to state 114
-    variable                       shift and go to state 89
-    const                          shift and go to state 38
-    qstring                        shift and go to state 39
-    math_expression                shift and go to state 40
-    call                           shift and go to state 90
-
-state 76
+state 79
 
     (62) while -> DO statements_group . UNTIL expression
 
-    UNTIL           shift and go to state 115
+    UNTIL           shift and go to state 116
 
 
-state 77
+state 80
 
     (2) statements_group -> BEGIN . statements END
     (13) statements -> . statements statement
@@ -2242,7 +2332,7 @@ state 77
     (19) statement -> . command NEWLINE
     (20) statement -> . function NEWLINE
     (21) statement -> . call NEWLINE
-    (22) statement -> . RETURN NEWLINE
+    (22) statement -> . RETURN expression NEWLINE
     (23) statement -> . empty NEWLINE
     (24) declaration -> . type variables
     (33) assignment -> . variable ASSIGNMENT expression
@@ -2336,7 +2426,7 @@ state 77
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    statements                     shift and go to state 116
+    statements                     shift and go to state 117
     statement                      shift and go to state 3
     declaration                    shift and go to state 4
     assignment                     shift and go to state 5
@@ -2345,10 +2435,10 @@ state 77
     command                        shift and go to state 8
     function                       shift and go to state 9
     call                           shift and go to state 10
-    empty                          shift and go to state 12
-    type                           shift and go to state 13
-    variable                       shift and go to state 14
-    expression                     shift and go to state 15
+    expression                     shift and go to state 12
+    empty                          shift and go to state 13
+    type                           shift and go to state 14
+    variable                       shift and go to state 15
     vector_command                 shift and go to state 18
     robot_command                  shift and go to state 19
     converting_command             shift and go to state 20
@@ -2356,7 +2446,7 @@ state 77
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
 
-state 78
+state 81
 
     (3) statements_group -> inner_statement .
 
@@ -2365,7 +2455,7 @@ state 78
     NEWLINE         reduce using rule 3 (statements_group -> inner_statement .)
 
 
-state 79
+state 82
 
     (4) inner_statement -> declaration .
 
@@ -2374,7 +2464,7 @@ state 79
     NEWLINE         reduce using rule 4 (inner_statement -> declaration .)
 
 
-state 80
+state 83
 
     (5) inner_statement -> assignment .
 
@@ -2383,7 +2473,7 @@ state 80
     NEWLINE         reduce using rule 5 (inner_statement -> assignment .)
 
 
-state 81
+state 84
 
     (6) inner_statement -> while .
 
@@ -2392,7 +2482,7 @@ state 81
     NEWLINE         reduce using rule 6 (inner_statement -> while .)
 
 
-state 82
+state 85
 
     (7) inner_statement -> if .
 
@@ -2401,7 +2491,7 @@ state 82
     NEWLINE         reduce using rule 7 (inner_statement -> if .)
 
 
-state 83
+state 86
 
     (8) inner_statement -> command .
 
@@ -2410,7 +2500,7 @@ state 83
     NEWLINE         reduce using rule 8 (inner_statement -> command .)
 
 
-state 84
+state 87
 
     (9) inner_statement -> function .
 
@@ -2419,7 +2509,7 @@ state 84
     NEWLINE         reduce using rule 9 (inner_statement -> function .)
 
 
-state 85
+state 88
 
     (10) inner_statement -> call .
     (40) expression -> call .
@@ -2436,16 +2526,60 @@ state 85
     NOTEQ           reduce using rule 40 (expression -> call .)
 
 
-state 86
+state 89
 
-    (11) inner_statement -> RETURN .
+    (11) inner_statement -> RETURN . expression
+    (36) expression -> . variable
+    (37) expression -> . const
+    (38) expression -> . qstring
+    (39) expression -> . math_expression
+    (40) expression -> . call
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (45) const -> . TRUE
+    (46) const -> . FALSE
+    (47) const -> . UNDEFINED
+    (48) const -> . DECIMAL
+    (49) const -> . EXIT
+    (50) const -> . WOOD
+    (51) const -> . STEEL
+    (52) const -> . GLASS
+    (53) const -> . CONCRETE
+    (54) const -> . PLASTIC
+    (41) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
+    (42) qstring -> . QUOTE string QUOTE
+    (55) math_expression -> . expression PLUS expression
+    (56) math_expression -> . expression MINUS expression
+    (57) math_expression -> . MINUS expression
+    (58) math_expression -> . expression LESS expression
+    (59) math_expression -> . expression GREATER expression
+    (60) math_expression -> . expression EQ expression
+    (61) math_expression -> . expression NOTEQ expression
+    (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    UNTIL           reduce using rule 11 (inner_statement -> RETURN .)
-    ELSE            reduce using rule 11 (inner_statement -> RETURN .)
-    NEWLINE         reduce using rule 11 (inner_statement -> RETURN .)
+    VARIABLE        shift and go to state 65
+    TRUE            shift and go to state 41
+    FALSE           shift and go to state 42
+    UNDEFINED       shift and go to state 43
+    DECIMAL         shift and go to state 44
+    EXIT            shift and go to state 45
+    WOOD            shift and go to state 46
+    STEEL           shift and go to state 47
+    GLASS           shift and go to state 48
+    CONCRETE        shift and go to state 49
+    PLASTIC         shift and go to state 50
+    DOUBLE_QUOTE    shift and go to state 51
+    QUOTE           shift and go to state 52
+    MINUS           shift and go to state 53
 
+    expression                     shift and go to state 118
+    variable                       shift and go to state 63
+    const                          shift and go to state 38
+    qstring                        shift and go to state 39
+    math_expression                shift and go to state 40
+    call                           shift and go to state 64
 
-state 87
+state 90
 
     (12) inner_statement -> empty .
 
@@ -2454,7 +2588,7 @@ state 87
     NEWLINE         reduce using rule 12 (inner_statement -> empty .)
 
 
-state 88
+state 91
 
     (63) if -> IF expression . THEN statements_group
     (64) if -> IF expression . THEN statements_group ELSE statements_group
@@ -2465,80 +2599,13 @@ state 88
     (60) math_expression -> expression . EQ expression
     (61) math_expression -> expression . NOTEQ expression
 
-    THEN            shift and go to state 117
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
-
-
-state 89
-
-    (36) expression -> variable .
-
-    THEN            reduce using rule 36 (expression -> variable .)
-    PLUS            reduce using rule 36 (expression -> variable .)
-    MINUS           reduce using rule 36 (expression -> variable .)
-    LESS            reduce using rule 36 (expression -> variable .)
-    GREATER         reduce using rule 36 (expression -> variable .)
-    EQ              reduce using rule 36 (expression -> variable .)
-    NOTEQ           reduce using rule 36 (expression -> variable .)
-    TO              reduce using rule 36 (expression -> variable .)
-    NEWLINE         reduce using rule 36 (expression -> variable .)
-    COMMA           reduce using rule 36 (expression -> variable .)
-    UNTIL           reduce using rule 36 (expression -> variable .)
-    ELSE            reduce using rule 36 (expression -> variable .)
-    RBRACKET        reduce using rule 36 (expression -> variable .)
-    CONTINUE        reduce using rule 36 (expression -> variable .)
-    L_QBRACKET      reduce using rule 36 (expression -> variable .)
-
-
-state 90
-
-    (40) expression -> call .
-
-    THEN            reduce using rule 40 (expression -> call .)
-    PLUS            reduce using rule 40 (expression -> call .)
-    MINUS           reduce using rule 40 (expression -> call .)
-    LESS            reduce using rule 40 (expression -> call .)
-    GREATER         reduce using rule 40 (expression -> call .)
-    EQ              reduce using rule 40 (expression -> call .)
-    NOTEQ           reduce using rule 40 (expression -> call .)
-    TO              reduce using rule 40 (expression -> call .)
-    NEWLINE         reduce using rule 40 (expression -> call .)
-    COMMA           reduce using rule 40 (expression -> call .)
-    UNTIL           reduce using rule 40 (expression -> call .)
-    ELSE            reduce using rule 40 (expression -> call .)
-    RBRACKET        reduce using rule 40 (expression -> call .)
-    CONTINUE        reduce using rule 40 (expression -> call .)
-    L_QBRACKET      reduce using rule 40 (expression -> call .)
-
-
-state 91
-
-    (34) variable -> VARIABLE . R_QBRACKET expression L_QBRACKET
-    (35) variable -> VARIABLE .
-    (84) call -> VARIABLE . LBRACKET parameters RBRACKET
-
-    R_QBRACKET      shift and go to state 94
-    THEN            reduce using rule 35 (variable -> VARIABLE .)
-    PLUS            reduce using rule 35 (variable -> VARIABLE .)
-    MINUS           reduce using rule 35 (variable -> VARIABLE .)
-    LESS            reduce using rule 35 (variable -> VARIABLE .)
-    GREATER         reduce using rule 35 (variable -> VARIABLE .)
-    EQ              reduce using rule 35 (variable -> VARIABLE .)
-    NOTEQ           reduce using rule 35 (variable -> VARIABLE .)
-    TO              reduce using rule 35 (variable -> VARIABLE .)
-    NEWLINE         reduce using rule 35 (variable -> VARIABLE .)
-    COMMA           reduce using rule 35 (variable -> VARIABLE .)
-    UNTIL           reduce using rule 35 (variable -> VARIABLE .)
-    ELSE            reduce using rule 35 (variable -> VARIABLE .)
-    RBRACKET        reduce using rule 35 (variable -> VARIABLE .)
-    CONTINUE        reduce using rule 35 (variable -> VARIABLE .)
-    L_QBRACKET      reduce using rule 35 (variable -> VARIABLE .)
-    LBRACKET        shift and go to state 93
+    THEN            shift and go to state 119
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
 state 92
@@ -2554,7 +2621,7 @@ state 92
     BOOL            shift and go to state 25
     VECTOR          shift and go to state 26
 
-    type                           shift and go to state 118
+    type                           shift and go to state 120
 
 state 93
 
@@ -2594,7 +2661,7 @@ state 93
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 119
+    VARIABLE        shift and go to state 121
     RBRACKET        reduce using rule 85 (empty -> .)
     COMMA           reduce using rule 85 (empty -> .)
     CONTINUE        reduce using rule 85 (empty -> .)
@@ -2612,15 +2679,15 @@ state 93
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    parameters                     shift and go to state 120
-    parameter                      shift and go to state 121
-    empty                          shift and go to state 122
-    expression                     shift and go to state 123
-    variable                       shift and go to state 89
+    parameters                     shift and go to state 122
+    parameter                      shift and go to state 123
+    empty                          shift and go to state 124
+    expression                     shift and go to state 125
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
 state 94
 
@@ -2653,7 +2720,7 @@ state 94
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -2668,12 +2735,12 @@ state 94
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 124
-    variable                       shift and go to state 89
+    expression                     shift and go to state 126
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
 state 95
 
@@ -2688,7 +2755,7 @@ state 95
     BOOL            shift and go to state 25
     VECTOR          shift and go to state 26
 
-    type                           shift and go to state 125
+    type                           shift and go to state 127
 
 state 96
 
@@ -2721,7 +2788,7 @@ state 96
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -2736,12 +2803,12 @@ state 96
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 126
-    variable                       shift and go to state 89
+    expression                     shift and go to state 128
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
 state 97
 
@@ -2774,7 +2841,7 @@ state 97
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -2789,12 +2856,12 @@ state 97
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 127
-    variable                       shift and go to state 89
+    expression                     shift and go to state 129
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
 state 98
 
@@ -2827,7 +2894,7 @@ state 98
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -2842,12 +2909,12 @@ state 98
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 128
-    variable                       shift and go to state 89
+    expression                     shift and go to state 130
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
 state 99
 
@@ -2880,7 +2947,7 @@ state 99
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -2895,20 +2962,20 @@ state 99
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 129
-    variable                       shift and go to state 89
+    expression                     shift and go to state 131
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
 state 100
 
     (41) qstring -> DOUBLE_QUOTE string . DOUBLE_QUOTE
     (43) string -> string . VARIABLE
 
-    DOUBLE_QUOTE    shift and go to state 130
-    VARIABLE        shift and go to state 131
+    DOUBLE_QUOTE    shift and go to state 132
+    VARIABLE        shift and go to state 133
 
 
 state 101
@@ -2925,8 +2992,8 @@ state 102
     (42) qstring -> QUOTE string . QUOTE
     (43) string -> string . VARIABLE
 
-    QUOTE           shift and go to state 132
-    VARIABLE        shift and go to state 131
+    QUOTE           shift and go to state 134
+    VARIABLE        shift and go to state 133
 
 
 state 103
@@ -2946,20 +3013,20 @@ state 103
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
     TO              reduce using rule 57 (math_expression -> MINUS expression .)
-    THEN            reduce using rule 57 (math_expression -> MINUS expression .)
     NEWLINE         reduce using rule 57 (math_expression -> MINUS expression .)
-    COMMA           reduce using rule 57 (math_expression -> MINUS expression .)
+    THEN            reduce using rule 57 (math_expression -> MINUS expression .)
     UNTIL           reduce using rule 57 (math_expression -> MINUS expression .)
     ELSE            reduce using rule 57 (math_expression -> MINUS expression .)
+    COMMA           reduce using rule 57 (math_expression -> MINUS expression .)
     RBRACKET        reduce using rule 57 (math_expression -> MINUS expression .)
     CONTINUE        reduce using rule 57 (math_expression -> MINUS expression .)
     L_QBRACKET      reduce using rule 57 (math_expression -> MINUS expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
   ! PLUS            [ reduce using rule 57 (math_expression -> MINUS expression .) ]
   ! MINUS           [ reduce using rule 57 (math_expression -> MINUS expression .) ]
@@ -2971,61 +3038,47 @@ state 103
 
 state 104
 
-    (29) variables -> variable COMMA . variables
-    (29) variables -> . variable COMMA variables
-    (30) variables -> . assignment COMMA variables
-    (31) variables -> . variable
-    (32) variables -> . assignment
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (33) assignment -> . variable ASSIGNMENT expression
+    (22) statement -> RETURN expression NEWLINE .
 
-    VARIABLE        shift and go to state 67
+    RETURN          reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    DO              reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    IF              reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    FUNCTION        reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    VARIABLE        reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    INTEGER         reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    STRING          reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    BOOL            reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    VECTOR          reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    PUSH            reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    POP             reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    LEFT            reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    RIGHT           reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    FORWARD         reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    BACK            reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    ROTATE_RIGHT    reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    ROTATE_LEFT     reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    LMS             reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    REFLECT         reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    DRILL           reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    TRUE            reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    FALSE           reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    UNDEFINED       reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    DECIMAL         reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    EXIT            reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    WOOD            reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    STEEL           reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    GLASS           reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    CONCRETE        reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    PLASTIC         reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    DOUBLE_QUOTE    reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    QUOTE           reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    MINUS           reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    NEWLINE         reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    $end            reduce using rule 22 (statement -> RETURN expression NEWLINE .)
+    END             reduce using rule 22 (statement -> RETURN expression NEWLINE .)
 
-    variable                       shift and go to state 65
-    variables                      shift and go to state 133
-    assignment                     shift and go to state 66
 
 state 105
-
-    (30) variables -> assignment COMMA . variables
-    (29) variables -> . variable COMMA variables
-    (30) variables -> . assignment COMMA variables
-    (31) variables -> . variable
-    (32) variables -> . assignment
-    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
-    (35) variable -> . VARIABLE
-    (33) assignment -> . variable ASSIGNMENT expression
-
-    VARIABLE        shift and go to state 67
-
-    assignment                     shift and go to state 66
-    variables                      shift and go to state 134
-    variable                       shift and go to state 65
-
-state 106
-
-    (33) assignment -> variable ASSIGNMENT expression .
-    (55) math_expression -> expression . PLUS expression
-    (56) math_expression -> expression . MINUS expression
-    (58) math_expression -> expression . LESS expression
-    (59) math_expression -> expression . GREATER expression
-    (60) math_expression -> expression . EQ expression
-    (61) math_expression -> expression . NOTEQ expression
-
-    NEWLINE         reduce using rule 33 (assignment -> variable ASSIGNMENT expression .)
-    COMMA           reduce using rule 33 (assignment -> variable ASSIGNMENT expression .)
-    UNTIL           reduce using rule 33 (assignment -> variable ASSIGNMENT expression .)
-    ELSE            reduce using rule 33 (assignment -> variable ASSIGNMENT expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
-
-
-state 107
 
     (70) converting_command -> expression TO expression .
     (55) math_expression -> expression . PLUS expression
@@ -3038,15 +3091,15 @@ state 107
     NEWLINE         reduce using rule 70 (converting_command -> expression TO expression .)
     UNTIL           reduce using rule 70 (converting_command -> expression TO expression .)
     ELSE            reduce using rule 70 (converting_command -> expression TO expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 108
+state 106
 
     (69) converting_command -> expression TO type .
 
@@ -3055,7 +3108,7 @@ state 108
     ELSE            reduce using rule 69 (converting_command -> expression TO type .)
 
 
-state 109
+state 107
 
     (55) math_expression -> expression PLUS expression .
     (55) math_expression -> expression . PLUS expression
@@ -3072,20 +3125,20 @@ state 109
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
     TO              reduce using rule 55 (math_expression -> expression PLUS expression .)
-    THEN            reduce using rule 55 (math_expression -> expression PLUS expression .)
     NEWLINE         reduce using rule 55 (math_expression -> expression PLUS expression .)
-    COMMA           reduce using rule 55 (math_expression -> expression PLUS expression .)
+    THEN            reduce using rule 55 (math_expression -> expression PLUS expression .)
     UNTIL           reduce using rule 55 (math_expression -> expression PLUS expression .)
     ELSE            reduce using rule 55 (math_expression -> expression PLUS expression .)
+    COMMA           reduce using rule 55 (math_expression -> expression PLUS expression .)
     RBRACKET        reduce using rule 55 (math_expression -> expression PLUS expression .)
     CONTINUE        reduce using rule 55 (math_expression -> expression PLUS expression .)
     L_QBRACKET      reduce using rule 55 (math_expression -> expression PLUS expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
   ! PLUS            [ reduce using rule 55 (math_expression -> expression PLUS expression .) ]
   ! MINUS           [ reduce using rule 55 (math_expression -> expression PLUS expression .) ]
@@ -3095,7 +3148,7 @@ state 109
   ! NOTEQ           [ reduce using rule 55 (math_expression -> expression PLUS expression .) ]
 
 
-state 110
+state 108
 
     (56) math_expression -> expression MINUS expression .
     (55) math_expression -> expression . PLUS expression
@@ -3112,20 +3165,20 @@ state 110
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
     TO              reduce using rule 56 (math_expression -> expression MINUS expression .)
-    THEN            reduce using rule 56 (math_expression -> expression MINUS expression .)
     NEWLINE         reduce using rule 56 (math_expression -> expression MINUS expression .)
-    COMMA           reduce using rule 56 (math_expression -> expression MINUS expression .)
+    THEN            reduce using rule 56 (math_expression -> expression MINUS expression .)
     UNTIL           reduce using rule 56 (math_expression -> expression MINUS expression .)
     ELSE            reduce using rule 56 (math_expression -> expression MINUS expression .)
+    COMMA           reduce using rule 56 (math_expression -> expression MINUS expression .)
     RBRACKET        reduce using rule 56 (math_expression -> expression MINUS expression .)
     CONTINUE        reduce using rule 56 (math_expression -> expression MINUS expression .)
     L_QBRACKET      reduce using rule 56 (math_expression -> expression MINUS expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
   ! PLUS            [ reduce using rule 56 (math_expression -> expression MINUS expression .) ]
   ! MINUS           [ reduce using rule 56 (math_expression -> expression MINUS expression .) ]
@@ -3135,7 +3188,7 @@ state 110
   ! NOTEQ           [ reduce using rule 56 (math_expression -> expression MINUS expression .) ]
 
 
-state 111
+state 109
 
     (58) math_expression -> expression LESS expression .
     (55) math_expression -> expression . PLUS expression
@@ -3152,20 +3205,20 @@ state 111
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
     TO              reduce using rule 58 (math_expression -> expression LESS expression .)
-    THEN            reduce using rule 58 (math_expression -> expression LESS expression .)
     NEWLINE         reduce using rule 58 (math_expression -> expression LESS expression .)
-    COMMA           reduce using rule 58 (math_expression -> expression LESS expression .)
+    THEN            reduce using rule 58 (math_expression -> expression LESS expression .)
     UNTIL           reduce using rule 58 (math_expression -> expression LESS expression .)
     ELSE            reduce using rule 58 (math_expression -> expression LESS expression .)
+    COMMA           reduce using rule 58 (math_expression -> expression LESS expression .)
     RBRACKET        reduce using rule 58 (math_expression -> expression LESS expression .)
     CONTINUE        reduce using rule 58 (math_expression -> expression LESS expression .)
     L_QBRACKET      reduce using rule 58 (math_expression -> expression LESS expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
   ! PLUS            [ reduce using rule 58 (math_expression -> expression LESS expression .) ]
   ! MINUS           [ reduce using rule 58 (math_expression -> expression LESS expression .) ]
@@ -3175,7 +3228,7 @@ state 111
   ! NOTEQ           [ reduce using rule 58 (math_expression -> expression LESS expression .) ]
 
 
-state 112
+state 110
 
     (59) math_expression -> expression GREATER expression .
     (55) math_expression -> expression . PLUS expression
@@ -3192,20 +3245,20 @@ state 112
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
     TO              reduce using rule 59 (math_expression -> expression GREATER expression .)
-    THEN            reduce using rule 59 (math_expression -> expression GREATER expression .)
     NEWLINE         reduce using rule 59 (math_expression -> expression GREATER expression .)
-    COMMA           reduce using rule 59 (math_expression -> expression GREATER expression .)
+    THEN            reduce using rule 59 (math_expression -> expression GREATER expression .)
     UNTIL           reduce using rule 59 (math_expression -> expression GREATER expression .)
     ELSE            reduce using rule 59 (math_expression -> expression GREATER expression .)
+    COMMA           reduce using rule 59 (math_expression -> expression GREATER expression .)
     RBRACKET        reduce using rule 59 (math_expression -> expression GREATER expression .)
     CONTINUE        reduce using rule 59 (math_expression -> expression GREATER expression .)
     L_QBRACKET      reduce using rule 59 (math_expression -> expression GREATER expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
   ! PLUS            [ reduce using rule 59 (math_expression -> expression GREATER expression .) ]
   ! MINUS           [ reduce using rule 59 (math_expression -> expression GREATER expression .) ]
@@ -3215,7 +3268,7 @@ state 112
   ! NOTEQ           [ reduce using rule 59 (math_expression -> expression GREATER expression .) ]
 
 
-state 113
+state 111
 
     (60) math_expression -> expression EQ expression .
     (55) math_expression -> expression . PLUS expression
@@ -3232,20 +3285,20 @@ state 113
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
     TO              reduce using rule 60 (math_expression -> expression EQ expression .)
-    THEN            reduce using rule 60 (math_expression -> expression EQ expression .)
     NEWLINE         reduce using rule 60 (math_expression -> expression EQ expression .)
-    COMMA           reduce using rule 60 (math_expression -> expression EQ expression .)
+    THEN            reduce using rule 60 (math_expression -> expression EQ expression .)
     UNTIL           reduce using rule 60 (math_expression -> expression EQ expression .)
     ELSE            reduce using rule 60 (math_expression -> expression EQ expression .)
+    COMMA           reduce using rule 60 (math_expression -> expression EQ expression .)
     RBRACKET        reduce using rule 60 (math_expression -> expression EQ expression .)
     CONTINUE        reduce using rule 60 (math_expression -> expression EQ expression .)
     L_QBRACKET      reduce using rule 60 (math_expression -> expression EQ expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
   ! PLUS            [ reduce using rule 60 (math_expression -> expression EQ expression .) ]
   ! MINUS           [ reduce using rule 60 (math_expression -> expression EQ expression .) ]
@@ -3255,7 +3308,7 @@ state 113
   ! NOTEQ           [ reduce using rule 60 (math_expression -> expression EQ expression .) ]
 
 
-state 114
+state 112
 
     (61) math_expression -> expression NOTEQ expression .
     (55) math_expression -> expression . PLUS expression
@@ -3272,20 +3325,20 @@ state 114
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
     TO              reduce using rule 61 (math_expression -> expression NOTEQ expression .)
-    THEN            reduce using rule 61 (math_expression -> expression NOTEQ expression .)
     NEWLINE         reduce using rule 61 (math_expression -> expression NOTEQ expression .)
-    COMMA           reduce using rule 61 (math_expression -> expression NOTEQ expression .)
+    THEN            reduce using rule 61 (math_expression -> expression NOTEQ expression .)
     UNTIL           reduce using rule 61 (math_expression -> expression NOTEQ expression .)
     ELSE            reduce using rule 61 (math_expression -> expression NOTEQ expression .)
+    COMMA           reduce using rule 61 (math_expression -> expression NOTEQ expression .)
     RBRACKET        reduce using rule 61 (math_expression -> expression NOTEQ expression .)
     CONTINUE        reduce using rule 61 (math_expression -> expression NOTEQ expression .)
     L_QBRACKET      reduce using rule 61 (math_expression -> expression NOTEQ expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
   ! PLUS            [ reduce using rule 61 (math_expression -> expression NOTEQ expression .) ]
   ! MINUS           [ reduce using rule 61 (math_expression -> expression NOTEQ expression .) ]
@@ -3295,7 +3348,63 @@ state 114
   ! NOTEQ           [ reduce using rule 61 (math_expression -> expression NOTEQ expression .) ]
 
 
+state 113
+
+    (29) variables -> variable COMMA . variables
+    (29) variables -> . variable COMMA variables
+    (30) variables -> . assignment COMMA variables
+    (31) variables -> . variable
+    (32) variables -> . assignment
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (33) assignment -> . variable ASSIGNMENT expression
+
+    VARIABLE        shift and go to state 77
+
+    variable                       shift and go to state 75
+    variables                      shift and go to state 135
+    assignment                     shift and go to state 76
+
+state 114
+
+    (30) variables -> assignment COMMA . variables
+    (29) variables -> . variable COMMA variables
+    (30) variables -> . assignment COMMA variables
+    (31) variables -> . variable
+    (32) variables -> . assignment
+    (34) variable -> . VARIABLE R_QBRACKET expression L_QBRACKET
+    (35) variable -> . VARIABLE
+    (33) assignment -> . variable ASSIGNMENT expression
+
+    VARIABLE        shift and go to state 77
+
+    assignment                     shift and go to state 76
+    variables                      shift and go to state 136
+    variable                       shift and go to state 75
+
 state 115
+
+    (33) assignment -> variable ASSIGNMENT expression .
+    (55) math_expression -> expression . PLUS expression
+    (56) math_expression -> expression . MINUS expression
+    (58) math_expression -> expression . LESS expression
+    (59) math_expression -> expression . GREATER expression
+    (60) math_expression -> expression . EQ expression
+    (61) math_expression -> expression . NOTEQ expression
+
+    NEWLINE         reduce using rule 33 (assignment -> variable ASSIGNMENT expression .)
+    COMMA           reduce using rule 33 (assignment -> variable ASSIGNMENT expression .)
+    UNTIL           reduce using rule 33 (assignment -> variable ASSIGNMENT expression .)
+    ELSE            reduce using rule 33 (assignment -> variable ASSIGNMENT expression .)
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
+
+
+state 116
 
     (62) while -> DO statements_group UNTIL . expression
     (36) expression -> . variable
@@ -3326,7 +3435,7 @@ state 115
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -3341,14 +3450,14 @@ state 115
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 135
-    variable                       shift and go to state 89
+    expression                     shift and go to state 137
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
-state 116
+state 117
 
     (2) statements_group -> BEGIN statements . END
     (13) statements -> statements . statement
@@ -3359,7 +3468,7 @@ state 116
     (19) statement -> . command NEWLINE
     (20) statement -> . function NEWLINE
     (21) statement -> . call NEWLINE
-    (22) statement -> . RETURN NEWLINE
+    (22) statement -> . RETURN expression NEWLINE
     (23) statement -> . empty NEWLINE
     (24) declaration -> . type variables
     (33) assignment -> . variable ASSIGNMENT expression
@@ -3418,7 +3527,7 @@ state 116
     (60) math_expression -> . expression EQ expression
     (61) math_expression -> . expression NOTEQ expression
 
-    END             shift and go to state 136
+    END             shift and go to state 138
     RETURN          shift and go to state 11
     DO              shift and go to state 16
     IF              shift and go to state 17
@@ -3462,10 +3571,10 @@ state 116
     command                        shift and go to state 8
     function                       shift and go to state 9
     call                           shift and go to state 10
-    empty                          shift and go to state 12
-    type                           shift and go to state 13
-    variable                       shift and go to state 14
-    expression                     shift and go to state 15
+    expression                     shift and go to state 12
+    empty                          shift and go to state 13
+    type                           shift and go to state 14
+    variable                       shift and go to state 15
     vector_command                 shift and go to state 18
     robot_command                  shift and go to state 19
     converting_command             shift and go to state 20
@@ -3473,7 +3582,28 @@ state 116
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
 
-state 117
+state 118
+
+    (11) inner_statement -> RETURN expression .
+    (55) math_expression -> expression . PLUS expression
+    (56) math_expression -> expression . MINUS expression
+    (58) math_expression -> expression . LESS expression
+    (59) math_expression -> expression . GREATER expression
+    (60) math_expression -> expression . EQ expression
+    (61) math_expression -> expression . NOTEQ expression
+
+    UNTIL           reduce using rule 11 (inner_statement -> RETURN expression .)
+    ELSE            reduce using rule 11 (inner_statement -> RETURN expression .)
+    NEWLINE         reduce using rule 11 (inner_statement -> RETURN expression .)
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
+
+
+state 119
 
     (63) if -> IF expression THEN . statements_group
     (64) if -> IF expression THEN . statements_group ELSE statements_group
@@ -3486,7 +3616,7 @@ state 117
     (8) inner_statement -> . command
     (9) inner_statement -> . function
     (10) inner_statement -> . call
-    (11) inner_statement -> . RETURN
+    (11) inner_statement -> . RETURN expression
     (12) inner_statement -> . empty
     (24) declaration -> . type variables
     (33) assignment -> . variable ASSIGNMENT expression
@@ -3545,8 +3675,8 @@ state 117
     (60) math_expression -> . expression EQ expression
     (61) math_expression -> . expression NOTEQ expression
 
-    BEGIN           shift and go to state 77
-    RETURN          shift and go to state 86
+    BEGIN           shift and go to state 80
+    RETURN          shift and go to state 89
     DO              shift and go to state 16
     IF              shift and go to state 17
     FUNCTION        shift and go to state 21
@@ -3583,19 +3713,19 @@ state 117
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 15
-    statements_group               shift and go to state 137
-    inner_statement                shift and go to state 78
-    declaration                    shift and go to state 79
-    assignment                     shift and go to state 80
-    while                          shift and go to state 81
-    if                             shift and go to state 82
-    command                        shift and go to state 83
-    function                       shift and go to state 84
-    call                           shift and go to state 85
-    empty                          shift and go to state 87
-    type                           shift and go to state 13
-    variable                       shift and go to state 14
+    expression                     shift and go to state 12
+    statements_group               shift and go to state 139
+    inner_statement                shift and go to state 81
+    declaration                    shift and go to state 82
+    assignment                     shift and go to state 83
+    while                          shift and go to state 84
+    if                             shift and go to state 85
+    command                        shift and go to state 86
+    function                       shift and go to state 87
+    call                           shift and go to state 88
+    empty                          shift and go to state 90
+    type                           shift and go to state 14
+    variable                       shift and go to state 15
     vector_command                 shift and go to state 18
     robot_command                  shift and go to state 19
     converting_command             shift and go to state 20
@@ -3603,14 +3733,14 @@ state 117
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
 
-state 118
+state 120
 
     (65) function -> FUNCTION OF type . VARIABLE LBRACKET parameters RBRACKET statements_group
 
-    VARIABLE        shift and go to state 138
+    VARIABLE        shift and go to state 140
 
 
-state 119
+state 121
 
     (91) parameter -> VARIABLE . EQ expression
     (34) variable -> VARIABLE . R_QBRACKET expression L_QBRACKET
@@ -3618,7 +3748,7 @@ state 119
     (84) call -> VARIABLE . LBRACKET parameters RBRACKET
 
   ! shift/reduce conflict for EQ resolved as shift
-    EQ              shift and go to state 139
+    EQ              shift and go to state 141
     R_QBRACKET      shift and go to state 94
     PLUS            reduce using rule 35 (variable -> VARIABLE .)
     MINUS           reduce using rule 35 (variable -> VARIABLE .)
@@ -3633,18 +3763,18 @@ state 119
   ! EQ              [ reduce using rule 35 (variable -> VARIABLE .) ]
 
 
-state 120
+state 122
 
     (84) call -> VARIABLE LBRACKET parameters . RBRACKET
     (86) parameters -> parameters . COMMA parameter
     (88) parameters -> parameters . CONTINUE
 
-    RBRACKET        shift and go to state 140
-    COMMA           shift and go to state 141
-    CONTINUE        shift and go to state 142
+    RBRACKET        shift and go to state 142
+    COMMA           shift and go to state 143
+    CONTINUE        shift and go to state 144
 
 
-state 121
+state 123
 
     (87) parameters -> parameter .
 
@@ -3653,7 +3783,7 @@ state 121
     CONTINUE        reduce using rule 87 (parameters -> parameter .)
 
 
-state 122
+state 124
 
     (89) parameters -> empty .
 
@@ -3662,7 +3792,7 @@ state 122
     CONTINUE        reduce using rule 89 (parameters -> empty .)
 
 
-state 123
+state 125
 
     (90) parameter -> expression .
     (55) math_expression -> expression . PLUS expression
@@ -3675,15 +3805,15 @@ state 123
     RBRACKET        reduce using rule 90 (parameter -> expression .)
     COMMA           reduce using rule 90 (parameter -> expression .)
     CONTINUE        reduce using rule 90 (parameter -> expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 124
+state 126
 
     (34) variable -> VARIABLE R_QBRACKET expression . L_QBRACKET
     (55) math_expression -> expression . PLUS expression
@@ -3693,16 +3823,16 @@ state 124
     (60) math_expression -> expression . EQ expression
     (61) math_expression -> expression . NOTEQ expression
 
-    L_QBRACKET      shift and go to state 143
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    L_QBRACKET      shift and go to state 145
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 125
+state 127
 
     (28) type -> VECTOR OF type .
 
@@ -3712,7 +3842,7 @@ state 125
     ELSE            reduce using rule 28 (type -> VECTOR OF type .)
 
 
-state 126
+state 128
 
     (71) vector_command -> PUSH BACK expression .
     (55) math_expression -> expression . PLUS expression
@@ -3725,15 +3855,15 @@ state 126
     NEWLINE         reduce using rule 71 (vector_command -> PUSH BACK expression .)
     UNTIL           reduce using rule 71 (vector_command -> PUSH BACK expression .)
     ELSE            reduce using rule 71 (vector_command -> PUSH BACK expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 127
+state 129
 
     (73) vector_command -> PUSH FRONT expression .
     (55) math_expression -> expression . PLUS expression
@@ -3746,15 +3876,15 @@ state 127
     NEWLINE         reduce using rule 73 (vector_command -> PUSH FRONT expression .)
     UNTIL           reduce using rule 73 (vector_command -> PUSH FRONT expression .)
     ELSE            reduce using rule 73 (vector_command -> PUSH FRONT expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 128
+state 130
 
     (72) vector_command -> POP BACK expression .
     (55) math_expression -> expression . PLUS expression
@@ -3767,15 +3897,15 @@ state 128
     NEWLINE         reduce using rule 72 (vector_command -> POP BACK expression .)
     UNTIL           reduce using rule 72 (vector_command -> POP BACK expression .)
     ELSE            reduce using rule 72 (vector_command -> POP BACK expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 129
+state 131
 
     (74) vector_command -> POP FRONT expression .
     (55) math_expression -> expression . PLUS expression
@@ -3788,15 +3918,15 @@ state 129
     NEWLINE         reduce using rule 74 (vector_command -> POP FRONT expression .)
     UNTIL           reduce using rule 74 (vector_command -> POP FRONT expression .)
     ELSE            reduce using rule 74 (vector_command -> POP FRONT expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 130
+state 132
 
     (41) qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .
 
@@ -3807,17 +3937,17 @@ state 130
     GREATER         reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     EQ              reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     NOTEQ           reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
-    THEN            reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     NEWLINE         reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
-    COMMA           reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
+    THEN            reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     UNTIL           reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     ELSE            reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
+    COMMA           reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     RBRACKET        reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     CONTINUE        reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     L_QBRACKET      reduce using rule 41 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
 
 
-state 131
+state 133
 
     (43) string -> string VARIABLE .
 
@@ -3826,7 +3956,7 @@ state 131
     QUOTE           reduce using rule 43 (string -> string VARIABLE .)
 
 
-state 132
+state 134
 
     (42) qstring -> QUOTE string QUOTE .
 
@@ -3837,17 +3967,17 @@ state 132
     GREATER         reduce using rule 42 (qstring -> QUOTE string QUOTE .)
     EQ              reduce using rule 42 (qstring -> QUOTE string QUOTE .)
     NOTEQ           reduce using rule 42 (qstring -> QUOTE string QUOTE .)
-    THEN            reduce using rule 42 (qstring -> QUOTE string QUOTE .)
     NEWLINE         reduce using rule 42 (qstring -> QUOTE string QUOTE .)
-    COMMA           reduce using rule 42 (qstring -> QUOTE string QUOTE .)
+    THEN            reduce using rule 42 (qstring -> QUOTE string QUOTE .)
     UNTIL           reduce using rule 42 (qstring -> QUOTE string QUOTE .)
     ELSE            reduce using rule 42 (qstring -> QUOTE string QUOTE .)
+    COMMA           reduce using rule 42 (qstring -> QUOTE string QUOTE .)
     RBRACKET        reduce using rule 42 (qstring -> QUOTE string QUOTE .)
     CONTINUE        reduce using rule 42 (qstring -> QUOTE string QUOTE .)
     L_QBRACKET      reduce using rule 42 (qstring -> QUOTE string QUOTE .)
 
 
-state 133
+state 135
 
     (29) variables -> variable COMMA variables .
 
@@ -3856,7 +3986,7 @@ state 133
     ELSE            reduce using rule 29 (variables -> variable COMMA variables .)
 
 
-state 134
+state 136
 
     (30) variables -> assignment COMMA variables .
 
@@ -3865,7 +3995,7 @@ state 134
     ELSE            reduce using rule 30 (variables -> assignment COMMA variables .)
 
 
-state 135
+state 137
 
     (62) while -> DO statements_group UNTIL expression .
     (55) math_expression -> expression . PLUS expression
@@ -3878,15 +4008,15 @@ state 135
     NEWLINE         reduce using rule 62 (while -> DO statements_group UNTIL expression .)
     UNTIL           reduce using rule 62 (while -> DO statements_group UNTIL expression .)
     ELSE            reduce using rule 62 (while -> DO statements_group UNTIL expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 136
+state 138
 
     (2) statements_group -> BEGIN statements END .
 
@@ -3895,7 +4025,7 @@ state 136
     NEWLINE         reduce using rule 2 (statements_group -> BEGIN statements END .)
 
 
-state 137
+state 139
 
     (63) if -> IF expression THEN statements_group .
     (64) if -> IF expression THEN statements_group . ELSE statements_group
@@ -3903,19 +4033,19 @@ state 137
   ! shift/reduce conflict for ELSE resolved as shift
     NEWLINE         reduce using rule 63 (if -> IF expression THEN statements_group .)
     UNTIL           reduce using rule 63 (if -> IF expression THEN statements_group .)
-    ELSE            shift and go to state 144
+    ELSE            shift and go to state 146
 
   ! ELSE            [ reduce using rule 63 (if -> IF expression THEN statements_group .) ]
 
 
-state 138
+state 140
 
     (65) function -> FUNCTION OF type VARIABLE . LBRACKET parameters RBRACKET statements_group
 
-    LBRACKET        shift and go to state 145
+    LBRACKET        shift and go to state 147
 
 
-state 139
+state 141
 
     (91) parameter -> VARIABLE EQ . expression
     (36) expression -> . variable
@@ -3946,7 +4076,7 @@ state 139
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 91
+    VARIABLE        shift and go to state 65
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -3961,14 +4091,14 @@ state 139
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 146
-    variable                       shift and go to state 89
+    expression                     shift and go to state 148
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
-state 140
+state 142
 
     (84) call -> VARIABLE LBRACKET parameters RBRACKET .
 
@@ -3982,14 +4112,14 @@ state 140
     NOTEQ           reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     UNTIL           reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     THEN            reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
-    COMMA           reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     ELSE            reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
+    COMMA           reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     RBRACKET        reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     CONTINUE        reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     L_QBRACKET      reduce using rule 84 (call -> VARIABLE LBRACKET parameters RBRACKET .)
 
 
-state 141
+state 143
 
     (86) parameters -> parameters COMMA . parameter
     (90) parameter -> . expression
@@ -4022,7 +4152,7 @@ state 141
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 119
+    VARIABLE        shift and go to state 121
     TRUE            shift and go to state 41
     FALSE           shift and go to state 42
     UNDEFINED       shift and go to state 43
@@ -4037,15 +4167,15 @@ state 141
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    parameter                      shift and go to state 147
-    expression                     shift and go to state 123
-    variable                       shift and go to state 89
+    parameter                      shift and go to state 149
+    expression                     shift and go to state 125
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
-state 142
+state 144
 
     (88) parameters -> parameters CONTINUE .
 
@@ -4054,7 +4184,7 @@ state 142
     CONTINUE        reduce using rule 88 (parameters -> parameters CONTINUE .)
 
 
-state 143
+state 145
 
     (34) variable -> VARIABLE R_QBRACKET expression L_QBRACKET .
 
@@ -4066,8 +4196,8 @@ state 143
     GREATER         reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
     EQ              reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
     NOTEQ           reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
-    COMMA           reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
     NEWLINE         reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
+    COMMA           reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
     UNTIL           reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
     ELSE            reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
     THEN            reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
@@ -4076,7 +4206,7 @@ state 143
     L_QBRACKET      reduce using rule 34 (variable -> VARIABLE R_QBRACKET expression L_QBRACKET .)
 
 
-state 144
+state 146
 
     (64) if -> IF expression THEN statements_group ELSE . statements_group
     (2) statements_group -> . BEGIN statements END
@@ -4088,7 +4218,7 @@ state 144
     (8) inner_statement -> . command
     (9) inner_statement -> . function
     (10) inner_statement -> . call
-    (11) inner_statement -> . RETURN
+    (11) inner_statement -> . RETURN expression
     (12) inner_statement -> . empty
     (24) declaration -> . type variables
     (33) assignment -> . variable ASSIGNMENT expression
@@ -4147,8 +4277,8 @@ state 144
     (60) math_expression -> . expression EQ expression
     (61) math_expression -> . expression NOTEQ expression
 
-    BEGIN           shift and go to state 77
-    RETURN          shift and go to state 86
+    BEGIN           shift and go to state 80
+    RETURN          shift and go to state 89
     DO              shift and go to state 16
     IF              shift and go to state 17
     FUNCTION        shift and go to state 21
@@ -4185,19 +4315,19 @@ state 144
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    expression                     shift and go to state 15
-    statements_group               shift and go to state 148
-    inner_statement                shift and go to state 78
-    declaration                    shift and go to state 79
-    assignment                     shift and go to state 80
-    while                          shift and go to state 81
-    if                             shift and go to state 82
-    command                        shift and go to state 83
-    function                       shift and go to state 84
-    call                           shift and go to state 85
-    empty                          shift and go to state 87
-    type                           shift and go to state 13
-    variable                       shift and go to state 14
+    expression                     shift and go to state 12
+    statements_group               shift and go to state 150
+    inner_statement                shift and go to state 81
+    declaration                    shift and go to state 82
+    assignment                     shift and go to state 83
+    while                          shift and go to state 84
+    if                             shift and go to state 85
+    command                        shift and go to state 86
+    function                       shift and go to state 87
+    call                           shift and go to state 88
+    empty                          shift and go to state 90
+    type                           shift and go to state 14
+    variable                       shift and go to state 15
     vector_command                 shift and go to state 18
     robot_command                  shift and go to state 19
     converting_command             shift and go to state 20
@@ -4205,7 +4335,7 @@ state 144
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
 
-state 145
+state 147
 
     (65) function -> FUNCTION OF type VARIABLE LBRACKET . parameters RBRACKET statements_group
     (86) parameters -> . parameters COMMA parameter
@@ -4243,7 +4373,7 @@ state 145
     (61) math_expression -> . expression NOTEQ expression
     (84) call -> . VARIABLE LBRACKET parameters RBRACKET
 
-    VARIABLE        shift and go to state 119
+    VARIABLE        shift and go to state 121
     RBRACKET        reduce using rule 85 (empty -> .)
     COMMA           reduce using rule 85 (empty -> .)
     CONTINUE        reduce using rule 85 (empty -> .)
@@ -4261,17 +4391,17 @@ state 145
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    parameters                     shift and go to state 149
-    parameter                      shift and go to state 121
-    empty                          shift and go to state 122
-    expression                     shift and go to state 123
-    variable                       shift and go to state 89
+    parameters                     shift and go to state 151
+    parameter                      shift and go to state 123
+    empty                          shift and go to state 124
+    expression                     shift and go to state 125
+    variable                       shift and go to state 63
     const                          shift and go to state 38
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
-    call                           shift and go to state 90
+    call                           shift and go to state 64
 
-state 146
+state 148
 
     (91) parameter -> VARIABLE EQ expression .
     (55) math_expression -> expression . PLUS expression
@@ -4284,15 +4414,15 @@ state 146
     RBRACKET        reduce using rule 91 (parameter -> VARIABLE EQ expression .)
     COMMA           reduce using rule 91 (parameter -> VARIABLE EQ expression .)
     CONTINUE        reduce using rule 91 (parameter -> VARIABLE EQ expression .)
-    PLUS            shift and go to state 70
-    MINUS           shift and go to state 71
-    LESS            shift and go to state 72
-    GREATER         shift and go to state 73
-    EQ              shift and go to state 74
-    NOTEQ           shift and go to state 75
+    PLUS            shift and go to state 67
+    MINUS           shift and go to state 68
+    LESS            shift and go to state 69
+    GREATER         shift and go to state 70
+    EQ              shift and go to state 71
+    NOTEQ           shift and go to state 72
 
 
-state 147
+state 149
 
     (86) parameters -> parameters COMMA parameter .
 
@@ -4301,7 +4431,7 @@ state 147
     CONTINUE        reduce using rule 86 (parameters -> parameters COMMA parameter .)
 
 
-state 148
+state 150
 
     (64) if -> IF expression THEN statements_group ELSE statements_group .
 
@@ -4310,18 +4440,18 @@ state 148
     ELSE            reduce using rule 64 (if -> IF expression THEN statements_group ELSE statements_group .)
 
 
-state 149
+state 151
 
     (65) function -> FUNCTION OF type VARIABLE LBRACKET parameters . RBRACKET statements_group
     (86) parameters -> parameters . COMMA parameter
     (88) parameters -> parameters . CONTINUE
 
-    RBRACKET        shift and go to state 150
-    COMMA           shift and go to state 141
-    CONTINUE        shift and go to state 142
+    RBRACKET        shift and go to state 152
+    COMMA           shift and go to state 143
+    CONTINUE        shift and go to state 144
 
 
-state 150
+state 152
 
     (65) function -> FUNCTION OF type VARIABLE LBRACKET parameters RBRACKET . statements_group
     (2) statements_group -> . BEGIN statements END
@@ -4333,7 +4463,7 @@ state 150
     (8) inner_statement -> . command
     (9) inner_statement -> . function
     (10) inner_statement -> . call
-    (11) inner_statement -> . RETURN
+    (11) inner_statement -> . RETURN expression
     (12) inner_statement -> . empty
     (24) declaration -> . type variables
     (33) assignment -> . variable ASSIGNMENT expression
@@ -4392,8 +4522,8 @@ state 150
     (60) math_expression -> . expression EQ expression
     (61) math_expression -> . expression NOTEQ expression
 
-    BEGIN           shift and go to state 77
-    RETURN          shift and go to state 86
+    BEGIN           shift and go to state 80
+    RETURN          shift and go to state 89
     DO              shift and go to state 16
     IF              shift and go to state 17
     FUNCTION        shift and go to state 21
@@ -4430,19 +4560,19 @@ state 150
     QUOTE           shift and go to state 52
     MINUS           shift and go to state 53
 
-    type                           shift and go to state 13
-    statements_group               shift and go to state 151
-    inner_statement                shift and go to state 78
-    declaration                    shift and go to state 79
-    assignment                     shift and go to state 80
-    while                          shift and go to state 81
-    if                             shift and go to state 82
-    command                        shift and go to state 83
-    function                       shift and go to state 84
-    call                           shift and go to state 85
-    empty                          shift and go to state 87
-    variable                       shift and go to state 14
-    expression                     shift and go to state 15
+    type                           shift and go to state 14
+    statements_group               shift and go to state 153
+    inner_statement                shift and go to state 81
+    declaration                    shift and go to state 82
+    assignment                     shift and go to state 83
+    while                          shift and go to state 84
+    if                             shift and go to state 85
+    command                        shift and go to state 86
+    function                       shift and go to state 87
+    call                           shift and go to state 88
+    expression                     shift and go to state 12
+    empty                          shift and go to state 90
+    variable                       shift and go to state 15
     vector_command                 shift and go to state 18
     robot_command                  shift and go to state 19
     converting_command             shift and go to state 20
@@ -4450,7 +4580,7 @@ state 150
     qstring                        shift and go to state 39
     math_expression                shift and go to state 40
 
-state 151
+state 153
 
     (65) function -> FUNCTION OF type VARIABLE LBRACKET parameters RBRACKET statements_group .
 
@@ -4467,6 +4597,18 @@ WARNING: shift/reduce conflict for LESS in state 103 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 103 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 103 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 103 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 107 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 107 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 107 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 107 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 107 resolved as shift
+WARNING: shift/reduce conflict for NOTEQ in state 107 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 108 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 108 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 108 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 108 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 108 resolved as shift
+WARNING: shift/reduce conflict for NOTEQ in state 108 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 109 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 109 resolved as shift
 WARNING: shift/reduce conflict for LESS in state 109 resolved as shift
@@ -4491,17 +4633,5 @@ WARNING: shift/reduce conflict for LESS in state 112 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 112 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 112 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 112 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 113 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 113 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 113 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 113 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 113 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 113 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 114 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 114 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 114 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 114 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 114 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 114 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 119 resolved as shift
-WARNING: shift/reduce conflict for ELSE in state 137 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 121 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 139 resolved as shift

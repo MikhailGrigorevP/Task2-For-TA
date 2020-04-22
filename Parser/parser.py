@@ -53,9 +53,13 @@ class parser(object):
                      | command
                      | function
                      | call
-                     | RETURN
+                     | RETURN expression
                      | empty"""
-        p[0] = p[1]
+
+        if len(p) == 3:
+            p[0] = node('return', val=p[2])
+        else:
+            p[0] = p[1]
 
     @staticmethod
     def p_statements(p):
@@ -75,9 +79,12 @@ class parser(object):
                      | command NEWLINE
                      | function NEWLINE
                      | call NEWLINE
-                     | RETURN NEWLINE
+                     | RETURN expression NEWLINE
                      | empty NEWLINE"""
-        p[0] = p[1]
+        if len(p) == 4:
+            p[0] = node('return', val=p[2])
+        else:
+            p[0] = p[1]
 
     @staticmethod
     def p_declaration(p):
@@ -169,9 +176,9 @@ class parser(object):
                            | expression EQ expression
                            | expression NOTEQ expression"""
         if len(p) == 3:
-            p[0] = node('unary_exp', p[1], ch=p[2])
+            p[0] = node('unary_expression', p[1], ch=p[2])
         else:
-            p[0] = node('binary_exp', p[2], ch=[p[1], p[3]])
+            p[0] = node('binary_expression', p[2], ch=[p[1], p[3]])
 
     @staticmethod
     def p_while(p):
@@ -203,7 +210,7 @@ class parser(object):
     def p_converting_command(p):
         """converting_command : expression TO type
                               | expression TO expression"""
-        p[0] = node('converting_command', p[1], ch=p[3])
+        p[0] = node('converting', p[1], ch=p[3])
 
     @staticmethod
     def p_vector_command(p):
@@ -278,13 +285,11 @@ if __name__ == '__main__':
             f = open("../Tests For Parser/test.txt")
             text = f.read()
             f.close()
+            print(f'Your file:\n {text}')
         else:
+            print("I think, you're wrong :)")
             correct = False
 
-
-
     parser = parser()
-    print(f'INPUT: {text}')
     tree, func_table = parser.parse(text)
     tree.print()
-    # print(func_table)

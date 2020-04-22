@@ -1,6 +1,7 @@
 function of integer application () begin
     integer a := 4
     string str := "Happy MEPhi", dog, cat := 'SNOW'
+    return cat
     end
 integer a := 4
 string str := "Happy MEPhi", dog, cat := 'SNOW'
@@ -22,3 +23,13 @@ right
 lms
 drill
 reflect
+rotate_left
+rotate_right
+a to string
+42 to "Mephi"
+push back 3
+pop front 3
+push front 42
+pop back 15
+integer a := 34 + 9
+boolean a := 34 < -9
