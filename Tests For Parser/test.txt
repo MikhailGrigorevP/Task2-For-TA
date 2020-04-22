@@ -7,4 +7,18 @@ string str := "Happy MEPhi", dog, cat := 'SNOW'
 a := 5
 if 4 < 5 then begin
     a := 3
+    b := 23
+    string str3
+    str3 := "It works"
     end else a := 6
+do begin
+    a := a + 1
+    b := b - 1
+    end until a < 65
+do a := a + 1 until a < 65
+vector of string cities
+left
+right
+lms
+drill
+reflect

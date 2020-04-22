@@ -89,9 +89,12 @@ class parser(object):
         """type : INTEGER
                 | STRING
                 | BOOL
-                | VECTOR OF
+                | VECTOR OF type
         """
-        p[0] = p[1]
+        if len(p) == 2:
+            p[0] = p[1]
+        else:
+            p[0] = p[1] + ' ' + p[2] + ' ' + p[3]
 
     @staticmethod
     def p_variables(p):
@@ -189,7 +192,6 @@ class parser(object):
         self._functions[p[3]] = node('function', ch={'parameters': p[6], 'body': p[8]})
         p[0] = node('function_description', val=p[3])
 
-
     @staticmethod
     def p_command(p):
         """command : vector_command
@@ -263,15 +265,26 @@ class parser(object):
     def get_f(self):
         return self._functions
 
-if __name__ == '__main__':
-    f = open("../Tests For Parser/test.txt")
-    text = f.read()
-    f.close()
 
-    # text = sys.stdin.read()
+if __name__ == '__main__':
+    correct = False
+    while not correct:
+        print("Input type? (console, file)")
+        inputType = input()
+        correct = True
+        if inputType == "console":
+            text = sys.stdin.read()
+        elif inputType == "file":
+            f = open("../Tests For Parser/test.txt")
+            text = f.read()
+            f.close()
+        else:
+            correct = False
+
+
 
     parser = parser()
     print(f'INPUT: {text}')
     tree, func_table = parser.parse(text)
     tree.print()
-    #print(func_table)
+    # print(func_table)
