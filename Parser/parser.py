@@ -13,7 +13,7 @@ class parser(object):
     tokens = lexer.tokens
 
     def __init__(self):
-        self.acc = True
+        self.ok = True
         self.lexer = lexer()
         self.parser = yacc.yacc(module=self)
         self._functions: Dict[str, node] = dict()
@@ -24,11 +24,6 @@ class parser(object):
             return res, self._functions
         except LexError:
             sys.stderr.write(f'Illegal token {s}\n')
-
-    # TODO WTF??????
-    # def check_program(self, prog: str) -> bool:
-    #     self.parser.parse(prog)
-    #     return self.acc
 
     @staticmethod
     def p_application(p):
@@ -195,9 +190,14 @@ class parser(object):
             p[0] = node('if', ch={'condition': p[2], 'body': p[4]})
 
     def p_function(self, p):
-        """function : FUNCTION OF type VARIABLE LBRACKET parameters RBRACKET statements_group"""
-        self._functions[p[3]] = node('function', ch={'parameters': p[6], 'body': p[8]})
-        p[0] = node('function_description', val=p[3])
+        """function : FUNCTION OF type VARIABLE LBRACKET parameters RBRACKET statements_group
+                    | FUNCTION OF type VARIABLE BRACKETS statements_group"""
+        if len(p) == 9:
+            self._functions[p[3]] = node('function', ch={'parameters': p[6], 'body': p[8]})
+            p[0] = node('function_description', val=p[3])
+        else:
+            self._functions[p[3]] = node('function', ch={'body': p[6]})
+            p[0] = node('function_description', val=p[3])
 
     @staticmethod
     def p_command(p):
@@ -214,11 +214,14 @@ class parser(object):
 
     @staticmethod
     def p_vector_command(p):
-        """vector_command : PUSH BACK expression
-                          | POP BACK expression
-                          | PUSH FRONT expression
-                          | POP FRONT expression"""
-        p[0] = node('vector', p[1] + ' ' + p[2], ch=p[3])
+        """vector_command : VARIABLE PUSH BACK expression
+                          | VARIABLE POP BACK
+                          | VARIABLE PUSH FRONT expression
+                          | VARIABLE POP FRONT"""
+        if len(p) == 5:
+            p[0] = node('vector', p[1] + ' ' + p[2] + ' ' + p[3], ch=p[4])
+        else:
+            p[0] = node('vector', p[1] + ' ' + p[2] + ' ' +  p[3])
 
     @staticmethod
     def p_robot_command(p):
@@ -235,10 +238,12 @@ class parser(object):
 
     @staticmethod
     def p_call(p):
-        """call : VARIABLE LBRACKET parameters RBRACKET"""
-        p[0] = node('call', p[1], ch=p[3])
-
-        p[0] = p[1]
+        """call : VARIABLE LBRACKET parameters RBRACKET
+                | VARIABLE BRACKETS"""
+        if len(p) == 5:
+            p[0] = node('call', p[1], ch=p[3])
+        else:
+            p[0] = node('call', p[1])
 
     @staticmethod
     def p_empty(p):
@@ -249,10 +254,11 @@ class parser(object):
     def p_parameters(p):
         """parameters : parameters COMMA parameter
                      | parameter
-                     | parameters CONTINUE
-                     | empty"""
+                     | parameters CONTINUE"""
         if len(p) == 2:
             p[0] = node('parameters', ch=p[1])
+        elif len(p) == 3:
+            p[0] = node('parameters', ch=[p[1], p[2]])
         else:
             p[0] = node('parameters', ch=[p[1], p[3]])
 
@@ -267,7 +273,7 @@ class parser(object):
 
     def p_error(self, p):
         print(f'Syntax error at {p}')
-        self.acc = False
+        self.ok = False
 
     def get_f(self):
         return self._functions

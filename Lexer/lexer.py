@@ -52,7 +52,7 @@ class lexer(object):
 
     tokens = ['DECIMAL',  'VARIABLE',
               'ASSIGNMENT', 'PLUS', 'MINUS',
-              'LBRACKET', 'RBRACKET',
+              'LBRACKET', 'RBRACKET', 'BRACKETS',
               'DOUBLE_QUOTE', 'QUOTE',
               'LESS', 'GREATER', 'EQ', 'NOTEQ',
               'R_QBRACKET', 'L_QBRACKET',
@@ -63,6 +63,7 @@ class lexer(object):
     t_MINUS = r'\-'
     t_LBRACKET = r'\('
     t_RBRACKET = r'\)'
+    t_BRACKETS = r'\(\)'
     t_DOUBLE_QUOTE = r'\"'
     t_QUOTE = r'\''
     #t_SPACE = r'\ ' 'SPACE'
