@@ -34,3 +34,5 @@ cities pop back
 integer a := 34 + 9
 boolean a := 34 < -9
 func ()
+func ( df )
+func ( df , ert = 3 )

@@ -267,9 +267,9 @@ class parser(object):
         """parameter : expression
                     | VARIABLE EQ expression"""
         if len(p) == 2:
-            p[0] = node('parameter', ch=p[1])
+            p[0] = node('parameter', p[1])
         else:
-            p[0] = node('parameter', ch=p[3])
+            p[0] = node('parameter', p[1], ch=p[3])
 
     def p_error(self, p):
         print(f'Syntax error at {p}')
