@@ -13,6 +13,44 @@
     function of integer return_x (stack_x, size_x, x)
         return x + stack_x[size_x-1] - stack_x[size_x-2]
 
+    function of integer expand_x_back (vm, size_y, y, size_x, lms)
+        # EXPAND TO LEFT
+        if x + lms < size_x - 1 then begin
+        integer steps := x + lms - size_x + 1
+        size_x := size_x + steps
+        do begin
+            integer i: size_y - 1
+            do begin
+                if steps = y then vm[steps] push back True
+                else vm[steps] push back False
+                i := i - 1
+                end until i <> 0
+            steps := steps - 1
+            end until steps <> 0
+
+    function of integer expand_x_front (vm, size_y, y, size_x, stack_x, stack_x_size, lms)
+        # EXPAND TO LEFT
+        if x - lms < 0 then begin
+        integer steps := lms - x
+        size_x := size_x + steps
+        do begin
+            integer i: size_y - 1
+            do begin
+                if steps = y then vm[steps] push front True
+                else vm[steps] push front False
+                i := i - 1
+                end until i <> 0
+            steps := steps - 1
+            end until steps <> 0
+        steps := lms - x
+        integer i := 0
+        do begin
+            stack_x [ i ] += steps
+            i := i + 1
+            end until i <> stack_x_size
+
+
+
     function of integer findPath(x, y) begin
         # size
         vector of vector of bool vm
@@ -37,45 +75,10 @@
                     numOfTurns := 0
                     # we should expand our map
 
-                    if turn = 0 then begin
-
-                        # EXPAND TO LEFT
-                        if x + lms < size_x - 1 then begin
-                            integer steps := x + lms - size_x + 1
-                            size_x := size_x + steps
-                            do begin
-                                integer i: size_y - 1
-                                do begin
-                                    if steps = y then vm[steps] push back True
-                                        else vm[steps] push back False
-                                    i := i - 1
-                                    end until i <> 0
-                                steps := steps - 1
-                                end until steps <> 0
-
-                        # TODO EXPAND OTHERS
-                        end else if turn = 1 then begin y := y - 1
-
-                            # EXPAND TO LEFT NOT WWWWWWWOOOORK 
-                            if y - lms < 0 then begin
-                                integer steps := lms - y
-                                size_y := size_y + steps
-                                do begin
-                                    integer i: size_y - 1
-                                    do begin
-                                        if steps = y then vm[steps] push back True
-                                            else vm[steps] push back False
-                                        i := i - 1
-                                        end until i <> 0
-                                    steps := steps - 1
-                                    end until steps <> 0
-
-
-
-                        end else if turn = 2 then begin x := x - 1
-
-                        end else if turn = 3 then begin y := y + 1
-
+                    if turn = 0 then expand_x_back (vm, size_y, y, size_x lms)
+                    else if turn = 1 then # TODO
+                    else if turn = 2 then expand_x_front (vm, size_y, y, size_x, stack_x, stack_x_size, lms)
+                    else if turn = 3 then # TODO
 
                     # counter for cycle
                     integer i := lms
