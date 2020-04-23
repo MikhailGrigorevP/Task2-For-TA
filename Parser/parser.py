@@ -68,6 +68,7 @@ class parser(object):
     @staticmethod
     def p_statement(p):
         """statement : declaration NEWLINE
+                     | comment NEWLINE
                      | assignment NEWLINE
                      | while NEWLINE
                      | if NEWLINE
@@ -85,6 +86,20 @@ class parser(object):
     def p_declaration(p):
         """declaration : type variables"""
         p[0] = node('declaration', val=p[1], ch=p[2])
+
+    @staticmethod
+    def p_comment(p):
+        """comment : COMMENT any"""
+        p[0] = node('comment', val=p[2])
+
+    @staticmethod
+    def p_any(p):
+        """any : any VARIABLE
+               | VARIABLE"""
+        if len(p) == 3:
+            p[0] = str(p[1]) + ' ' + str(p[2])
+        else:
+            p[0] = p[1]
 
     @staticmethod
     def p_type(p):
@@ -253,8 +268,8 @@ class parser(object):
     @staticmethod
     def p_parameters(p):
         """parameters : parameters COMMA parameter
-                     | parameter
-                     | parameters CONTINUE"""
+                      | parameter
+                      | parameters CONTINUE"""
         if len(p) == 2:
             p[0] = node('parameters', ch=p[1])
         elif len(p) == 3:
@@ -265,7 +280,7 @@ class parser(object):
     @staticmethod
     def p_parameter(p):
         """parameter : expression
-                    | VARIABLE EQ expression"""
+                     | VARIABLE EQ expression"""
         if len(p) == 2:
             p[0] = node('parameter', p[1])
         else:

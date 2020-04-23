@@ -35,4 +35,6 @@ integer a := 34 + 9
 boolean a := 34 < -9
 func ()
 func ( df )
+# THIS IS COMMENT
+# same
 func ( df , ert = 3 )
