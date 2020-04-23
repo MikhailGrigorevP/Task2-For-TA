@@ -131,7 +131,7 @@ class parser(object):
 
     @staticmethod
     def p_variable(p):
-        """variable : VARIABLE R_QBRACKET expression L_QBRACKET
+        """variable : VARIABLE L_QBRACKET expression R_QBRACKET
                     | VARIABLE"""
         if len(p) == 2:
             p[0] = node('variable', p[1])
