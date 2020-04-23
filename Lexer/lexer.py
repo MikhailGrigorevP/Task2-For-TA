@@ -56,7 +56,7 @@ class lexer(object):
               'DOUBLE_QUOTE', 'QUOTE',
               'LESS', 'GREATER', 'EQ', 'NOTEQ',
               'R_QBRACKET', 'L_QBRACKET',
-              'CONTINUE', 'COMMA', 'NEWLINE'] + list(reserved.values())
+              'CONTINUE', 'COMMA', 'COMMENT', 'NEWLINE'] + list(reserved.values())
 
     t_ASSIGNMENT = r'\:\='
     t_PLUS = r'\+'
@@ -75,6 +75,7 @@ class lexer(object):
     t_L_QBRACKET = r'\['
     t_CONTINUE = r'\.\.\.'
     t_COMMA = r'\,'
+    t_COMMENT = r'\#'
 
     def t_VARIABLE(self, t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
