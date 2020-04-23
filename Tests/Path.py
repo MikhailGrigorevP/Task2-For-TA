@@ -33,11 +33,11 @@
             else begin
                 # if we CAN move forward
                 if lms <> 0 then begin
+                    # TODO CHECK VM
                     numOfTurns := 0
                     # we should expand our map
 
-
-                    if turn = 0 then begin x := x + 1
+                    if turn = 0 then begin
 
                         # EXPAND TO LEFT
                         if x + lms < size_x - 1 then begin
@@ -56,6 +56,22 @@
                         # TODO EXPAND OTHERS
                         end else if turn = 1 then begin y := y - 1
 
+                            # EXPAND TO LEFT NOT WWWWWWWOOOORK 
+                            if y - lms < 0 then begin
+                                integer steps := lms - y
+                                size_y := size_y + steps
+                                do begin
+                                    integer i: size_y - 1
+                                    do begin
+                                        if steps = y then vm[steps] push back True
+                                            else vm[steps] push back False
+                                        i := i - 1
+                                        end until i <> 0
+                                    steps := steps - 1
+                                    end until steps <> 0
+
+
+
                         end else if turn = 2 then begin x := x - 1
 
                         end else if turn = 3 then begin y := y + 1
@@ -63,8 +79,6 @@
 
                     # counter for cycle
                     integer i := lms
-                    # TODO EXPAND STACK
-                    # update stack
                     # make steps
                     # counter for cycle
                     integer i := lms
