@@ -77,6 +77,7 @@ class parser(object):
                      | call NEWLINE
                      | RETURN expression NEWLINE
                      | empty NEWLINE"""
+
         if len(p) == 4:
             p[0] = node('return', val=p[2])
         else:
@@ -236,7 +237,7 @@ class parser(object):
         if len(p) == 5:
             p[0] = node('vector', p[1] + ' ' + p[2] + ' ' + p[3], ch=p[4])
         else:
-            p[0] = node('vector', p[1] + ' ' + p[2] + ' ' +  p[3])
+            p[0] = node('vector', p[1] + ' ' + p[2] + ' ' + p[3])
 
     @staticmethod
     def p_robot_command(p):

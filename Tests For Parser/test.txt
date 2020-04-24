@@ -37,5 +37,5 @@ func ()
 func ( df )
 # THIS IS COMMENT
 # same
-func ( df , ert = 3 )
+func (df,ert = 3 )
 integer a := b[4]
