@@ -235,9 +235,9 @@ class parser(object):
                           | VARIABLE PUSH FRONT expression
                           | VARIABLE POP FRONT"""
         if len(p) == 5:
-            p[0] = node('vector', p[1] + ' ' + p[2] + ' ' + p[3], ch=p[4])
+            p[0] = node('vector', p[2] + p[3], ch=[p[1], p[4]])
         else:
-            p[0] = node('vector', p[1] + ' ' + p[2] + ' ' + p[3])
+            p[0] = node('vector', p[2] + p[3], ch=p[1])
 
     @staticmethod
     def p_robot_command(p):
