@@ -84,6 +84,16 @@ class parser(object):
             p[0] = p[1]
 
     @staticmethod
+    def p_statement_error(p):
+        """statement : errors NEWLINE"""
+        sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
+
+    @staticmethod
+    def p_statement_error_no_nl(p):
+        """statement : errors"""
+        sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
+
+    @staticmethod
     def p_declaration(p):
         """declaration : type variables"""
         p[0] = node('declaration', val=p[1], ch=p[2])
@@ -128,7 +138,7 @@ class parser(object):
     @staticmethod
     def p_assignment(p):
         """assignment : variable ASSIGNMENT expression"""
-        p[0] = node('assignment', ch=[p[1], p[3]])
+        p[0] = node('assignment', ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_variable(p):
@@ -137,7 +147,7 @@ class parser(object):
         if len(p) == 2:
             p[0] = node('variable', p[1])
         else:
-            p[0] = node('indexing', p[1], ch=p[3])
+            p[0] = node('indexing', p[1], ch=p[3], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_expression(p):
@@ -187,9 +197,9 @@ class parser(object):
                            | expression EQ expression
                            | expression NOTEQ expression"""
         if len(p) == 3:
-            p[0] = node('unary_expression', p[1], ch=p[2])
+            p[0] = node('unary_expression', p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = node('binary_expression', p[2], ch=[p[1], p[3]])
+            p[0] = node('binary_expression', p[2], ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_while(p):
@@ -201,19 +211,19 @@ class parser(object):
         """if : IF expression THEN statements_group
               | IF expression THEN statements_group ELSE statements_group"""
         if len(p) == 7:
-            p[0] = node('if', ch={'condition': p[2], 'body': p[4], 'else': p[6]})
+            p[0] = node('if', ch={'condition': p[2], 'body': p[4], 'else': p[6]}, no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = node('if', ch={'condition': p[2], 'body': p[4]})
+            p[0] = node('if', ch={'condition': p[2], 'body': p[4]}, no=p.lineno(1), pos=p.lexpos(1))
 
     def p_function(self, p):
         """function : FUNCTION OF type VARIABLE LBRACKET parameters RBRACKET statements_group
                     | FUNCTION OF type VARIABLE BRACKETS statements_group"""
         if len(p) == 9:
             self._functions[p[4]] = node('function', ch={'type': p[3], 'parameters': p[6], 'body': p[8]})
-            p[0] = node('function_description', val=p[4])
+            p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
         else:
             self._functions[p[4]] = node('function', ch={'type': p[3], 'body': p[6]})
-            p[0] = node('function_description', val=p[4])
+            p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_command(p):
@@ -226,7 +236,7 @@ class parser(object):
     def p_converting_command(p):
         """converting_command : expression TO type
                               | expression TO expression"""
-        p[0] = node('converting', p[1], ch=p[3])
+        p[0] = node('converting', p[1], ch=p[3], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_vector_command(p):
@@ -235,9 +245,9 @@ class parser(object):
                           | VARIABLE PUSH FRONT expression
                           | VARIABLE POP FRONT"""
         if len(p) == 5:
-            p[0] = node('vector', p[2] + p[3], ch=[p[1], p[4]])
+            p[0] = node('vector', p[2] + p[3], ch=[p[1], p[4]], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = node('vector', p[2] + p[3], ch=p[1])
+            p[0] = node('vector', p[2] + p[3], ch=p[1], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_robot_command(p):
@@ -250,7 +260,7 @@ class parser(object):
                     | LMS
                     | REFLECT
                     | DRILL"""
-        p[0] = node('robot', p[1])
+        p[0] = node('robot', p[1], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_call(p):
@@ -286,6 +296,15 @@ class parser(object):
             p[0] = node('parameter', p[1])
         else:
             p[0] = node('parameter', p[1], ch=p[3])
+
+    @staticmethod
+    def p_errors(p):
+        """errors : errors error
+        | error"""
+        if len(p) == 2:
+            p[0] = [p[1]]
+        else:
+            p[0] = p[1] + p[2]
 
     def p_error(self, p):
         print(f'Syntax error at {p}')
