@@ -1,4 +1,3 @@
-from __future__ import annotations
 import sys
 from typing import List
 from Parser.parser import parser
@@ -53,7 +52,7 @@ class InterpreterRedeclarationError(Exception):
     pass
 
 
-class InterpreterCastError(Exception):
+class InterpreterConverseError(Exception):
     pass
 
 
@@ -72,9 +71,18 @@ class TypeConversion:
         if _type == 'boolean':
             if var.type == 'integer':
                 return self.int_to_bool(var)
+            if var.type == 'string':
+                return self.int_to_string(var)
         if _type == 'integer':
             if var.type == 'boolean':
                 return self.bool_to_int(var)
+            if var.type == 'string':
+                return self.bool_to_string(var)
+        if _type == 'vector':
+            if var.type == 'string':
+                return self.vector_to_string(var)
+            else:
+                raise InterpreterConverseError
         else:
             raise ValueError('wrong type')
 
@@ -95,6 +103,22 @@ class TypeConversion:
         elif isinstance(value.value, int):
             return Variable('boolean', 'true')
         raise InterpreterValueError
+
+    @staticmethod
+    def int_to_string(value):
+        return Variable('string', str(value))
+
+    @staticmethod
+    def bool_to_string(value):
+        return Variable('string', str(value))
+
+    @staticmethod
+    def vector_to_string(value):
+        string = ''
+        for char in value:
+            string.join(char)
+        return Variable('string', value)
+
 
 
 # Cell of a map
@@ -212,7 +236,7 @@ class Interpreter:
 
         # statements -> declaration
         elif node.type == 'declaration':
-            declaration_type = node.value
+            declaration_type = node.value.value
             declaration_child = node.child.child
             # if declare a group of variables
             if isinstance(declaration_child, list):
@@ -231,7 +255,7 @@ class Interpreter:
                 expression = self.interpreter_node(node.child[1])
                 try:
                     self.assign(_type, variable, expression)
-                except InterpreterCastError:
+                except InterpreterConverseError:
                     print(Error_handler(self.error_types['cast'], node))
                 except InterpreterValueError:
                     print(Error_handler(self.error_types['value'], node))
@@ -255,8 +279,24 @@ class Interpreter:
                 self.vector_pop_front(node.child[0])
         # statements -> command -> converting
         elif node.type == 'converting':
-            # TODO converting
-            pass
+            expression_from = self.interpreter_node(node.value)
+            expression_to = node.child.value
+            if not node.child.type != "type":
+                expression_to = self.interpreter_node(node.child.value).type
+            if expression_to in ['integer', 'string', 'boolean']:
+                return self.converse.converse(expression_to, expression_from.value)
+            elif len(expression_to.split()) == 3:
+                if expression_to == 'vector of integer':
+                    return Variable('vector of integer', [self.converse.converse('integer', expression_from.value).value])
+                elif expression_to == 'vector of boolean':
+                    return Variable('vector of boolean', [self.converse.converse('boolean', expression_from.value).value])
+                elif expression_to == 'vector of string':
+                    return Variable('vector of string', [self.converse.converse('string', expression_from.value).value])
+            elif len(expression_to.split()) == 2:
+                return Variable('vector of string ' + str(expression_from.type), expression_from.value)
+            else:
+                raise InterpreterConverseError
+
         # statements -> command -> converting
         elif node.type == 'robot':
             if node.value == 'forward':
@@ -348,7 +388,7 @@ class Interpreter:
             expression = self.interpreter_node(node.child[1])
             try:
                 self.assign(_type, variable, expression)
-            except InterpreterCastError:
+            except InterpreterConverseError:
                 print(Error_handler(self.error_types['cast'], node))
             except InterpreterValueError:
                 print(Error_handler(self.error_types['value'], node))
@@ -367,8 +407,7 @@ class Interpreter:
         if _type == expression.type:
             self.sym_table[variable] = expression
         else:
-            casted_value = self.converse.converse(_type, expression)
-            self.sym_table[variable] = casted_value
+            raise InterpreterConverseError
 
     # for const
     @staticmethod
@@ -458,8 +497,7 @@ class Interpreter:
             if self.sym_table[_value][0] == val.type:
                 self.sym_table[_value][1].append(val.value)
             else:
-                conversed_value = self.converse.converse(self.sym_table[_value][0], val.value)
-                self.sym_table[_value][1].append(conversed_value.value)
+                raise InterpreterConverseError
 
     def vector_push_front(self, _value, val: Variable):
         if _value not in self.sym_table.keys():
@@ -468,8 +506,7 @@ class Interpreter:
             if self.sym_table[_value][0] == val.type:
                 self.sym_table[_value][1].insert(0, val.value)
             else:
-                conversed_value = self.converse.converse(self.sym_table[_value][0], val.value)
-                self.sym_table[_value][1].insert(0, conversed_value.value)
+                raise InterpreterConverseError
 
     def vector_pop_front(self, _value):
         if _value not in self.sym_table.keys():
