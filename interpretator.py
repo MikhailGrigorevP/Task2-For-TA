@@ -227,7 +227,7 @@ class Interpreter:
             if variable not in self.sym_table.keys():
                 print(Error_handler(self.error_types['undeclared_value'], node))
             else:
-                _type = self.sym_table[variable][0]
+                _type = self.sym_table[variable].type
                 expression = self.interpreter_node(node.child[1])
                 try:
                     self.assign(_type, variable, expression)
@@ -244,9 +244,11 @@ class Interpreter:
         # statements -> command -> vector
         elif node.type == 'vector':
             if node.value == 'pushback':
-                self.vector_push_back(node.child[0], node.child[1])
+                expression = self.interpreter_node(node.child[1])
+                self.vector_push_back(node.child[0], expression)
             if node.value == 'pushfront':
-                self.vector_push_front(node.child[0], node.child[1])
+                expression = self.interpreter_node(node.child[1])
+                self.vector_push_front(node.child[0], expression)
             if node.value == 'popback':
                 self.vector_pop_back(node.child[0])
             if node.value == 'popfront':
@@ -351,18 +353,19 @@ class Interpreter:
     def declare(self, _type, _value):
         if _value in self.sym_table.keys():
             raise InterpreterRedeclarationError
-        self.sym_table[_value] = Variable(_type, None)
+        if _type.split(" ")[0] != "vector":
+            self.sym_table[_value] = Variable(_type, None)
+        else:
+            self.sym_table[_value] = [_type.split(" ")[2], []]
 
-    def assign(self, _type, variable, expression):
+    def assign(self, _type, variable, expression: Variable):
         if variable not in self.sym_table.keys():
             raise InterpreterNameError
-        if _type in [expr.type, 'var']:
-            self.sym_table[variable] = expr
-        elif not isinstance(expr.value, list):
-            casted_value = self.cast.cast(_type, expr)
-            self.sym_table[variable] = casted_value
+        if _type == expression.type:
+            self.sym_table[variable] = expression
         else:
-            self._assign_array(_type, variable, expr)
+            casted_value = self.converse.converse(_type, expression)
+            self.sym_table[variable] = casted_value
 
     # for const
     @staticmethod
@@ -445,18 +448,37 @@ class Interpreter:
         pass
 
     # for vector
+    def vector_push_back(self, _value, val: Variable):
+        if _value not in self.sym_table.keys():
+            raise InterpreterNameError
+        else:
+            if self.sym_table[_value][0] == val.type:
+                self.sym_table[_value][1].append(val.value)
+            else:
+                conversed_value = self.converse.converse(self.sym_table[_value][0], val.value)
+                self.sym_table[_value][1].append(conversed_value.value)
 
-    def vector_push_back(self, vector, val):
-        pass
+    def vector_push_front(self, _value, val: Variable):
+        if _value not in self.sym_table.keys():
+            raise InterpreterNameError
+        else:
+            if self.sym_table[_value][0] == val.type:
+                self.sym_table[_value][1].insert(0, val.value)
+            else:
+                conversed_value = self.converse.converse(self.sym_table[_value][0], val.value)
+                self.sym_table[_value][1].insert(0, conversed_value.value)
 
-    def vector_push_front(self, vector, val):
-        pass
+    def vector_pop_front(self, _value):
+        if _value not in self.sym_table.keys():
+            raise InterpreterNameError
+        else:
+            return self.sym_table[_value][1].pop(0)
 
-    def vector_pop_front(self, vector):
-        pass
-
-    def vector_pop_back(self, vector):
-        pass
+    def vector_pop_back(self, _value):
+        if _value not in self.sym_table.keys():
+            raise InterpreterNameError
+        else:
+            return self.sym_table[_value][1].pop()
 
     # for while
 
