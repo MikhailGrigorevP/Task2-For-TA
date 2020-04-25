@@ -28,7 +28,7 @@ class parser(object):
     @staticmethod
     def p_application(p):
         """application : statements"""
-        p[0] = node('application', ch=p[1])
+        p[0] = node('program', ch=p[1])
 
     @staticmethod
     def p_statements_group(p):

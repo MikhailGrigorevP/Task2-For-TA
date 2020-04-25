@@ -2,19 +2,21 @@ from __future__ import annotations
 import sys
 from typing import List
 
+from Parser.parser import parser
+
 
 # Item of symbol table
-class SymTableItem:
-    def __init__(self, elem_type, elem_value):
-        self.type = elem_type
-        self.value = elem_value
+class Variable:
+    def __init__(self, var_type, var_value):
+        self.type = var_type
+        self.value = var_value
 
     def __repr__(self):
         return f'{self.type}, {self.value}'
 
 
 # Conversion of types
-class typeConversion:
+class TypeConversion:
     pass
 
 
@@ -45,8 +47,8 @@ class Error_handler:
 
 class Interpreter:
 
-    def __init__(self, parser):
-        self.parser = parser
+    def __init__(self, par):
+        self.parser = par
         self.map = None
         self.program = None
         self.sym_table = None
@@ -67,7 +69,7 @@ class Interpreter:
         # noinspection PyBroadException
         try:
             self.tree, self.funcs = self.parser.parse(program)
-        except Exception as e:
+        except Exception:
             if 'application' not in self.funcs.keys():
                 print(Error_handler(self.error_types['no_application']))
                 return
@@ -78,4 +80,41 @@ class Interpreter:
         pass
 
     def interpreter_node(self, node):
+        # nothing
+        if node is None:
+            return
+        # - program
+        if node.type == 'program':
+            self.interpreter_node(node.child)
+        # program - statements
+        elif node.type == 'statements':
+            for ch in node.child:
+                self.interpreter_node(ch)
+        # statements -> declaration
+        elif node.type == 'declaration':
+            declaration_type = node.value
+            declaration_child = node.child.child
+            # if declare a group of variables
+            if isinstance(declaration_child, list):
+                for ch in declaration_child:
+                    self.declare_variable(ch, declaration_type)
+            # if declare a variables
+            else:
+                self.declare_variable(declaration_child, declaration_type)
+        # statements -> assignment
+
+        # statements -> while
+        # statements -> if
+        # statements -> command
+        # statements -> function
+        # statements -> call
+        # statements -> return
+
+
+
+
+
+
+
+    def declare_variable(self, child, type):
         pass
