@@ -16,7 +16,38 @@ class Variable:
 
 # Conversion of types
 class TypeConversion:
-    pass
+    def __init__(self):
+        pass
+
+    def converse(self, _type, var):
+        if _type == var.type:
+            return var
+        if _type == 'boolean':
+            if var.type == 'integer':
+                return self.int_to_bool(var)
+        if _type == 'integer':
+            if var.type == 'boolean':
+                return self.bool_to_int(var)
+        else:
+            raise ValueError('wrong type')
+
+    @staticmethod
+    def bool_to_int(value):
+        if value.value == 'true':
+            return Variable('integer', 1)
+        elif value.value == 'false':
+            return Variable('integer', 0)
+        elif value.value == 'undefined':
+            return Variable('int', 'undefined')
+        raise ValueError('wrong type')
+
+    @staticmethod
+    def int_to_bool(value):
+        if value.value == '0':
+            return Variable('bool', 'false')
+        elif isinstance(value.value, int):
+            return Variable('bool', 'true')
+        raise ValueError('wrong type')
 
 
 # Error handler
@@ -43,6 +74,8 @@ class Error_handler:
             sys.stderr.write(f'Unknown function call "{self.node.value}" at '
                              f'{self.node.lineno}:{self.node.lexpos}\n')
 
+
+# Cell of a map
 
 class Cell:
     def __init__(self, x, y, _type, _solidity):
