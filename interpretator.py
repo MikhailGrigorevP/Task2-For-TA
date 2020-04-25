@@ -22,7 +22,7 @@ class TypeConversion:
 
 # Error handler
 class Error_handler:
-    def __init__(self, err_type, node):
+    def __init__(self, err_type, node=None):
         self.type = err_type
         self.node = node
 
@@ -83,13 +83,19 @@ class Interpreter:
         # nothing
         if node is None:
             return
-        # - program
+        # comment
+        if node.type == 'comment':
+            return
+        # program
         if node.type == 'program':
             self.interpreter_node(node.child)
         # program - statements
         elif node.type == 'statements':
             for ch in node.child:
                 self.interpreter_node(ch)
+
+        # STATEMENTS BLOCK
+
         # statements -> declaration
         elif node.type == 'declaration':
             declaration_type = node.value
@@ -110,11 +116,70 @@ class Interpreter:
         # statements -> call
         # statements -> return
 
+        # EXPRESSION BLOCK
 
+        # expression -> math_expression
+        elif node.type == 'unary_expression':
+            if node.value == '-':
+                return self.un_minus(node.child)
+        elif node.type == 'binary_expression':
+            if node.value == '+':
+                return self.bin_plus(node.child[0], node.child[1])
+            elif node.value == '-':
+                return self.bin_minus(node.child[0], node.child[1])
+            elif node.value == '>':
+                return self.bin_gr(node.child[0], node.child[1])
+            elif node.value == '<':
+                return self.bin_ls(node.child[0], node.child[1])
+            elif node.value == '=':
+                return self.bin_eq(node.child[0], node.child[1])
+            elif node.value == '^':
+                return self.bin_not_eq(node.child[0], node.child[1])
+        # expression -> const
+        elif node.type == 'const':
+            return self.const_val(node.value)
+        # expression / variables -> variable
+        elif node.type == 'variable':
+            return node.value
+        # variable -> indexing
+        elif node.type == 'indexing':
+            expression = self.interpreter_node(node.child)
+            try:
+                ret = self.sym_table[node.value][expression]
+                return ret
+            except KeyError:
+                print(Error_handler(self.error_types['undeclared_value'], node))
+            except IndexError:
+                print(Error_handler(self.error_types['index_error'], node))
+            return
 
-
-
-
-
-    def declare_variable(self, child, type):
+    # for declaration
+    def declare_variable(self, _child, _type):
         pass
+
+    # for const
+    def const_val(self, _value):
+        pass
+
+    # for math operations
+    def un_minus(self, _val):
+        pass
+
+    def bin_plus(self, _val1, _val2):
+        pass
+
+    def bin_minus(self, _val1, _val2):
+        pass
+
+    def bin_gr(self, _val1, _val2):
+        pass
+
+    def bin_ls(self, _val1, _val2):
+        pass
+
+    def bin_eq(self, _val1, _val2):
+        pass
+
+    def bin_not_eq(self, _val1, _val2):
+        pass
+
