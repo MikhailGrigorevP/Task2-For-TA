@@ -38,15 +38,15 @@ class TypeConversion:
         elif value.value == 'false':
             return Variable('integer', 0)
         elif value.value == 'undefined':
-            return Variable('int', 'undefined')
+            return Variable('integer', 'undefined')
         raise ValueError('wrong type')
 
     @staticmethod
     def int_to_bool(value):
         if value.value == '0':
-            return Variable('bool', 'false')
+            return Variable('boolean', 'false')
         elif isinstance(value.value, int):
-            return Variable('bool', 'true')
+            return Variable('boolean', 'true')
         raise ValueError('wrong type')
 
 
@@ -136,8 +136,9 @@ class Exit(CellType):
 
 class Interpreter:
 
-    def __init__(self, par):
+    def __init__(self, par, _converse=TypeConversion()):
         self.parser = par
+        self.converse = _converse
         self.map = None
         self.program = None
         self.sym_table = None
@@ -302,7 +303,8 @@ class Interpreter:
     # for math operations
 
     def un_minus(self, _val):
-        pass
+        expression = self.interpreter_node(_val)
+        return (-1) * self.converse.converse('integer', expression)
 
     def bin_plus(self, _val1, _val2):
         pass
