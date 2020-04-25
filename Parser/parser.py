@@ -1,8 +1,7 @@
-from __future__ import annotations
 import ply.yacc as yacc
 from ply.lex import LexError
 import sys
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 # outer classes
 from Lexer.lexer import lexer
@@ -120,9 +119,16 @@ class parser(object):
                 | VECTOR OF type
         """
         if len(p) == 2:
-            p[0] = p[1]
+            p[0] = node('type', val=p[1], ch=[], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = p[1] + ' ' + p[2] + ' ' + p[3]
+            p[0] = node('type', val=str(p[1]) + ' ' + str(p[2]) + ' ' + str(p[3]), ch=[], no=p.lineno(1),
+                        pos=p.lexpos(1))
+
+    @staticmethod
+    def p_type_error(p):
+        """type : errors"""
+        sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
+        p[0] = node('error')
 
     @staticmethod
     def p_variables(p):
@@ -326,7 +332,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests For Parser/path.txt")
+            f = open("../Tests For Parser/test.txt")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')

@@ -1,7 +1,3 @@
-from __future__ import annotations
-from typing import List, Optional
-
-
 class node(object):
     # object constructor
     def __init__(self, t='const', val=None,  ch=[], no=None, pos=None):
