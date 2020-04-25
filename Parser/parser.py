@@ -27,7 +27,7 @@ class parser(object):
 
     @staticmethod
     def p_application(p):
-        """application : statements"""
+        """program : statements"""
         p[0] = node('program', ch=p[1])
 
     @staticmethod
@@ -209,11 +209,11 @@ class parser(object):
         """function : FUNCTION OF type VARIABLE LBRACKET parameters RBRACKET statements_group
                     | FUNCTION OF type VARIABLE BRACKETS statements_group"""
         if len(p) == 9:
-            self._functions[p[3]] = node('function', ch={'parameters': p[6], 'body': p[8]})
-            p[0] = node('function_description', val=p[3])
+            self._functions[p[4]] = node('function', ch={'type': p[3], 'parameters': p[6], 'body': p[8]})
+            p[0] = node('function_description', val=p[4])
         else:
-            self._functions[p[3]] = node('function', ch={'body': p[6]})
-            p[0] = node('function_description', val=p[3])
+            self._functions[p[4]] = node('function', ch={'type': p[3], 'body': p[6]})
+            p[0] = node('function_description', val=p[4])
 
     @staticmethod
     def p_command(p):
