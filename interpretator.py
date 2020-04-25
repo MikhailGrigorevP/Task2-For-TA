@@ -37,6 +37,12 @@ class Error_handler:
         elif self.type == 5:
             sys.stderr.write(f'Unknown function call "{self.node.value}" at '
                              f'{self.node.lineno}:{self.node.lexpos}\n')
+        elif self.type == 6:
+            sys.stderr.write(f'failed to cast variable "{self.node.value}" at '
+                             f'{self.node.lineno}:{self.node.lexpos}\n')
+        elif self.type == 7:
+            sys.stderr.write(f'incompatible value and type: "{self.node.value}" at'
+                             f' {self.node.lineno}:{self.node.lexpos}\n')
 
 
 class InterpreterNameError(Exception):
@@ -165,7 +171,9 @@ class Interpreter:
             'value_redeclare': 2,
             'undeclared_value': 3,
             'index_error': 4,
-            'func_call_error': 5
+            'func_call_error': 5,
+            'cast': 6,
+            'value': 7
         }
 
     def interpreter(self, map_description, program):
@@ -214,7 +222,19 @@ class Interpreter:
             else:
                 self.declare_variable(declaration_child, declaration_type)
         # statements -> assignment
-        # TODO ASSIGNMENT
+        elif node.type == 'assignment':
+            variable = node.child[0]
+            if variable not in self.sym_table.keys():
+                print(Error_handler(self.error_types['undeclared_value'], node))
+            else:
+                _type = self.sym_table[variable][0]
+                expression = self.interpreter_node(node.child[1])
+                try:
+                    self.assign(_type, variable, expression)
+                except InterpreterCastError:
+                    print(Error_handler(self.error_types['cast'], node))
+                except InterpreterValueError:
+                    print(Error_handler(self.error_types['value'], node))
         # statements -> while
         elif node.type == 'while':
             self.op_while(node)
@@ -267,7 +287,8 @@ class Interpreter:
             # TODO PARAMETERS - node.child
             return self.interpreter_node(self.funcs[node.value])
         # statements -> return
-        # TODO RETURN
+        elif node.type == 'return':
+            return self.interpreter_node(node.value)
 
         # EXPRESSION BLOCK
 
@@ -311,34 +332,45 @@ class Interpreter:
     def declare_variable(self, node, _type):
         if node.type == 'variables':
             for child in node.children:
-                self._declaration(child, _type)
+                self.declare_variable(child, _type)
         else:
             try:
-                self._create_new_var(node.type, node.value)
+                self.declare(node.type, node.value)
             except InterpreterRedeclarationError:
                 print(Error_handler(self.error_types['value_redeclare'], node))
         if node.type == 'assignment':
-            variable = node.children[0]
-            if node.children[1].type != 'array':
-                expr = self._interpret_node(node.children[1])
-                try:
-                    self._assign(_type, variable, expr)
-                except InterpreterCastError:
-                    self._error(errors['cast'], node)
-                except InterpreterValueError:
-                    self._error(errors['value'], node)
-            else:
-                nodearr = self._array(node.chilren[1])
-                arr = [self._interpret_node(i) for i in nodearr]
-                self._assign_array(_type, variable, arr)
+            variable = node.child[0]
+            expression = self.interpreter_node(node.child[1])
+            try:
+                self.assign(_type, variable, expression)
+            except InterpreterCastError:
+                print(Error_handler(self.error_types['cast'], node))
+            except InterpreterValueError:
+                print(Error_handler(self.error_types['value'], node))
+
+    def declare(self, _type, _value):
+        if _value in self.sym_table.keys():
+            raise InterpreterRedeclarationError
+        self.sym_table[_value] = Variable(_type, None)
+
+    def assign(self, _type, variable, expression):
+        if variable not in self.sym_table.keys():
+            raise InterpreterNameError
+        if _type in [expr.type, 'var']:
+            self.sym_table[variable] = expr
+        elif not isinstance(expr.value, list):
+            casted_value = self.cast.cast(_type, expr)
+            self.sym_table[variable] = casted_value
+        else:
+            self._assign_array(_type, variable, expr)
 
     # for const
     @staticmethod
-    def const_val(_value):
-        if _value.isdigit():
-            return Variable('int', int(_value))
+    def const_val(value):
+        if value.isdigit():
+            return Variable('int', int(value))
         else:
-            return Variable('int', int(_value, 16))
+            return Variable('int', int(value, 16))
 
     # for math operations
 
