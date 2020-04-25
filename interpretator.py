@@ -302,27 +302,46 @@ class Interpreter:
 
     # for math operations
 
+    # unary minus
     def un_minus(self, _val):
         expression = self.interpreter_node(_val)
         return (-1) * self.converse.converse('integer', expression)
 
+    # binary plus
     def bin_plus(self, _val1, _val2):
-        pass
+        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
+        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
+        return Variable('int', expression1.value + expression2.value)
 
+    # binary minus
     def bin_minus(self, _val1, _val2):
-        pass
+        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
+        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
+        return Variable('int', expression1.value - expression2.value)
 
+    # binary greater
     def bin_gr(self, _val1, _val2):
-        pass
+        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
+        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
+        return Variable('boolean', 'true') if expression1.value > expression2.value else Variable('boolean', 'false')
 
+    # binary less
     def bin_ls(self, _val1, _val2):
-        pass
+        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
+        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
+        return Variable('boolean', 'true') if expression1.value < expression2.value else Variable('boolean', 'false')
 
+    # binary equal
     def bin_eq(self, _val1, _val2):
-        pass
+        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
+        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
+        return Variable('boolean', 'true') if expression1.value == expression2.value else Variable('boolean', 'false')
 
+    # binary not equal
     def bin_not_eq(self, _val1, _val2):
-        pass
+        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
+        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
+        return Variable('boolean', 'true') if expression1.value != expression2.value else Variable('boolean', 'false')
 
     # for robot
 
