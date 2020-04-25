@@ -328,12 +328,15 @@ class Interpreter:
             except IndexError:
                 print(Error_handler(self.error_types['index_error'], node))
             return
+        # variable -> string
+        elif node.type == 'string':
+            return Variable('string', node.value)
 
     # for declaration
 
     def declare_variable(self, node, _type):
         if node.type == 'variables':
-            for child in node.children:
+            for child in node.child:
                 self.declare_variable(child, _type)
         else:
             try:
