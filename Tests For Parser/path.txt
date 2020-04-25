@@ -1,18 +1,8 @@
-"""
-    Turn:
-
-     3
-    2 0
-     1
-
-     Algorithm:
-
     function of integer return_y (stack_y, size_y, y)
         return y + stack_y[size_y-1] - stack_y[size_y-2]
     function of integer return_x (stack_x, size_x, x)
         return x + stack_x[size_x-1] - stack_x[size_x-2]
-    function of integer expand_x_back (vm, size_y, y, size_x, lms1)
-        # EXPAND TO RIGHT
+    function of integer expand_x_back (vm, size_y, y, size_x, lms1) begin
         if x + lms1 < size_x - 1 then begin
         integer steps := x + lms1 - size_x + 1
         size_x := size_x + steps
@@ -24,7 +14,9 @@
                 end until i <> 0
             steps := steps - 1
             end until steps <> 0
-    function of integer expand_x_front (vm, size_y, y, x, size_x, stack_x, stack_x_size, lms1)
+        end
+        end
+        function of integer expand_x_front (vm, size_y, y, x, size_x, stack_x, stack_x_size, lms1) begin
         # EXPAND TO LEFT
         if x - lms1 < 0 then begin
         integer steps := lms1 - x
@@ -44,7 +36,9 @@
             stack_x [ i ] := stack_x [ i ] + steps
             i := i + 1
             end until i <> stack_x_size
-    function of integer expand_y_front(vm, size_x, x, size_y, lms1)
+        end
+        end
+    function of integer expand_y_front(vm, size_x, x, size_y, lms1) begin
         # EXPAND TO RIGHT
         if y + lms1 < size_y - 1 then begin
         integer steps := y + lms1 - size_y + 1
@@ -57,7 +51,9 @@
                 end until i <> 0
             steps := steps - 1
             end until steps <> 0
-    function of integer expand_y_back (vm, size_x, y, x, size_y, stack_y, stack_y_size, lms1)
+        end
+        end
+    function of integer expand_y_back (vm, size_x, y, x, size_y, stack_y, stack_y_size, lms1) begin
         # EXPAND TO LEFT
         if y - lms1 < 0 then begin
         integer steps := lms1 - y
@@ -77,6 +73,15 @@
             stack_y [ i ] := stack_y [ i ] + steps
             i := i + 1
             end until i <> stack_y_size
+        end
+        end
+    function of integer application() begin
+        integer x := 0
+        integer y := 0
+        stack_x push front x
+        stack_y push front y
+        return findPath(x, y)
+    end
     function of integer findPath(x, y) begin
         # size
         vector of vector of boolean vm
@@ -154,19 +159,3 @@
                 end
             end until exit <> true
     end
-    # Main
-    function of integer application() begin
-        # Start position
-        integer x := 0
-        integer y := 0
-        stack_x push front x
-        stack_y push front y
-        return findPath(x, y)
-        end
-
-
-
-
-
-
-"""

@@ -28,9 +28,9 @@ rotate_right
 a to string
 42 to "Mephi"
 cities push back 3
-cities pop front
+integer a := cities pop front
 cities push front 42
-cities pop back
+integer a := cities pop back
 integer a := 34 + 9
 boolean a := 34 < -9
 func ()
