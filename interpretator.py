@@ -1,7 +1,6 @@
 from __future__ import annotations
 import sys
 from typing import List
-
 from Parser.parser import parser
 
 
@@ -108,13 +107,60 @@ class Interpreter:
             else:
                 self.declare_variable(declaration_child, declaration_type)
         # statements -> assignment
-
+            # TODO ASSIGNMENT
         # statements -> while
+        elif node.type == 'while':
+            self.op_while(node)
         # statements -> if
-        # statements -> command
+        elif node.type == 'if':
+            self.op_if(node)
+        # statements -> command -> vector
+        elif node.type == 'vector':
+            if node.value == 'pushback':
+                self.vector_push_back(node.child[0], node.child[1])
+            if node.value == 'pushfront':
+                self.vector_push_front(node.child[0], node.child[1])
+            if node.value == 'popback':
+                self.vector_pop_back(node.child[0])
+            if node.value == 'popfront':
+                self.vector_pop_front(node.child[0])
+        # statements -> command -> converting
+        elif node.type == 'converting':
+            # TODO converting
+            pass
+        # statements -> command -> converting
+        elif node.type == 'robot':
+            if node.value == 'forward':
+                return self.robot_forward()
+            elif node.value == 'back':
+                return self.robot_back()
+            elif node.value == 'left':
+                return self.robot_left()
+            elif node.value == 'right':
+                return self.robot_right()
+            elif node.value == 'rotate_right':
+                return self.robot_rotate_right()
+            elif node.value == 'rotate_left':
+                return self.robot_rotate_left()
+            elif node.value == 'lms':
+                return self.robot_lms()
+            elif node.value == 'reflect':
+                return self.robot_reflect()
+            elif node.value == 'drill':
+                return self.robot_drill()
         # statements -> function
+        elif node.type == 'function_description':
+            # TODO FUNCTION
+            pass
         # statements -> call
+        elif node.type == 'call':
+            if node.value not in self.funcs:
+                print(Error_handler(self.error_types['func_call_error'], node))
+                return
+            # TODO PARAMETERS - node.child
+            return self.interpreter_node(self.funcs[node.value])
         # statements -> return
+            # TODO RETURN
 
         # EXPRESSION BLOCK
 
@@ -154,14 +200,17 @@ class Interpreter:
             return
 
     # for declaration
+
     def declare_variable(self, _child, _type):
         pass
 
     # for const
+
     def const_val(self, _value):
         pass
 
     # for math operations
+
     def un_minus(self, _val):
         pass
 
@@ -181,5 +230,58 @@ class Interpreter:
         pass
 
     def bin_not_eq(self, _val1, _val2):
+        pass
+
+    # for robot
+
+    def robot_left(self):
+        pass
+
+    def robot_right(self):
+        pass
+
+    def robot_forward(self):
+        pass
+
+    def robot_back(self):
+        pass
+
+    def robot_rotate_left(self):
+        pass
+
+    def robot_rotate_right(self):
+        pass
+
+    def robot_lms(self):
+        pass
+
+    def robot_reflect(self):
+        pass
+
+    def robot_drill(self):
+        pass
+
+    # for vector
+
+    def vector_push_back(self, vector, val):
+        pass
+
+    def vector_push_front(self, vector, val):
+        pass
+
+    def vector_pop_front(self, vector):
+        pass
+
+    def vector_pop_back(self, vector):
+        pass
+
+    # for while
+
+    def op_while(self, vector):
+        pass
+
+    # for if
+
+    def op_if(self, vector):
         pass
 
