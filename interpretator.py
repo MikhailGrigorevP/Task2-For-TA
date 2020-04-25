@@ -14,6 +14,47 @@ class Variable:
         return f'{self.type}, {self.value}'
 
 
+# Error handler
+class Error_handler:
+    def __init__(self, err_type, node=None):
+        self.type = err_type
+        self.node = node
+
+    def __repr__(self):
+        sys.stderr.write(f'Error {self.type}: ')
+        if self.type == 1:
+            sys.stderr.write(f'no input point\n')
+            return
+        elif self.type == 2:
+            sys.stderr.write(f'variable "{self.node.value}" at '
+                             f'{self.node.lineno}:{self.node.lexpos} is already declared\n')
+        elif self.type == 3:
+            sys.stderr.write(f'variable "{self.node.value}" at '
+                             f'{self.node.lineno}:{self.node.lexpos} is used before declaration\n')
+        elif self.type == 4:
+            sys.stderr.write(f'index error "{self.node.value}" at '
+                             f'{self.node.lineno}:{self.node.lexpos}\n')
+        elif self.type == 5:
+            sys.stderr.write(f'Unknown function call "{self.node.value}" at '
+                             f'{self.node.lineno}:{self.node.lexpos}\n')
+
+
+class InterpreterNameError(Exception):
+    pass
+
+
+class InterpreterRedeclarationError(Exception):
+    pass
+
+
+class InterpreterCastError(Exception):
+    pass
+
+
+class InterpreterValueError(Exception):
+    pass
+
+
 # Conversion of types
 class TypeConversion:
     def __init__(self):
@@ -39,7 +80,7 @@ class TypeConversion:
             return Variable('integer', 0)
         elif value.value == 'undefined':
             return Variable('integer', 'undefined')
-        raise ValueError('wrong type')
+        raise InterpreterValueError
 
     @staticmethod
     def int_to_bool(value):
@@ -47,32 +88,7 @@ class TypeConversion:
             return Variable('boolean', 'false')
         elif isinstance(value.value, int):
             return Variable('boolean', 'true')
-        raise ValueError('wrong type')
-
-
-# Error handler
-class Error_handler:
-    def __init__(self, err_type, node=None):
-        self.type = err_type
-        self.node = node
-
-    def __repr__(self):
-        sys.stderr.write(f'Error {self.type}: ')
-        if self.type == 1:
-            sys.stderr.write(f'no input point\n')
-            return
-        elif self.type == 2:
-            sys.stderr.write(f'variable "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos} is already declared\n')
-        elif self.type == 3:
-            sys.stderr.write(f'variable "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos} is used before declaration\n')
-        elif self.type == 4:
-            sys.stderr.write(f'index error "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos}\n')
-        elif self.type == 5:
-            sys.stderr.write(f'Unknown function call "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos}\n')
+        raise InterpreterValueError
 
 
 # Cell of a map
@@ -292,13 +308,37 @@ class Interpreter:
 
     # for declaration
 
-    def declare_variable(self, _child, _type):
-        pass
+    def declare_variable(self, node, _type):
+        if node.type == 'variables':
+            for child in node.children:
+                self._declaration(child, _type)
+        else:
+            try:
+                self._create_new_var(node.type, node.value)
+            except InterpreterRedeclarationError:
+                print(Error_handler(self.error_types['value_redeclare'], node))
+        if node.type == 'assignment':
+            variable = node.children[0]
+            if node.children[1].type != 'array':
+                expr = self._interpret_node(node.children[1])
+                try:
+                    self._assign(_type, variable, expr)
+                except InterpreterCastError:
+                    self._error(errors['cast'], node)
+                except InterpreterValueError:
+                    self._error(errors['value'], node)
+            else:
+                nodearr = self._array(node.chilren[1])
+                arr = [self._interpret_node(i) for i in nodearr]
+                self._assign_array(_type, variable, arr)
 
     # for const
-
-    def const_val(self, _value):
-        pass
+    @staticmethod
+    def const_val(_value):
+        if _value.isdigit():
+            return Variable('int', int(_value))
+        else:
+            return Variable('int', int(_value, 16))
 
     # for math operations
 

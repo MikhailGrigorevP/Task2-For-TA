@@ -26,9 +26,9 @@ class parser(object):
             sys.stderr.write(f'Illegal token {s}\n')
 
     @staticmethod
-    def p_application(p):
+    def p_program(p):
         """program : statements"""
-        p[0] = node('program', ch=p[1])
+        p[0] = node('program', ch=p[1], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_statements_group(p):

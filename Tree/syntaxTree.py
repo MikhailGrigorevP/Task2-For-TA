@@ -4,11 +4,13 @@ from typing import List, Optional
 
 class node(object):
     # object constructor
-    def __init__(self, t='const', val=None, ch: Optional[List[node]] = None):
+    def __init__(self, t='const', val=None,  ch=[], no=None, pos=None):
         self.type = t
         self.value = val
         self.child = ch
         self.acc = None
+        self.lineno = no
+        self.lexpos = pos
 
     # object representation
     def __repr__(self):
