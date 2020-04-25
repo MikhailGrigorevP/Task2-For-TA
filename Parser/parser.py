@@ -60,7 +60,7 @@ class parser(object):
         """statements : statements statement
                       | statement"""
         if len(p) == 2:
-            p[0] = node('statements', ch=p[1])
+            p[0] = node('statements', ch=[p[1]])
         else:
             p[0] = node('statements', ch=[p[1], p[2]])
 
@@ -332,7 +332,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests For Parser/test.txt")
+            f = open("../Tests For Parser/interpretator")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')

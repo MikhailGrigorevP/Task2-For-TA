@@ -1,5 +1,9 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    TEXT
+
 Grammar
 
 Rule 0     S' -> program
@@ -157,6 +161,7 @@ ROTATE_RIGHT         : 89
 R_QBRACKET           : 41
 STEEL                : 60
 STRING               : 32
+TEXT                 : 
 THEN                 : 72 73
 TO                   : 79 80
 TRUE                 : 54
