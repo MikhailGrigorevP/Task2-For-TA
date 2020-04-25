@@ -155,6 +155,8 @@ class parser(object):
                       | const
                       | qstring
                       | math_expression
+                      | robot_command
+                      | vector_pop
                       | call"""
         p[0] = p[1]
 
@@ -240,14 +242,15 @@ class parser(object):
 
     @staticmethod
     def p_vector_command(p):
-        """vector_command : VARIABLE PUSH BACK expression
-                          | VARIABLE POP BACK
-                          | VARIABLE PUSH FRONT expression
-                          | VARIABLE POP FRONT"""
-        if len(p) == 5:
-            p[0] = node('vector', p[2] + p[3], ch=[p[1], p[4]], no=p.lineno(1), pos=p.lexpos(1))
-        else:
-            p[0] = node('vector', p[2] + p[3], ch=p[1], no=p.lineno(1), pos=p.lexpos(1))
+        """vector_command : variable PUSH BACK expression
+                          | variable PUSH FRONT expression"""
+        p[0] = node('vector', p[2] + p[3], ch=[p[1], p[4]], no=p.lineno(1), pos=p.lexpos(1))
+
+    @staticmethod
+    def p_vector_command_pop(p):
+        """vector_pop : variable POP BACK
+                      | variable POP FRONT"""
+        p[0] = node('vector', p[2] + p[3], ch=p[1], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_robot_command(p):
@@ -323,7 +326,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests For Parser/test.txt")
+            f = open("../Tests For Parser/path.txt")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')
