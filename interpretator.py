@@ -471,17 +471,39 @@ class Interpreter:
 
     # for while
 
-    def op_while(self, vector):
-        pass
+    def op_while(self, node):
+        try:
+            while self.converse.converse('boolean', node.child['condition']).value == 'true':
+                self.interpreter_node(node.children['body'])
+        except InterpreterConverseError:
+            print(Error_handler(self.error_types['cast'], node))
+        except InterpreterValueError:
+            print(Error_handler(self.error_types['value'], node))
+        except InterpreterNameError:
+            print(Error_handler(self.error_types['undeclared_value'], node))
 
     # for if
 
-    def op_if(self, vector):
-        pass
+    def op_if(self, node):
+        try:
+            condition = self.converse.converse('boolean', node.child['condition']).value
+            if condition == 'true':
+                self.interpreter_node(node.child['body'])
+            elif condition == 'false':
+                if 'else' in node.child:
+                    self.interpreter_node(node.child['else'])
+        except InterpreterConverseError:
+            print(Error_handler(self.error_types['cast'], node))
+        except InterpreterValueError:
+            print(Error_handler(self.error_types['value'], node))
+        except InterpreterNameError:
+            print(Error_handler(self.error_types['undeclared_value'], node))
 
 
 if __name__ == '__main__':
     correct = False
+    text = None
+
     while not correct:
         print("Input type? (console, file)")
         inputType = input()
