@@ -14,4 +14,4 @@ vector of integer v2
 v1 push back 1
 v2 push back 2
 a := c
-v1 := v2
+v1 := a to vector of integer

@@ -259,17 +259,24 @@ class Interpreter:
                 expression_to = self.interpreter_node(node.child.value).type
             if expression_to in ['integer', 'string', 'boolean']:
                 return self.converse.converse(expression_to, expression_from)
-            elif len(expression_to.split()) == 3:
-                if expression_to == 'vector of integer':
-                    return Variable('vector of integer',
-                                    [self.converse.converse('integer', expression_from).value])
-                elif expression_to == 'vector of boolean':
-                    return Variable('vector of boolean',
-                                    [self.converse.converse('boolean', expression_from).value])
-                elif expression_to == 'vector of string':
-                    return Variable('vector of string', [self.converse.converse('string', expression_from).value])
+            elif len(expression_to.split()) == 4:
+                if expression_to == 'vector of type integer':
+                    return ['vector of integer',
+                                    [self.converse.converse('integer', expression_from).value], 1]
+                elif expression_to == 'vector of type boolean':
+                    return ['vector of boolean',
+                                    [self.converse.converse('boolean', expression_from).value], 1]
+                elif expression_to == 'vector of type string':
+                    return ['vector of string', [self.converse.converse('string', expression_from).value], 1]
             elif len(expression_to.split()) == 2:
-                return Variable('vector of string ' + str(expression_from.type), expression_from)
+                if expression_from.type == 'string':
+                    return ['vector of string ' + str(expression_from.type), expression_from, 1]
+                elif expression_from.type == 'boolean':
+                    return ['vector of boolean ' + str(expression_from.type), expression_from, 1]
+                elif expression_from.type == 'integer':
+                    return ['vector of integer ' + str(expression_from.type), expression_from, 1]
+                else:
+                    raise InterpreterConverseError
             else:
                 raise InterpreterConverseError
 
