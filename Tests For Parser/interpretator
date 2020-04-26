@@ -1,4 +1,24 @@
 integer a
 integer b := 3
 a := 15
-b := 32
+b := 32 + 3
+b := b - 1
+b := b + a + 1
+b := b + -8
+boolean c := false
+integer d := 1
+c := d to boolean
+c := 3 > 4
+c := 3 > 4
+c := 3 = 4
+c := 3 <> 4
+if c then a := 43
+if a = 43 then begin
+    a := 42
+    c := false
+    end
+integer e := 0
+do begin
+    a := a - 1
+    e := e + 1
+    end until a > 0

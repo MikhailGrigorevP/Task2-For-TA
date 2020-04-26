@@ -51,7 +51,7 @@ class parser(object):
                      | empty"""
 
         if len(p) == 3:
-            p[0] = node('return', val=p[2])
+            p[0] = node('return', val=p[2], no=p.lineno(1), pos=p.lexpos(1))
         else:
             p[0] = p[1]
 
@@ -162,6 +162,7 @@ class parser(object):
                       | qstring
                       | math_expression
                       | robot_command
+                      | converting_command
                       | vector_pop
                       | call"""
         p[0] = p[1]
@@ -212,7 +213,7 @@ class parser(object):
     @staticmethod
     def p_while(p):
         """while : DO statements_group UNTIL expression"""
-        p[0] = node('while', ch=[p[2], p[4]])
+        p[0] = node('while', ch={'condition': p[4], 'body': p[2]})
 
     @staticmethod
     def p_if(p):
@@ -236,8 +237,7 @@ class parser(object):
     @staticmethod
     def p_command(p):
         """command : vector_command
-                   | robot_command
-                   | converting_command"""
+                   | robot_command"""
         p[0] = p[1]
 
     @staticmethod
@@ -278,7 +278,7 @@ class parser(object):
         if len(p) == 5:
             p[0] = node('call', p[1], ch=p[3])
         else:
-            p[0] = node('call', p[1])
+            p[0] = node('call', p[1], ch=[])
 
     @staticmethod
     def p_empty(p):
@@ -309,7 +309,7 @@ class parser(object):
     @staticmethod
     def p_errors(p):
         """errors : errors error
-        | error"""
+                    | error"""
         if len(p) == 2:
             p[0] = [p[1]]
         else:
@@ -324,6 +324,7 @@ class parser(object):
 
 
 if __name__ == '__main__':
+    text = None
     correct = False
     while not correct:
         print("Input type? (console, file)")

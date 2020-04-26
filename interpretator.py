@@ -1,65 +1,22 @@
 import sys
-from typing import List
 from Parser.parser import parser
-from Robot.robot import robot
 from Robot import map
+from Robot.robot import robot
+from Errors.errors import Error_handler
+from Errors.errors import InterpreterNameError
+from Errors.errors import InterpreterConverseError
+from Errors.errors import InterpreterValueError
+from Errors.errors import InterpreterRedeclarationError
 
 
 # Item of symbol table
 class Variable:
-    def __init__(self, var_type, var_value):
+    def __init__(self, var_type='integer', var_value=None):
         self.type = var_type
         self.value = var_value
 
     def __repr__(self):
         return f'{self.type}, {self.value}'
-
-
-# Error handler
-class Error_handler:
-    def __init__(self, err_type, node=None):
-        self.type = err_type
-        self.node = node
-
-    def __repr__(self):
-        sys.stderr.write(f'Error {self.type}: ')
-        if self.type == 1:
-            sys.stderr.write(f'no input point\n')
-            return
-        elif self.type == 2:
-            sys.stderr.write(f'variable "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos} is already declared\n')
-        elif self.type == 3:
-            sys.stderr.write(f'variable "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos} is used before declaration\n')
-        elif self.type == 4:
-            sys.stderr.write(f'index error "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos}\n')
-        elif self.type == 5:
-            sys.stderr.write(f'Unknown function call "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos}\n')
-        elif self.type == 6:
-            sys.stderr.write(f'failed to cast variable "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos}\n')
-        elif self.type == 7:
-            sys.stderr.write(f'incompatible value and type: "{self.node.value}" at'
-                             f' {self.node.lineno}:{self.node.lexpos}\n')
-
-
-class InterpreterNameError(Exception):
-    pass
-
-
-class InterpreterRedeclarationError(Exception):
-    pass
-
-
-class InterpreterConverseError(Exception):
-    pass
-
-
-class InterpreterValueError(Exception):
-    pass
 
 
 # Conversion of types
@@ -128,7 +85,8 @@ class Interpreter:
         self.parser = _parser
         self.converse = _converse
         # DELETE ME
-        self.sym_table = dict()
+        self.sym_table = [dict()]
+        self.scope = 0
         self.map = None
         self.program = None
         self.tree = None
@@ -147,7 +105,7 @@ class Interpreter:
     def interpreter(self, map_description, program):
         self.map = map_description
         self.program = program
-        self.sym_table = dict()
+        self.sym_table = [dict()]
         # noinspection PyBroadException
         try:
             self.tree, self.funcs = self.parser.parse(program)
@@ -158,7 +116,7 @@ class Interpreter:
         self.interpreter_tree(self.tree)
         self.interpreter_node(self.funcs['application'])
 
-    def interpreter_tree(self, tree):
+    def interpreter_tree(self, _tree):
         pass
 
     def interpreter_node(self, node):
@@ -192,10 +150,10 @@ class Interpreter:
         # statements -> assignment
         elif node.type == 'assignment':
             variable = node.child[0].value
-            if variable not in self.sym_table.keys():
+            if variable not in self.sym_table[self.scope].keys():
                 print(Error_handler(self.error_types['undeclared_value'], node))
             else:
-                _type = self.sym_table[variable].type
+                _type = self.sym_table[self.scope][variable].type
                 expression = self.interpreter_node(node.child[1])
                 try:
                     self.assign(_type, variable, expression)
@@ -225,21 +183,21 @@ class Interpreter:
         elif node.type == 'converting':
             expression_from = self.interpreter_node(node.value)
             expression_to = node.child.value
-            if not node.child.type != "type":
+            if node.child.type != "type":
                 expression_to = self.interpreter_node(node.child.value).type
             if expression_to in ['integer', 'string', 'boolean']:
-                return self.converse.converse(expression_to, expression_from.value)
+                return self.converse.converse(expression_to, expression_from)
             elif len(expression_to.split()) == 3:
                 if expression_to == 'vector of integer':
                     return Variable('vector of integer',
-                                    [self.converse.converse('integer', expression_from.value).value])
+                                    [self.converse.converse('integer', expression_from).value])
                 elif expression_to == 'vector of boolean':
                     return Variable('vector of boolean',
-                                    [self.converse.converse('boolean', expression_from.value).value])
+                                    [self.converse.converse('boolean', expression_from).value])
                 elif expression_to == 'vector of string':
-                    return Variable('vector of string', [self.converse.converse('string', expression_from.value).value])
+                    return Variable('vector of string', [self.converse.converse('string', expression_from).value])
             elif len(expression_to.split()) == 2:
-                return Variable('vector of string ' + str(expression_from.type), expression_from.value)
+                return Variable('vector of string ' + str(expression_from.type), expression_from)
             else:
                 raise InterpreterConverseError
 
@@ -265,15 +223,10 @@ class Interpreter:
                 return self.robot_drill()
         # statements -> function
         elif node.type == 'function_description':
-            # TODO FUNCTION
             pass
         # statements -> call
         elif node.type == 'call':
-            if node.value not in self.funcs:
-                print(Error_handler(self.error_types['func_call_error'], node))
-                return
-            # TODO PARAMETERS - node.child
-            return self.interpreter_node(self.funcs[node.value])
+            return self.function_call(node)
         # statements -> return
         elif node.type == 'return':
             return self.interpreter_node(node.value)
@@ -295,25 +248,35 @@ class Interpreter:
                 return self.bin_ls(node.child[0], node.child[1])
             elif node.value == '=':
                 return self.bin_eq(node.child[0], node.child[1])
-            elif node.value == '^':
+            elif node.value == '<>':
                 return self.bin_not_eq(node.child[0], node.child[1])
         # expression -> const
         elif node.type == 'const':
             return self.const_val(node.value)
         # expression / variables -> variable
         elif node.type == 'variable':
-            return node.value
+            var = node.value
+            if var not in self.sym_table[self.scope].keys():
+                print(Error_handler(self.error_types['undeclared_value'], node))
+                return
+            return self.sym_table[self.scope][var]
         # variable -> indexing
         elif node.type == 'indexing':
-            expression = self.interpreter_node(node.child)
             try:
-                ret = self.sym_table[node.value][expression]
-                return ret
-            except KeyError:
+                var = node.value
+                index = self.converse.converse('integer', self.interpreter_node(node.child))
+                if index == len(self.sym_table[self.scope][var][1]):
+                    self.sym_table[self.scope][var].append(Variable())
+                elif index > len(self.sym_table[self.scope][var][1]):
+                    print(Error_handler(self.error_types['index_error'], node))
+                    return
+                return self.sym_table[self.scope][var][1][index]
+            except InterpreterConverseError:
+                print(Error_handler(self.error_types['cast'], node))
+            except InterpreterValueError:
+                print(Error_handler(self.error_types['value'], node))
+            except InterpreterNameError:
                 print(Error_handler(self.error_types['undeclared_value'], node))
-            except IndexError:
-                print(Error_handler(self.error_types['index_error'], node))
-            return
         # variable -> string
         elif node.type == 'string':
             return Variable('string', node.value)
@@ -343,18 +306,18 @@ class Interpreter:
                 print(Error_handler(self.error_types['value'], node))
 
     def declare(self, _type, _value):
-        if _value in self.sym_table.keys():
+        if _value in self.sym_table[self.scope].keys():
             raise InterpreterRedeclarationError
         if _type.split(" ")[0] != "vector":
-            self.sym_table[_value] = Variable(_type, None)
+            self.sym_table[self.scope][_value] = Variable(_type, None)
         else:
             self.sym_table[_value] = [_type.split(" ")[2], []]
 
     def assign(self, _type, variable, expression: Variable):
-        if variable not in self.sym_table.keys():
+        if variable not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         if _type == expression.type:
-            self.sym_table[variable] = expression
+            self.sym_table[self.scope][variable] = expression
         else:
             raise InterpreterConverseError
 
@@ -363,27 +326,31 @@ class Interpreter:
     def const_val(value):
         if (str(value)).isdigit():
             return Variable('integer', int(value))
+        elif value in ['true', 'false', 'undefined']:
+            return Variable('boolean', value)
         else:
-            return Variable('integer', int(value, 16))
+            return Variable('string', value)
 
     # for math operations
 
     # unary minus
     def un_minus(self, _val):
         expression = self.interpreter_node(_val)
-        return (-1) * self.converse.converse('integer', expression)
+        curr = self.converse.converse('integer', expression)
+        curr.value *= -1
+        return curr
 
     # binary plus
     def bin_plus(self, _val1, _val2):
         expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
         expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
-        return Variable('int', expression1.value + expression2.value)
+        return Variable('integer', expression1.value + expression2.value)
 
     # binary minus
     def bin_minus(self, _val1, _val2):
         expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
         expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
-        return Variable('int', expression1.value - expression2.value)
+        return Variable('integer', expression1.value - expression2.value)
 
     # binary greater
     def bin_gr(self, _val1, _val2):
@@ -440,41 +407,41 @@ class Interpreter:
 
     # for vector
     def vector_push_back(self, _value, val: Variable):
-        if _value not in self.sym_table.keys():
+        if _value not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         else:
             if self.sym_table[_value][0] == val.type:
-                self.sym_table[_value][1].append(val.value)
+                self.sym_table[self.scope][_value][1].append(val.value)
             else:
                 raise InterpreterConverseError
 
     def vector_push_front(self, _value, val: Variable):
-        if _value not in self.sym_table.keys():
+        if _value not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         else:
             if self.sym_table[_value][0] == val.type:
-                self.sym_table[_value][1].insert(0, val.value)
+                self.sym_table[self.scope][_value][1].insert(0, val.value)
             else:
                 raise InterpreterConverseError
 
     def vector_pop_front(self, _value):
-        if _value not in self.sym_table.keys():
+        if _value not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         else:
-            return self.sym_table[_value][1].pop(0)
+            return self.sym_table[self.scope][_value][1].pop(0)
 
     def vector_pop_back(self, _value):
-        if _value not in self.sym_table.keys():
+        if _value not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         else:
-            return self.sym_table[_value][1].pop()
+            return self.sym_table[self.scope][_value][1].pop()
 
     # for while
 
     def op_while(self, node):
         try:
-            while self.converse.converse('boolean', node.child['condition']).value == 'true':
-                self.interpreter_node(node.children['body'])
+            while self.converse.converse('boolean', self.interpreter_node(node.child['condition'])).value == 'true':
+                self.interpreter_node(node.child['body'])
         except InterpreterConverseError:
             print(Error_handler(self.error_types['cast'], node))
         except InterpreterValueError:
@@ -486,7 +453,8 @@ class Interpreter:
 
     def op_if(self, node):
         try:
-            condition = self.converse.converse('boolean', node.child['condition']).value
+            condition = self.interpreter_node(node.child['condition'])
+            condition = self.converse.converse('boolean', condition).value
             if condition == 'true':
                 self.interpreter_node(node.child['body'])
             elif condition == 'false':
@@ -499,11 +467,29 @@ class Interpreter:
         except InterpreterNameError:
             print(Error_handler(self.error_types['undeclared_value'], node))
 
+    # for functions
+
+    def function_call(self, node):
+        func_name = node.value
+        if not node.child.empty():
+            func_param = self.interpreter_node(node.child)
+        else:
+            func_param = None
+        if func_name not in self.funcs.keys() and func_name not in self.sym_table[self.scope].keys():
+            print(Error_handler(self.error_types['undeclared_value'], node))
+            return
+        self.scope += 1
+        self.sym_table.append(dict())
+        func_subtree = self.funcs[func_name] or self.sym_table[self.scope - 1][func_name]
+        self.sym_table[self.scope][func_subtree.child['parameters'].value] = func_param
+        self.interpreter_node(func_subtree.children['body'])
+        self.scope -= 1
+        self.sym_table.pop()
+
 
 if __name__ == '__main__':
     correct = False
     text = None
-
     while not correct:
         print("Input type? (console, file)")
         inputType = input()
@@ -523,6 +509,10 @@ if __name__ == '__main__':
     tree, func_table = parser.parse(text)
     interpreter = Interpreter()
     interpreter.interpreter_node(tree)
-    print(f'Variables table:\n')
-    for keys, values in interpreter.sym_table.items():
-        print(keys, '-', values)
+    print(f'Symbols table:\n')
+    for sym_table in interpreter.sym_table:
+        for keys, values in sym_table.items():
+            if isinstance(values, Variable):
+                print(values.type, keys, '=', values.value)
+            else:
+                print(values[0], keys, ':', values[1:])

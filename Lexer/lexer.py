@@ -55,7 +55,7 @@ class lexer(object):
               'LBRACKET', 'RBRACKET', 'BRACKETS',
               'DOUBLE_QUOTE', 'QUOTE',
               'LESS', 'GREATER', 'EQ', 'NOTEQ',
-              'R_QBRACKET', 'L_QBRACKET', 'TEXT',
+              'R_QBRACKET', 'L_QBRACKET',
               'CONTINUE', 'COMMA', 'COMMENT', 'NEWLINE'] + list(reserved.values())
 
     t_ASSIGNMENT = r'\:\='
@@ -106,7 +106,7 @@ class lexer(object):
 
 
 if __name__ == '__main__':
-    f = open('../Tests For Parser/test.txt')
+    f = open('../Tests For Parser/interpretator')
     data = f.read()
     f.close()
     lexer = lexer()

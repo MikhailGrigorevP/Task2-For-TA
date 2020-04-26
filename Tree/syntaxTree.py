@@ -1,9 +1,9 @@
 class node(object):
     # object constructor
-    def __init__(self, t='const', val=None,  ch=[], no=None, pos=None):
+    def __init__(self, t='const', val=None,  ch=None, no=None, pos=None):
         self.type = t
         self.value = val
-        self.child = ch
+        self.child = ch or []
         self.acc = None
         self.lineno = no
         self.lexpos = pos
