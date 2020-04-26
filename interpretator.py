@@ -256,7 +256,14 @@ class Interpreter:
             expression_from = self.interpreter_node(node.value)
             expression_to = node.child.value
             if node.child.type != "type":
-                expression_to = self.interpreter_node(node.child.value).type
+                if node.child.type == "string":
+                    expression_to = 'string'
+                elif node.child.type == "integer":
+                    expression_to = 'integer'
+                elif node.child.type == "boolean":
+                    expression_to = 'boolean'
+                else:
+                    expression_to = self.interpreter_node(node.child.value).type
             if expression_to in ['integer', 'string', 'boolean']:
                 return self.converse.converse(expression_to, expression_from)
             elif len(expression_to.split()) == 4:
