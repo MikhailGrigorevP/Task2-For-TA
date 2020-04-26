@@ -206,7 +206,10 @@ class Interpreter:
             if variable not in self.sym_table[self.scope].keys():
                 print(Error_handler(self.error_types['undeclared_value'], node))
             else:
-                _type = self.sym_table[self.scope][variable].type
+                if isinstance(self.sym_table[self.scope][variable], list):
+                    _type = self.sym_table[self.scope][variable][0]
+                else:
+                    _type = self.sym_table[self.scope][variable].type
                 expression = self.interpreter_node(node.child[1])
                 try:
                     self.assign(_type, variable, expression)
@@ -410,7 +413,12 @@ class Interpreter:
     def assign(self, _type, variable, expression: Variable):
         if variable not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
-        if _type == expression.type:
+        if isinstance(expression, list):
+            if _type == expression[0]:
+                self.sym_table[self.scope][variable] = expression
+            else:
+                raise InterpreterConverseError
+        elif _type == expression.type:
             self.sym_table[self.scope][variable] = expression
         else:
             raise InterpreterConverseError
