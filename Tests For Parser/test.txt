@@ -1,3 +1,4 @@
+integer a := 4
 function of integer application () begin
     integer a := 4
     string str := "Happy MEPhi", dog, cat := 'SNOW'

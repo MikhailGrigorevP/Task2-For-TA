@@ -1,0 +1,4 @@
+integer a
+integer b := 3
+a := 15
+b := 32

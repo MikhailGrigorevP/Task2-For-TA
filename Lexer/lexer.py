@@ -55,7 +55,7 @@ class lexer(object):
               'LBRACKET', 'RBRACKET', 'BRACKETS',
               'DOUBLE_QUOTE', 'QUOTE',
               'LESS', 'GREATER', 'EQ', 'NOTEQ',
-              'R_QBRACKET', 'L_QBRACKET',
+              'R_QBRACKET', 'L_QBRACKET', 'TEXT',
               'CONTINUE', 'COMMA', 'COMMENT', 'NEWLINE'] + list(reserved.values())
 
     t_ASSIGNMENT = r'\:\='
