@@ -31,17 +31,19 @@ class TypeConversion:
             if var.type == 'integer':
                 return self.int_to_bool(var)
             if var.type == 'string':
-                return self.int_to_string(var)
+                return self.string_to_bool(var)
         if _type == 'integer':
             if var.type == 'boolean':
                 return self.bool_to_int(var)
             if var.type == 'string':
-                return self.bool_to_string(var)
-        if _type == 'vector':
-            if var.type == 'string':
+                return self.string_to_int(var)
+        if _type == 'string':
+            if var.type == 'vector':
                 return self.vector_to_string(var)
-            else:
-                raise InterpreterConverseError
+            if var.type == 'boolean':
+                return self.bool_to_string(var)
+            if var.type == 'integer':
+                return self.int_to_string(var)
         else:
             raise ValueError('wrong type')
 
@@ -64,19 +66,35 @@ class TypeConversion:
         raise InterpreterValueError
 
     @staticmethod
+    def string_to_bool(value):
+        if value.value == "false":
+            return Variable('boolean', value.value)
+        if value.value == "true":
+            return Variable('boolean', value.value)
+        else:
+            raise InterpreterValueError
+
+    @staticmethod
+    def string_to_int(value):
+        if value.value.isdigit():
+            return Variable('integer', int(value.value))
+        else:
+            raise InterpreterValueError
+
+    @staticmethod
     def int_to_string(value):
-        return Variable('string', str(value))
+        return Variable('string', str(value.value))
 
     @staticmethod
     def bool_to_string(value):
-        return Variable('string', str(value))
+        return Variable('string', str(value.value))
 
     @staticmethod
     def vector_to_string(value):
         string = ''
-        for char in value:
+        for char in value.value:
             string.join(char)
-        return Variable('string', value)
+        return Variable('string', value.value)
 
 
 class Interpreter:
@@ -149,7 +167,42 @@ class Interpreter:
                 self.declare_variable(declaration_child, declaration_type)
         # statements -> assignment
         elif node.type == 'assignment':
-            variable = node.child[0].value
+            if node.child[0].type == 'indexing':
+                try:
+                    var = node.child[0].value
+                    indexes = []
+                    children = node.child[0].child
+                    while children.type == 'indexing':
+                        if isinstance(children.child, list):
+                            indexes.append(children.child[0])
+                            children = children.child[1]
+                        else:
+                            indexes.append(children.child)
+                            children = children.child
+                    for i in range(len(indexes)):
+                        indexes[i] = self.converse.converse('integer', self.interpreter_node(indexes[i])).value
+                    current_type = self.sym_table[self.scope][var][0].split(" ")[2]
+                    current_var = self.sym_table[self.scope][var][1]
+                    full_size = self.sym_table[self.scope][var][2]
+                    for index in indexes:
+                        if index == len(current_var):
+                            current_var.append(Variable())
+                        elif index > len(current_var):
+                            print(Error_handler(self.error_types['index_error'], node))
+                        if index != indexes[len(indexes) - 1]:
+                            current_var = current_var[index]
+                        else:
+                            expression = self.interpreter_node(node.child[1])
+                            current_var[index] = expression.value
+                        return
+                except InterpreterConverseError:
+                    print(Error_handler(self.error_types['cast'], node))
+                except InterpreterValueError:
+                    print(Error_handler(self.error_types['value'], node))
+                except InterpreterNameError:
+                    print(Error_handler(self.error_types['undeclared_value'], node))
+            else:
+                variable = node.child[0].value
             if variable not in self.sym_table[self.scope].keys():
                 print(Error_handler(self.error_types['undeclared_value'], node))
             else:
@@ -171,14 +224,30 @@ class Interpreter:
         elif node.type == 'vector':
             if node.value == 'pushback':
                 expression = self.interpreter_node(node.child[1])
-                self.vector_push_back(node.child[0], expression)
+                if node.child[0].type == 'indexing':
+                    var = self.interpreter_node(node.child[0])
+                    self.vector_push_back_2(var, expression)
+                else:
+                    self.vector_push_back(node.child[0], expression)
             if node.value == 'pushfront':
                 expression = self.interpreter_node(node.child[1])
-                self.vector_push_front(node.child[0], expression)
+                if node.child[0].type == 'indexing':
+                    var = self.interpreter_node(node.child[0])
+                    self.vector_push_front_2(var, expression)
+                else:
+                    self.vector_push_front(node.child[0], expression)
             if node.value == 'popback':
-                self.vector_pop_back(node.child[0])
+                if node.child.type == 'indexing':
+                    var = self.interpreter_node(node.child)
+                    return self.vector_pop_back_2(var)
+                else:
+                    return self.vector_pop_back(node.child)
             if node.value == 'popfront':
-                self.vector_pop_front(node.child[0])
+                if node.child.type == 'indexing':
+                    var = self.interpreter_node(node.child)
+                    return self.vector_pop_front_2(var)
+                else:
+                    return self.vector_pop_front(node.child)
         # statements -> command -> converting
         elif node.type == 'converting':
             expression_from = self.interpreter_node(node.value)
@@ -264,13 +333,30 @@ class Interpreter:
         elif node.type == 'indexing':
             try:
                 var = node.value
-                index = self.converse.converse('integer', self.interpreter_node(node.child))
-                if index == len(self.sym_table[self.scope][var][1]):
-                    self.sym_table[self.scope][var].append(Variable())
-                elif index > len(self.sym_table[self.scope][var][1]):
-                    print(Error_handler(self.error_types['index_error'], node))
-                    return
-                return self.sym_table[self.scope][var][1][index]
+                indexes = []
+                children = node.child
+                while children.type == 'indexing':
+                    if isinstance(children.child, list):
+                        indexes.append(children.child[0])
+                        children = children.child[1]
+                    else:
+                        indexes.append(children.child)
+                        children = children.child
+                for i in range(len(indexes)):
+                    indexes[i] = self.converse.converse('integer', self.interpreter_node(indexes[i])).value
+                current_type = self.sym_table[self.scope][var][0].split(" ")[2]
+                current_var = self.sym_table[self.scope][var][1]
+                full_size = self.sym_table[self.scope][var][2]
+                for index in indexes:
+                    if index == len(current_var):
+                        current_var.append(Variable())
+                    elif index > len(current_var):
+                        print(Error_handler(self.error_types['index_error'], node))
+                    current_var = current_var[index]
+                if len(indexes) == full_size:
+                    return Variable(current_type, current_var)
+                else:
+                    return current_var
             except InterpreterConverseError:
                 print(Error_handler(self.error_types['cast'], node))
             except InterpreterValueError:
@@ -279,7 +365,7 @@ class Interpreter:
                 print(Error_handler(self.error_types['undeclared_value'], node))
         # variable -> string
         elif node.type == 'string':
-            return Variable('string', node.value)
+            return Variable('string', str(node.value))
 
     # for declaration
 
@@ -308,10 +394,18 @@ class Interpreter:
     def declare(self, _type, _value):
         if _value in self.sym_table[self.scope].keys():
             raise InterpreterRedeclarationError
-        if _type.split(" ")[0] != "vector":
+        if _type in ['integer', 'boolean', 'string']:
             self.sym_table[self.scope][_value] = Variable(_type, None)
         else:
-            self.sym_table[_value] = [_type.split(" ")[2], []]
+            mega_type = _type.split(" ")
+            last_elem = len(mega_type) - 1
+            size = (len(mega_type) - 2) // 2
+            vector = []
+            if size > 1:
+                for i in range(size):
+                    vector.append([])
+            self.sym_table[self.scope][_value] = \
+                [_type.split(" ")[0] + ' ' + _type.split(" ")[1] + ' ' + _type.split(" ")[last_elem], vector, size]
 
     def assign(self, _type, variable, expression: Variable):
         if variable not in self.sym_table[self.scope].keys():
@@ -407,35 +501,66 @@ class Interpreter:
 
     # for vector
     def vector_push_back(self, _value, val: Variable):
+        _value = _value.value
         if _value not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         else:
-            if self.sym_table[_value][0] == val.type:
+            if self.sym_table[self.scope][_value][2] != 1:
+                self.sym_table[self.scope][_value][2] += 1
+                self.sym_table[self.scope][_value][1].append([val.value])
+            elif val.type in self.sym_table[self.scope][_value][0].split(" "):
                 self.sym_table[self.scope][_value][1].append(val.value)
             else:
                 raise InterpreterConverseError
 
+    @staticmethod
+    def vector_push_back_2(_value, val: Variable):
+        _value.append(val.value)
+
     def vector_push_front(self, _value, val: Variable):
+        _value = _value.value
         if _value not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         else:
-            if self.sym_table[_value][0] == val.type:
+            if self.sym_table[self.scope][_value][2] != 1:
+                self.sym_table[self.scope][_value][2] += 1
+                self.sym_table[self.scope][_value][1].insert(0,[val.value])
+            elif val.type in self.sym_table[self.scope][_value][0].split(" "):
                 self.sym_table[self.scope][_value][1].insert(0, val.value)
             else:
                 raise InterpreterConverseError
 
+    @staticmethod
+    def vector_push_front_2(_value, val: Variable):
+        _value.insert(0, val.value)
+
     def vector_pop_front(self, _value):
-        if _value not in self.sym_table[self.scope].keys():
+        _value = _value.value
+        if self.sym_table[self.scope][_value][2] != 1:
+            raise InterpreterNameError
+        elif _value not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         else:
-            return self.sym_table[self.scope][_value][1].pop(0)
+            return Variable(self.sym_table[self.scope][_value][0].split(" ")[2],
+                            self.sym_table[self.scope][_value][1].pop(0))
+
+    @staticmethod
+    def vector_pop_front_2(_value):
+        return _value.pop(0)
 
     def vector_pop_back(self, _value):
-        if _value not in self.sym_table[self.scope].keys():
+        _value = _value.value
+        if self.sym_table[self.scope][_value][2] != 1:
+            raise InterpreterNameError
+        elif _value not in self.sym_table[self.scope].keys():
             raise InterpreterNameError
         else:
-            return self.sym_table[self.scope][_value][1].pop()
+            return Variable(self.sym_table[self.scope][_value][0].split(" ")[2],
+                            self.sym_table[self.scope][_value][1].pop())
 
+    @staticmethod
+    def vector_pop_back_2(_value):
+        return _value.pop()
     # for while
 
     def op_while(self, node):
@@ -497,7 +622,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("Tests For Parser/interpretator")
+            f = open("Tests For Parser/interpretator2")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -515,4 +640,4 @@ if __name__ == '__main__':
             if isinstance(values, Variable):
                 print(values.type, keys, '=', values.value)
             else:
-                print(values[0], keys, ':', values[1:])
+                print(values[0], keys, ':', values[1], 'dim:', values[2])

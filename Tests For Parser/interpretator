@@ -13,12 +13,23 @@ c := 3 > 4
 c := 3 = 4
 c := 3 <> 4
 if c then a := 43
-if a = 43 then begin
-    a := 42
+if a = 43 then begin a := 42
     c := false
     end
 integer e := 0
-do begin
-    a := a - 1
+do begin a := a - 1
     e := e + 1
     end until a > 0
+vector of integer abc
+abc push back 4
+abc push back 16
+abc push back 64
+abc push back 1
+a := abc pop front
+b := abc pop back
+d := abc[1]
+vector of vector of integer abcd
+abcd[0] push back 3
+abcd[1] push back 4
+abcd[0] push back 8
+d := abcd[0][1]

@@ -148,12 +148,21 @@ class parser(object):
 
     @staticmethod
     def p_variable(p):
-        """variable : VARIABLE L_QBRACKET expression R_QBRACKET
+        """variable : VARIABLE indexing
                     | VARIABLE"""
         if len(p) == 2:
             p[0] = node('variable', p[1])
         else:
-            p[0] = node('indexing', p[1], ch=p[3], no=p.lineno(1), pos=p.lexpos(1))
+            p[0] = node('indexing', p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
+
+    @staticmethod
+    def p_indexing(p):
+        """indexing : L_QBRACKET expression R_QBRACKET indexing
+                    | L_QBRACKET expression R_QBRACKET"""
+        if len(p) == 5:
+            p[0] = node('indexing', ch=[p[2], p[4]])
+        else:
+            p[0] = node('indexing', ch=p[2])
 
     @staticmethod
     def p_expression(p):
@@ -175,12 +184,21 @@ class parser(object):
 
     @staticmethod
     def p_string(p):
-        """string : string VARIABLE
+        """string : VARIABLE string
+                   | DECIMAL string
+                   | FALSE string
+                   | TRUE string
+                   | FALSE
+                   | TRUE
+                   | DECIMAL
                    | VARIABLE"""
         if len(p) == 3:
-            p[0] = p[1] + ' ' + p[2]
+            var = ''.join(p[1])
+            var = var + ' '
+            var = var.join(str(p[2]))
+            p[0] = var
         else:
-            p[0] = p[1]
+            p[0] = str(p[1])
 
     @staticmethod
     def p_const(p):
@@ -333,7 +351,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests For Parser/interpretator")
+            f = open("../Tests For Parser/interpretator2")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')

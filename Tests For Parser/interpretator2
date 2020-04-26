@@ -1,0 +1,10 @@
+string str := "825"
+integer a := 1
+boolean b := false
+str := a to string
+str := b to string
+string str1 := "825"
+a := str1 to integer
+string str2 := "false"
+boolean bool := true
+bool := str2 to boolean
