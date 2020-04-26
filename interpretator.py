@@ -1,5 +1,6 @@
 import sys
 from Parser.parser import parser
+from Tree.syntaxTree import node as Node
 from Robot import map
 from Robot.robot import robot
 from Errors.errors import Error_handler
@@ -120,22 +121,25 @@ class Interpreter:
             'value': 7
         }
 
-    def interpreter(self, map_description, program):
+    def interpreter(self, map_description=None, program=None):
         self.map = map_description
         self.program = program
         self.sym_table = [dict()]
         # noinspection PyBroadException
         try:
-            self.tree, self.funcs = self.parser.parse(program)
+            self.tree, self.funcs = self.parser.parse(self.program)
         except Exception:
             if 'application' not in self.funcs.keys():
                 print(Error_handler(self.error_types['no_application']))
                 return
         self.interpreter_tree(self.tree)
-        self.interpreter_node(self.funcs['application'])
+        self.interpreter_node(self.funcs['application'].child['body'])
 
-    def interpreter_tree(self, _tree):
-        pass
+    @staticmethod
+    def interpreter_tree(_tree):
+        print("Program tree:\n")
+        _tree.print()
+        print("\n")
 
     def interpreter_node(self, node):
         # nothing
@@ -315,7 +319,7 @@ class Interpreter:
             return self.function_call(node)
         # statements -> return
         elif node.type == 'return':
-            return self.interpreter_node(node.value)
+            self.sym_table[self.scope]['result'] = self.interpreter_node(node.value)
 
         # EXPRESSION BLOCK
 
@@ -618,8 +622,8 @@ class Interpreter:
 
     def function_call(self, node):
         func_name = node.value
-        if not node.child.empty():
-            func_param = self.interpreter_node(node.child)
+        if isinstance(node.child, Node):
+            func_param = self.interpreter_node(node.child.child.value)
         else:
             func_param = None
         if func_name not in self.funcs.keys() and func_name not in self.sym_table[self.scope].keys():
@@ -628,10 +632,13 @@ class Interpreter:
         self.scope += 1
         self.sym_table.append(dict())
         func_subtree = self.funcs[func_name] or self.sym_table[self.scope - 1][func_name]
-        self.sym_table[self.scope][func_subtree.child['parameters'].value] = func_param
-        self.interpreter_node(func_subtree.children['body'])
+        if func_param:
+            self.sym_table[self.scope][func_subtree.child['parameters'].child.value.value] = func_param
+        self.interpreter_node(func_subtree.child['body'])
+        result = self.sym_table[self.scope]['result']
         self.scope -= 1
         self.sym_table.pop()
+        return result
 
 
 if __name__ == '__main__':
@@ -644,7 +651,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("Tests For Parser/interpretator2")
+            f = open("Tests For Parser/intepretator3")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -655,7 +662,8 @@ if __name__ == '__main__':
     parser = parser()
     tree, func_table = parser.parse(text)
     interpreter = Interpreter()
-    interpreter.interpreter_node(tree)
+    interpreter.interpreter(program=text)
+    #interpreter.interpreter_node(tree)
     print(f'Symbols table:\n')
     for sym_table in interpreter.sym_table:
         for keys, values in sym_table.items():

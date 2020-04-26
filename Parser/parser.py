@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 from ply.lex import LexError
 import sys
-from typing import List, Dict
+from typing import List, Dict, Tuple, Any
 
 # outer classes
 from Lexer.lexer import lexer
@@ -17,7 +17,7 @@ class parser(object):
         self.parser = yacc.yacc(module=self)
         self._functions: Dict[str, node] = dict()
 
-    def parse(self, s) -> List:
+    def parse(self, s):
         try:
             res = self.parser.parse(s)
             return res, self._functions
@@ -249,7 +249,7 @@ class parser(object):
             self._functions[p[4]] = node('function', ch={'type': p[3], 'parameters': p[6], 'body': p[8]})
             p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            self._functions[p[4]] = node('function', ch={'type': p[3], 'body': p[6]})
+            self._functions[p[4]] = node('function', ch={'type': p[3], 'body': p[6], 'parameters': None})
             p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
@@ -351,7 +351,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests For Parser/interpretator2")
+            f = open("../Tests For Parser/intepretator3")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -362,3 +362,4 @@ if __name__ == '__main__':
     parser = parser()
     tree, func_table = parser.parse(text)
     tree.print()
+    print(func_table)

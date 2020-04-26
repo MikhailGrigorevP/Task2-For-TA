@@ -1,0 +1,27 @@
+function of integer application() begin
+    vector of integer my_vector
+    my_vector push front 3
+    my_vector push front 5
+    my_vector push back 7
+    my_vector push back 1
+    my_vector push back -3
+    my_vector push front 4
+    integer size := 6
+    integer break := size - 1
+    integer temp := 0
+    integer i := fu (4)
+    integer j := 0
+    do begin j := 0
+        do begin if my_vector[j] > my_vector[j+1] then begin temp := my_vector[j+1]
+        my_vector[j+1] := my_vector[j]
+        my_vector[j] := temp
+        end
+        j := j + 1
+        end until j < break
+    i := i + 1
+    end until i < break
+    end
+function of integer fu (a) begin
+    integer i := 0
+    return i
+    end
