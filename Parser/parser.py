@@ -317,12 +317,10 @@ class parser(object):
     def p_parameters(p):
         """parameters : parameters COMMA parameter
                       | parameter
-                      | parameters CONTINUE"""
+                      | CONTINUE"""
         if len(p) == 2:
             p[0] = node('parameters', ch=p[1])
-        elif len(p) == 3:
-            p[0] = node('parameters', ch=[p[1], p[2]])
-        else:
+        elif len(p) == 4:
             p[0] = node('parameters', ch=[p[1], p[3]])
 
     @staticmethod

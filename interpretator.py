@@ -169,6 +169,7 @@ class Interpreter:
             # if declare a variables
             else:
                 self.declare_variable(declaration_child, declaration_type)
+            self.sym_table[self.scope]['result'] = "error"
         # statements -> assignment
         elif node.type == 'assignment':
             if node.child[0].type == 'indexing':
@@ -198,6 +199,7 @@ class Interpreter:
                         else:
                             expression = self.interpreter_node(node.child[1])
                             current_var[index] = expression.value
+                            self.sym_table[self.scope]['result'] = expression.value
                         return
                 except InterpreterConverseError:
                     print(Error_handler(self.error_types['cast'], node))
@@ -217,6 +219,7 @@ class Interpreter:
                 expression = self.interpreter_node(node.child[1])
                 try:
                     self.assign(_type, variable, expression)
+                    self.sym_table[self.scope]['result'] = expression.value
                 except InterpreterConverseError:
                     print(Error_handler(self.error_types['cast'], node))
                 except InterpreterValueError:
@@ -224,9 +227,11 @@ class Interpreter:
         # statements -> while
         elif node.type == 'while':
             self.op_while(node)
+            self.sym_table[self.scope]['result'] = "error"
         # statements -> if
         elif node.type == 'if':
             self.op_if(node)
+            self.sym_table[self.scope]['result'] = "error"
         # statements -> command -> vector
         elif node.type == 'vector':
             if node.value == 'pushback':
@@ -234,6 +239,7 @@ class Interpreter:
                 if node.child[0].type == 'indexing':
                     var = self.interpreter_node(node.child[0])
                     self.vector_push_back_2(var, expression)
+                    self.sym_table[self.scope]['result'] = expression.value
                 else:
                     self.vector_push_back(node.child[0], expression)
             if node.value == 'pushfront':
@@ -241,6 +247,7 @@ class Interpreter:
                 if node.child[0].type == 'indexing':
                     var = self.interpreter_node(node.child[0])
                     self.vector_push_front_2(var, expression)
+                    self.sym_table[self.scope]['result'] = expression.value
                 else:
                     self.vector_push_front(node.child[0], expression)
             if node.value == 'popback':
@@ -287,16 +294,16 @@ class Interpreter:
             elif len(expression_to.split()) == 4:
                 if expression_to == 'vector of type integer':
                     return ['vector of integer',
-                                    [self.converse.converse('integer', expression_from).value], 1]
+                            [self.converse.converse('integer', expression_from).value], 1]
                 elif expression_to == 'vector of type boolean':
                     return ['vector of boolean',
-                                    [self.converse.converse('boolean', expression_from).value], 1]
+                            [self.converse.converse('boolean', expression_from).value], 1]
                 elif expression_to == 'vector of type string':
                     return ['vector of string', [self.converse.converse('string', expression_from).value], 1]
             else:
                 raise InterpreterConverseError
 
-        # statements -> command -> converting
+        # statements -> command -> robot
         elif node.type == 'robot':
             if node.value == 'forward':
                 return self.robot_forward()
@@ -316,6 +323,7 @@ class Interpreter:
                 return self.robot_reflect()
             elif node.value == 'drill':
                 return self.robot_drill()
+            self.sym_table[self.scope]['result'] = "error"
         # statements -> function
         elif node.type == 'function_description':
             pass
@@ -555,7 +563,7 @@ class Interpreter:
         else:
             if self.sym_table[self.scope][_value][2] != 1:
                 self.sym_table[self.scope][_value][2] += 1
-                self.sym_table[self.scope][_value][1].insert(0,[val.value])
+                self.sym_table[self.scope][_value][1].insert(0, [val.value])
             elif val.type in self.sym_table[self.scope][_value][0].split(" "):
                 self.sym_table[self.scope][_value][1].insert(0, val.value)
             else:
@@ -592,6 +600,7 @@ class Interpreter:
     @staticmethod
     def vector_pop_back_2(_value):
         return _value.pop()
+
     # for while
 
     def op_while(self, node):
@@ -627,18 +636,40 @@ class Interpreter:
 
     def function_call(self, node):
         func_name = node.value
-        if isinstance(node.child, Node):
-            func_param = self.interpreter_node(node.child.child.value)
-        else:
-            func_param = None
+        param = node.child
+        func_param = None
+        while isinstance(param, Node):
+            if func_param is None:
+                func_param = []
+            func_param.append(self.interpreter_node(param.child[1].value))
+            param = param.child[0]
+            if not isinstance(param.child, list):
+                func_param.append(self.interpreter_node(param.child.value))
+                func_param.reverse()
+                break
         if func_name not in self.funcs.keys() and func_name not in self.sym_table[self.scope].keys():
             print(Error_handler(self.error_types['undeclared_value'], node))
             return
         self.scope += 1
         self.sym_table.append(dict())
         func_subtree = self.funcs[func_name] or self.sym_table[self.scope - 1][func_name]
+        get = func_subtree.child['parameters']
+        func_get = None
+        while isinstance(get, Node):
+            if func_get is None:
+                func_get = []
+            func_get.append([get.child[1].value, self.interpreter_node(get.child[1].child).value])
+            get = get.child[0]
+            if isinstance(get.child, Node):
+                func_get.append([get.child.value, self.interpreter_node(get.child.child).value])
+                func_get.reverse()
+                break
         if func_param:
-            self.sym_table[self.scope][func_subtree.child['parameters'].child.value.value] = func_param
+            for i in range(len(func_get)):
+                if i < len(func_param):
+                    self.sym_table[self.scope][func_get[i][0]] = func_param[i]
+                else:
+                    self.sym_table[self.scope][func_get[i][0]] = func_get[i][1]
         self.interpreter_node(func_subtree.child['body'])
         result = self.sym_table[self.scope]['result']
         self.scope -= 1
@@ -656,7 +687,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("Tests For Parser/interpretator2")
+            f = open("Tests For Parser/interpretator3")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -668,7 +699,7 @@ if __name__ == '__main__':
     tree, func_table = parser.parse(text)
     interpreter = Interpreter()
     interpreter.interpreter(program=text)
-    #interpreter.interpreter_node(tree)
+    # interpreter.interpreter_node(tree)
     print(f'Symbols table:\n')
     for sym_table in interpreter.sym_table:
         for keys, values in sym_table.items():

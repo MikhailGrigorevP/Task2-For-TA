@@ -1,5 +1,6 @@
 function of integer application() begin
     vector of vector of vector of integer triple_int
+    vector of vector of vector of integer triple_int_2
     vector of vector of vector of boolean triple_bool
     vector of vector of vector of vector of string triple_str
     string str := "825"
@@ -28,6 +29,7 @@ function of integer application() begin
     triple_int[1] push back 2
     triple_int[2] push back 3
     triple_int := 1 to vector of vector of vector
+    triple_int_2 := triple_int
     triple_bool := true to vector of vector of vector
     triple_str := "heeeey" to vector of vector of vector of vector
 end

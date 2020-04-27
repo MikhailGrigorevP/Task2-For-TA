@@ -9,7 +9,7 @@ function of integer application() begin
     integer size := 6
     integer break := size - 1
     integer temp := 0
-    integer i := fu (4)
+    integer i := fu (0, 6, 7, 8)
     integer j := 0
     do begin j := 0
         do begin if my_vector[j] > my_vector[j+1] then begin temp := my_vector[j+1]
@@ -21,7 +21,6 @@ function of integer application() begin
     i := i + 1
     end until i < break
     end
-function of integer fu (a) begin
-    integer i := 0
+function of integer fu (i = 1, b = 2, c = 3, d = 4, e = "standart") begin
     return i
     end
