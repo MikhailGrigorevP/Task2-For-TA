@@ -258,6 +258,20 @@ class Interpreter:
         # statements -> command -> converting
         elif node.type == 'converting':
             expression_from = self.interpreter_node(node.value)
+            if isinstance(node.child, int):
+                size = node.child
+                vector = []
+                if size > 1:
+                    for i in range(size):
+                        vector.append([expression_from.value])
+                if expression_from.type == 'string':
+                    return ['vector of string', vector, node.child]
+                elif expression_from.type == 'boolean':
+                    return ['vector of boolean', vector, node.child]
+                elif expression_from.type == 'integer':
+                    return ['vector of integer', vector, node.child]
+                else:
+                    raise InterpreterConverseError
             expression_to = node.child.value
             if node.child.type != "type":
                 if node.child.type == "string":
@@ -279,15 +293,6 @@ class Interpreter:
                                     [self.converse.converse('boolean', expression_from).value], 1]
                 elif expression_to == 'vector of type string':
                     return ['vector of string', [self.converse.converse('string', expression_from).value], 1]
-            elif len(expression_to.split()) == 2:
-                if expression_from.type == 'string':
-                    return ['vector of string ' + str(expression_from.type), expression_from, 1]
-                elif expression_from.type == 'boolean':
-                    return ['vector of boolean ' + str(expression_from.type), expression_from, 1]
-                elif expression_from.type == 'integer':
-                    return ['vector of integer ' + str(expression_from.type), expression_from, 1]
-                else:
-                    raise InterpreterConverseError
             else:
                 raise InterpreterConverseError
 
@@ -420,7 +425,7 @@ class Interpreter:
         else:
             mega_type = _type.split(" ")
             last_elem = len(mega_type) - 1
-            size = (len(mega_type) - 2) // 2
+            size = (len(mega_type) - 1) // 3
             vector = []
             if size > 1:
                 for i in range(size):
@@ -651,7 +656,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("Tests For Parser/intepretator3")
+            f = open("Tests For Parser/interpretator2")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')

@@ -261,8 +261,18 @@ class parser(object):
     @staticmethod
     def p_converting_command(p):
         """converting_command : expression TO type
-                              | expression TO expression"""
+                              | expression TO expression
+                              | expression TO vector_of"""
         p[0] = node('converting', p[1], ch=p[3], no=p.lineno(1), pos=p.lexpos(1))
+
+    @staticmethod
+    def p_vector_of(p):
+        """vector_of : VECTOR OF vector_of
+                    | VECTOR"""
+        if len(p) == 2:
+            p[0] = 1
+        else:
+            p[0] = 1 + p[3]
 
     @staticmethod
     def p_vector_command(p):
@@ -351,7 +361,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests For Parser/intepretator3")
+            f = open("../Tests For Parser/interpretator3")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')

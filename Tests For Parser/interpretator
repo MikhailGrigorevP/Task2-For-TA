@@ -1,3 +1,4 @@
+function of integer application() begin
 integer a
 integer b := 3
 a := 15
@@ -33,3 +34,4 @@ abcd[0] push back 3
 abcd[1] push back 4
 abcd[0] push back 8
 d := abcd[0][1]
+end

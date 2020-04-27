@@ -1,18 +1,33 @@
-string str := "825"
-integer a := 1
-integer c := 2
-boolean b := false
-str := a to string
-str := b to string
-string str1 := "825"
-a := str1 to integer
-string str2 := "false"
-boolean bool := true
-bool := str2 to boolean
-vector of integer v1
-vector of integer v2
-v1 push back 1
-v2 push back 2
-a := c
-v1 := a to vector of integer
-str := 1 to "ff"
+function of integer application() begin
+    vector of vector of vector of integer triple_int
+    vector of vector of vector of boolean triple_bool
+    vector of vector of vector of vector of string triple_str
+    string str := "825"
+    integer a := 1
+    integer c := 2
+    boolean b := false
+    str := a to string
+    str := b to string
+    string str1 := "825"
+    a := str1 to integer
+    string str2 := "false"
+    boolean bool := true
+    bool := str2 to boolean
+    vector of integer v1
+    vector of integer v2
+    v1 push back 1
+    v2 push back 2
+    a := c
+    v1 := a to vector of integer
+    str := 1 to "ff"
+    vector of vector of integer abcd
+    abcd[0] push back 3
+    abcd[1] push back 4
+    abcd[0] push back 8
+    triple_int[0] push back 1
+    triple_int[1] push back 2
+    triple_int[2] push back 3
+    triple_int := 1 to vector of vector of vector
+    triple_bool := true to vector of vector of vector
+    triple_str := "heeeey" to vector of vector of vector of vector
+end

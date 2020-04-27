@@ -106,7 +106,7 @@ class lexer(object):
 
 
 if __name__ == '__main__':
-    f = open('../Tests For Parser/intepretator3')
+    f = open('../Tests For Parser/interpretator3')
     data = f.read()
     f.close()
     lexer = lexer()
