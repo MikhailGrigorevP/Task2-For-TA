@@ -2,8 +2,7 @@ import sys
 import copy
 from Parser.parser import parser
 from Tree.syntaxTree import node as Node
-from Robot import map
-from Robot.robot import robot
+from Robot.robot import Robot, Cell
 from Errors.errors import Error_handler
 from Errors.errors import InterpreterNameError
 from Errors.errors import InterpreterConverseError
@@ -115,7 +114,6 @@ class Interpreter:
         # DELETE ME
         self.sym_table = [dict()]
         self.scope = 0
-        self.map = None
         self.program = None
         self.tree = None
         self.funcs = None
@@ -130,8 +128,8 @@ class Interpreter:
             'value': 7
         }
 
-    def interpreter(self, map_description=None, program=None):
-        self.map = map_description
+    def interpreter(self, robot=None, program=None):
+        self.robot = robot
         self.program = program
         self.sym_table = [dict()]
         # noinspection PyBroadException
@@ -817,6 +815,31 @@ class Interpreter:
         return result
 
 
+def create_robot(descriptor):
+    with open(descriptor) as file:
+        _text = file.readlines()
+    robot_info = _text.pop(0).rstrip().split(" ")
+    map_size = _text.pop(0).rstrip().split(" ")
+    map_exit = _text.pop(0).rstrip().split(" ")
+
+    x = int(robot_info[0])
+    y = int(robot_info[1])
+    turn = int(robot_info[2])
+    power = int(robot_info[3])
+    _map = [0] * int(map_size[0])
+    for i in range(int(map_size[0])):
+        _map[i] = [0] * int((map_size[1]))
+    for i in range(int(map_size[0])):
+        for j in range(int(map_size[1])):
+            _map[i][j] = Cell("EMPTY")
+    _map[int(map_exit[0])][int(map_exit[1])] = Cell('EXIT')
+    while len(_text) > 0:
+        cell = _text.pop(0).rstrip().split(" ")
+        _map[int(cell[0])][int(cell[1])] = Cell(cell[2])
+
+    return Robot(x=x, y=y, turn=turn, power=power, _map=_map)
+
+
 if __name__ == '__main__':
     correct = False
     text = None
@@ -827,19 +850,21 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("Tests/math_logic_operators")
-            text = f.read()
+            with open("Tests/robot") as f:
+                text = f.read()
             f.close()
             print(f'Your file:\n {text}')
         else:
             print("I think, you're wrong :)")
             correct = False
 
+    # prepare
     parser = parser()
     tree, func_table = parser.parse(text)
+    robot = create_robot("Tests/map")
+
     interpreter = Interpreter()
-    interpreter.interpreter(program=text)
-    # interpreter.interpreter_node(tree)
+    interpreter.interpreter(program=text, robot=robot)
     print(f'Symbols table:\n')
     for sym_table in interpreter.sym_table:
         for keys, values in sym_table.items():
@@ -849,3 +874,5 @@ if __name__ == '__main__':
                 print(values.type, keys, '=', values.value)
             else:
                 print(values[0], keys, ':', values[1], 'dim:', values[2])
+    print(f'\nRobot:', interpreter.robot)
+    print(f'\nMap:', interpreter.robot.show())
