@@ -4,7 +4,7 @@ function of integer application() begin
     my_vector push front 5
     my_vector push back 7
     my_vector push back 1
-    my_vector push back -3
+    my_vector push back 0-3
     my_vector push front 4
     integer size := 6
     integer break := size - 1

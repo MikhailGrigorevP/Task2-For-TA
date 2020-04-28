@@ -218,15 +218,11 @@ class parser(object):
     def p_math_expression(p):
         """math_expression : expression PLUS expression
                            | expression MINUS expression
-                           | MINUS expression
                            | expression LESS expression
                            | expression GREATER expression
                            | expression EQ expression
                            | expression NOTEQ expression"""
-        if len(p) == 3:
-            p[0] = node('unary_expression', p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
-        else:
-            p[0] = node('binary_expression', p[2], ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('binary_expression', p[2], ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_while(p):
@@ -359,7 +355,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests For Parser/interpretator3")
+            f = open("../Tests/multidimentional_vectors and type_converse")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')

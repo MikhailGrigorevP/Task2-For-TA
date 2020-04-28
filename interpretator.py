@@ -1,4 +1,5 @@
 import sys
+import copy
 from Parser.parser import parser
 from Tree.syntaxTree import node as Node
 from Robot import map
@@ -14,7 +15,15 @@ from Errors.errors import InterpreterRedeclarationError
 class Variable:
     def __init__(self, var_type='integer', var_value=None):
         self.type = var_type
-        self.value = var_value
+        if self.type == 'boolean':
+            if var_value == "false":
+                self.value = False
+            elif var_value == "true":
+                self.value = bool(True)
+            else:
+                self.value = var_value
+        else:
+            self.value = var_value
 
     def __repr__(self):
         return f'{self.type}, {self.value}'
@@ -50,9 +59,9 @@ class TypeConversion:
 
     @staticmethod
     def bool_to_int(value):
-        if value.value == 'true':
+        if value.value == 'True':
             return Variable('integer', 1)
-        elif value.value == 'false':
+        elif value.value == 'False':
             return Variable('integer', 0)
         elif value.value == 'undefined':
             return Variable('integer', 'undefined')
@@ -61,17 +70,17 @@ class TypeConversion:
     @staticmethod
     def int_to_bool(value):
         if value.value == '0':
-            return Variable('boolean', 'false')
+            return Variable('boolean', False)
         elif isinstance(value.value, int):
-            return Variable('boolean', 'true')
+            return Variable('boolean', True)
         raise InterpreterValueError
 
     @staticmethod
     def string_to_bool(value):
-        if value.value == "false":
-            return Variable('boolean', value.value)
-        if value.value == "true":
-            return Variable('boolean', value.value)
+        if value.value.lower() == "false":
+            return Variable('boolean', bool(value.value))
+        if value.value.lower() == "true":
+            return Variable('boolean', bool(value.value))
         else:
             raise InterpreterValueError
 
@@ -198,8 +207,15 @@ class Interpreter:
                             current_var = current_var[index]
                         else:
                             expression = self.interpreter_node(node.child[1])
-                            current_var[index] = expression.value
-                            self.sym_table[self.scope]['result'] = expression.value
+                            if isinstance(expression, list):
+                                current_var[index] = expression
+                                self.sym_table[self.scope]['result'] = expression
+                            elif not isinstance(expression, Variable):
+                                current_var[index] = expression
+                                self.sym_table[self.scope]['result'] = expression
+                            else:
+                                current_var[index] = expression.value
+                                self.sym_table[self.scope]['result'] = expression.value
                         return
                 except InterpreterConverseError:
                     print(Error_handler(self.error_types['cast'], node))
@@ -216,10 +232,12 @@ class Interpreter:
                     _type = self.sym_table[self.scope][variable][0]
                 else:
                     _type = self.sym_table[self.scope][variable].type
+                if node.child[1].type == "indexing":
+                    node.child[1].type = "get_indexing"
                 expression = self.interpreter_node(node.child[1])
                 try:
                     self.assign(_type, variable, expression)
-                    self.sym_table[self.scope]['result'] = expression.value
+                    self.sym_table[self.scope]['result'] = expression
                 except InterpreterConverseError:
                     print(Error_handler(self.error_types['cast'], node))
                 except InterpreterValueError:
@@ -236,10 +254,18 @@ class Interpreter:
         elif node.type == 'vector':
             if node.value == 'pushback':
                 expression = self.interpreter_node(node.child[1])
+                if isinstance(expression, list) and len(expression) > 1:
+                    expression = Variable(expression[0], expression[1])
+                elif isinstance(expression, list):
+                    _type = self.sym_table[self.scope][node.child[1].value][0].split()[2]
+                    expression = Variable(_type, expression[0])
                 if node.child[0].type == 'indexing':
                     var = self.interpreter_node(node.child[0])
-                    self.vector_push_back_2(var, expression)
-                    self.sym_table[self.scope]['result'] = expression.value
+                    if isinstance(var, list) and isinstance(var[0], list) and len(var[0]) == 0:
+                        var[0].append(expression.value)
+                    else:
+                        self.vector_push_back_2(var, expression)
+                        self.sym_table[self.scope]['result'] = expression.value
                 else:
                     self.vector_push_back(node.child[0], expression)
             if node.value == 'pushfront':
@@ -267,10 +293,10 @@ class Interpreter:
             expression_from = self.interpreter_node(node.value)
             if isinstance(node.child, int):
                 size = node.child
-                vector = []
+                vector = [expression_from.value]
                 if size > 1:
                     for i in range(size):
-                        vector.append([expression_from.value])
+                        vector = [vector]
                 if expression_from.type == 'string':
                     return ['vector of string', vector, node.child]
                 elif expression_from.type == 'boolean':
@@ -337,9 +363,6 @@ class Interpreter:
         # EXPRESSION BLOCK
 
         # expression -> math_expression
-        elif node.type == 'unary_expression':
-            if node.value == '-':
-                return self.un_minus(node.child)
         elif node.type == 'binary_expression':
             if node.value == '+':
                 return self.bin_plus(node.child[0], node.child[1])
@@ -364,6 +387,45 @@ class Interpreter:
                 return
             return self.sym_table[self.scope][var]
         # variable -> indexing
+        elif node.type == 'get_indexing':
+            try:
+                var = node.value
+                indexes = []
+                children = node.child
+                while children.type == 'indexing':
+                    if isinstance(children.child, list):
+                        indexes.append(children.child[0])
+                        children = children.child[1]
+                    else:
+                        indexes.append(children.child)
+                        children = children.child
+                for i in range(len(indexes)):
+                    indexes[i] = self.converse.converse('integer', self.interpreter_node(indexes[i])).value
+                current_type = self.sym_table[self.scope][var][0].split(" ")[2]
+                current_var = self.sym_table[self.scope][var][1]
+                full_size = self.sym_table[self.scope][var][2]
+                for index in indexes:
+                    if index == len(current_var):
+                        current_var.append(Variable())
+                    elif index > len(current_var):
+                        print(Error_handler(self.error_types['index_error'], node))
+                    if isinstance(current_var[index], list):
+                        if len(current_var[index]) == 0:
+                            return current_var
+                    current_var = current_var[index]
+                if len(indexes) == full_size:
+                    if isinstance(current_var, list):
+                        return Variable(current_type, current_var[0])
+                    else:
+                        return Variable(current_type, current_var)
+                else:
+                    return current_var
+            except InterpreterConverseError:
+                print(Error_handler(self.error_types['cast'], node))
+            except InterpreterValueError:
+                print(Error_handler(self.error_types['value'], node))
+            except InterpreterNameError:
+                print(Error_handler(self.error_types['undeclared_value'], node))
         elif node.type == 'indexing':
             try:
                 var = node.value
@@ -386,9 +448,12 @@ class Interpreter:
                         current_var.append(Variable())
                     elif index > len(current_var):
                         print(Error_handler(self.error_types['index_error'], node))
+                    if isinstance(current_var[index], list):
+                        if len(current_var[index]) == 0:
+                            return current_var
                     current_var = current_var[index]
                 if len(indexes) == full_size:
-                    return Variable(current_type, current_var)
+                    return current_var
                 else:
                     return current_var
             except InterpreterConverseError:
@@ -405,8 +470,18 @@ class Interpreter:
 
     def declare_variable(self, node, _type):
         if node.type == 'variables':
-            for child in node.child:
-                self.declare_variable(child, _type)
+            if isinstance(node.child, list):
+                for child in node.child:
+                    self.declare_variable(child, _type)
+            else:
+                node = node.child
+                try:
+                    if node.type == 'assignment':
+                        self.declare(_type, node.child[0].value)
+                    else:
+                        self.declare(_type, node.value)
+                except InterpreterRedeclarationError:
+                    print(Error_handler(self.error_types['value_redeclare'], node))
         else:
             try:
                 if node.type == 'assignment':
@@ -417,6 +492,8 @@ class Interpreter:
                 print(Error_handler(self.error_types['value_redeclare'], node))
         if node.type == 'assignment':
             variable = node.child[0].value
+            if node.child[1].type == "indexing":
+                node.child[1].type = "get_indexing"
             expression = self.interpreter_node(node.child[1])
             try:
                 self.assign(_type, variable, expression)
@@ -437,7 +514,7 @@ class Interpreter:
             vector = []
             if size > 1:
                 for i in range(size):
-                    vector.append([])
+                    vector = [vector]
             self.sym_table[self.scope][_value] = \
                 [_type.split(" ")[0] + ' ' + _type.split(" ")[1] + ' ' + _type.split(" ")[last_elem], vector, size]
 
@@ -459,55 +536,118 @@ class Interpreter:
     def const_val(value):
         if (str(value)).isdigit():
             return Variable('integer', int(value))
-        elif value in ['true', 'false', 'undefined']:
+        elif value in ['true', 'false', True, False, 'undefined']:
             return Variable('boolean', value)
         else:
             return Variable('string', value)
 
     # for math operations
 
-    # unary minus
-    def un_minus(self, _val):
-        expression = self.interpreter_node(_val)
-        curr = self.converse.converse('integer', expression)
-        curr.value *= -1
-        return curr
-
     # binary plus
     def bin_plus(self, _val1, _val2):
-        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
-        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
-        return Variable('integer', expression1.value + expression2.value)
+        if isinstance(_val1, Node):
+            _val1 = self.interpreter_node(_val1)
+            _val2 = self.interpreter_node(_val2)
+            if isinstance(_val1, Variable) and isinstance(_val2, Variable):
+                if _val1.type == _val2.type == "integer":
+                    return Variable('integer', _val1.value + _val2.value)
+                elif _val1.type == _val2.type == "boolean":
+                    return Variable('boolean', bool(_val1.value) or bool(_val2.value))
+                elif _val1.type == _val2.type == "string":
+                    return Variable('string', _val1.value + _val2.value)
+            else:
+                _val = copy.deepcopy(_val1)
+                for i in range(len(_val[1])):
+                    _val[1][i] = self.bin_plus(_val1[1][i], _val2[1][i])
+                return _val
+        else:
+            if isinstance(_val1, list):
+                _val = copy.deepcopy(_val1)
+                for i in range(len(_val)):
+                    _val[i] = self.bin_plus(_val1[i], _val2[i])
+                return _val
+            if isinstance(_val1, int):
+                return _val1 + _val2
+            elif isinstance(_val1, bool):
+                return _val1 or _val2
+            elif isinstance(_val1, str):
+                return _val1 + _val2
+            return _val1
 
     # binary minus
     def bin_minus(self, _val1, _val2):
-        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
-        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
-        return Variable('integer', expression1.value - expression2.value)
+        if isinstance(_val1, Node):
+            _val1 = self.interpreter_node(_val1)
+            _val2 = self.interpreter_node(_val2)
+            if isinstance(_val1, Variable) and isinstance(_val2, Variable):
+                if _val1.type == _val2.type == "integer":
+                    return Variable('integer', _val1.value - _val2.value)
+                elif _val1.type == _val2.type == "boolean":
+                    return Variable('boolean', bool(_val1.value) ^ bool(_val2.value))
+                elif _val1.type == _val2.type == "string":
+                    return Variable('string', "".join(_val1.value.rsplit(_val2.value)))
+            else:
+                _val = copy.deepcopy(_val1)
+                for i in range(len(_val[1])):
+                    _val[1][i] = self.bin_minus(_val1[1][i], _val2[1][i])
+                return _val
+        else:
+            if isinstance(_val1, list):
+                _val = copy.deepcopy(_val1)
+                for i in range(len(_val1)):
+                    _val[i] = self.bin_minus(_val1[i], _val2[i])
+                return _val
+            if isinstance(_val1, int):
+                return _val1 - _val2
+            elif isinstance(_val1, bool):
+                return _val1 ^ _val2
+            elif isinstance(_val1, str):
+                return "".join(_val1.value.rsplit(_val2.value))
+            return _val1
 
     # binary greater
     def bin_gr(self, _val1, _val2):
-        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
-        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
-        return Variable('boolean', 'true') if expression1.value > expression2.value else Variable('boolean', 'false')
+        expression1 = self.interpreter_node(_val1)
+        expression2 = self.interpreter_node(_val2)
+        if isinstance(expression1, Variable) and isinstance(expression2, Variable):
+            return Variable('boolean', True) if expression1.value > expression2.value else Variable('boolean', False)
+        elif isinstance(expression1, list) and isinstance(expression2, list):
+            return Variable('boolean', True) if expression1[1] > expression2[1] else Variable('boolean', False)
+        else:
+            return Variable('boolean', True) if expression1 > expression2 else Variable('boolean', False)
 
     # binary less
     def bin_ls(self, _val1, _val2):
-        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
-        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
-        return Variable('boolean', 'true') if expression1.value < expression2.value else Variable('boolean', 'false')
+        expression1 = self.interpreter_node(_val1)
+        expression2 = self.interpreter_node(_val2)
+        if isinstance(expression1, Variable) and isinstance(expression2, Variable):
+            return Variable('boolean', True) if expression1.value < expression2.value else Variable('boolean', False)
+        elif isinstance(expression1, list) and isinstance(expression2, list):
+            return Variable('boolean', True) if expression1[1] < expression2[1] else Variable('boolean', False)
+        else:
+            return Variable('boolean', True) if expression1 > expression2 else Variable('boolean', False)
 
     # binary equal
     def bin_eq(self, _val1, _val2):
-        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
-        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
-        return Variable('boolean', 'true') if expression1.value == expression2.value else Variable('boolean', 'false')
+        expression1 = self.interpreter_node(_val1)
+        expression2 = self.interpreter_node(_val2)
+        if isinstance(expression1, Variable) and isinstance(expression2, Variable):
+            return Variable('boolean', True) if expression1.value == expression2.value else Variable('boolean', False)
+        elif isinstance(expression1, list) and isinstance(expression2, list):
+            return Variable('boolean', True) if expression1[1] == expression2[1] else Variable('boolean', False)
+        else:
+            return Variable('boolean', True) if expression1 == expression2 else Variable('boolean', False)
 
     # binary not equal
     def bin_not_eq(self, _val1, _val2):
-        expression1 = self.converse.converse('integer', self.interpreter_node(_val1))
-        expression2 = self.converse.converse('integer', self.interpreter_node(_val2))
-        return Variable('boolean', 'true') if expression1.value != expression2.value else Variable('boolean', 'false')
+        expression1 = self.interpreter_node(_val1)
+        expression2 = self.interpreter_node(_val2)
+        if isinstance(expression1, Variable) and isinstance(expression2, Variable):
+            return Variable('boolean', True) if expression1.value != expression2.value else Variable('boolean', False)
+        elif isinstance(expression1, list) and isinstance(expression2, list):
+            return Variable('boolean', True) if expression1[1] != expression2[1] else Variable('boolean', False)
+        else:
+            return Variable('boolean', True) if expression1 != expression2 else Variable('boolean', False)
 
     # for robot
 
@@ -545,7 +685,6 @@ class Interpreter:
             raise InterpreterNameError
         else:
             if self.sym_table[self.scope][_value][2] != 1:
-                self.sym_table[self.scope][_value][2] += 1
                 self.sym_table[self.scope][_value][1].append([val.value])
             elif val.type in self.sym_table[self.scope][_value][0].split(" "):
                 self.sym_table[self.scope][_value][1].append(val.value)
@@ -554,7 +693,8 @@ class Interpreter:
 
     @staticmethod
     def vector_push_back_2(_value, val: Variable):
-        _value.append(val.value)
+        if not isinstance(_value, Variable):
+            _value.append(val.value)
 
     def vector_push_front(self, _value, val: Variable):
         _value = _value.value
@@ -562,7 +702,6 @@ class Interpreter:
             raise InterpreterNameError
         else:
             if self.sym_table[self.scope][_value][2] != 1:
-                self.sym_table[self.scope][_value][2] += 1
                 self.sym_table[self.scope][_value][1].insert(0, [val.value])
             elif val.type in self.sym_table[self.scope][_value][0].split(" "):
                 self.sym_table[self.scope][_value][1].insert(0, val.value)
@@ -571,7 +710,8 @@ class Interpreter:
 
     @staticmethod
     def vector_push_front_2(_value, val: Variable):
-        _value.insert(0, val.value)
+        if not isinstance(_value, Variable):
+            _value.insert(0, val.value)
 
     def vector_pop_front(self, _value):
         _value = _value.value
@@ -605,7 +745,7 @@ class Interpreter:
 
     def op_while(self, node):
         try:
-            while self.converse.converse('boolean', self.interpreter_node(node.child['condition'])).value == 'true':
+            while self.converse.converse('boolean', self.interpreter_node(node.child['condition'])).value:
                 self.interpreter_node(node.child['body'])
         except InterpreterConverseError:
             print(Error_handler(self.error_types['cast'], node))
@@ -620,9 +760,9 @@ class Interpreter:
         try:
             condition = self.interpreter_node(node.child['condition'])
             condition = self.converse.converse('boolean', condition).value
-            if condition == 'true':
+            if condition:
                 self.interpreter_node(node.child['body'])
-            elif condition == 'false':
+            elif not condition:
                 if 'else' in node.child:
                     self.interpreter_node(node.child['else'])
         except InterpreterConverseError:
@@ -687,7 +827,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("Tests For Parser/interpretator3")
+            f = open("Tests/math_logic_operators")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -703,6 +843,8 @@ if __name__ == '__main__':
     print(f'Symbols table:\n')
     for sym_table in interpreter.sym_table:
         for keys, values in sym_table.items():
+            if keys == "result":
+                continue
             if isinstance(values, Variable):
                 print(values.type, keys, '=', values.value)
             else:
