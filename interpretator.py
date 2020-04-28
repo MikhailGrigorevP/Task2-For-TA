@@ -2,7 +2,7 @@ import sys
 import copy
 from Parser.parser import parser
 from Tree.syntaxTree import node as Node
-from Robot.robot import Robot, Cell
+from Robot.robot import Robot, Cell, cells
 from Errors.errors import Error_handler
 from Errors.errors import InterpreterNameError
 from Errors.errors import InterpreterConverseError
@@ -668,10 +668,14 @@ class Interpreter:
         return self.robot.rotate_right()
 
     def robot_lms(self):
-        return self.robot.lms()
+        result = self.robot.lms()
+        return Variable('integer', result)
 
     def robot_reflect(self):
-        return self.robot.reflect()
+        result = self.robot.reflect()
+        if result == 'EXIT':
+            print("\n\n========== END HAS BEEN FOUND ==========\n\n")
+        return result
 
     def robot_drill(self):
         return self.robot.drill()
@@ -816,26 +820,44 @@ class Interpreter:
 
 
 def create_robot(descriptor):
+
+    # Text file description
+    # First line - ROBOT (0;0) is left-up corner
+    # > Y X TURN POWER
+    # Second line - MAP SIZE
+    # > N M
+    # Next lines - map
+    # ' ' - empty
+    # c - 'CONCRETE'
+    # w - 'WOOD'
+    # p -'PLASTIC'
+    # g - 'GLASS'
+    # s - 'STEEL'
+    # e - 'EXIT'
+
     with open(descriptor) as file:
         _text = file.readlines()
     robot_info = _text.pop(0).rstrip().split(" ")
     map_size = _text.pop(0).rstrip().split(" ")
-    map_exit = _text.pop(0).rstrip().split(" ")
 
+    # robot set
     x = int(robot_info[0])
     y = int(robot_info[1])
     turn = int(robot_info[2])
     power = int(robot_info[3])
     _map = [0] * int(map_size[0])
+
     for i in range(int(map_size[0])):
         _map[i] = [0] * int((map_size[1]))
     for i in range(int(map_size[0])):
         for j in range(int(map_size[1])):
             _map[i][j] = Cell("EMPTY")
-    _map[int(map_exit[0])][int(map_exit[1])] = Cell('EXIT')
+    pos = 0
     while len(_text) > 0:
-        cell = _text.pop(0).rstrip().split(" ")
-        _map[int(cell[0])][int(cell[1])] = Cell(cell[2])
+        line = list(_text.pop(0).rstrip())
+        line = [Cell(cells[i]) for i in line]
+        _map[pos] = line
+        pos += 1
 
     return Robot(x=x, y=y, turn=turn, power=power, _map=_map)
 
@@ -850,6 +872,10 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
+            #print("Enter input file:")
+            #in_file = input()
+            #print("Enter map file:")
+            #map_file = input()
             with open("Tests/robot") as f:
                 text = f.read()
             f.close()
@@ -874,5 +900,6 @@ if __name__ == '__main__':
                 print(values.type, keys, '=', values.value)
             else:
                 print(values[0], keys, ':', values[1], 'dim:', values[2])
-    print(f'\nRobot:', interpreter.robot)
-    print(f'\nMap:', interpreter.robot.show())
+    print('\nRobot:', interpreter.robot, '\n\nMap:')
+    print()
+    print('\nEnded:', interpreter.robot.show())

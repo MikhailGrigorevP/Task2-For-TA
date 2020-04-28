@@ -1,20 +1,10 @@
 function of integer application() begin
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-forward
-right
+lms
+do forward until lms > 0
+rotate_right
+do forward until lms > 0
+drill
+do forward until lms > 0
+rotate_left
 reflect
 end
