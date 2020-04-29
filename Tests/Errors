@@ -1,0 +1,16 @@
+function of integer application() begin
+    integer a
+    integer b
+    integer c
+    f := 3
+    integer a
+    integer d := 3
+    integer c := "fsd"
+    integer e := true
+    boolean b_a
+    b_a := 3
+    b_a := "fsd"
+    string str_a := "fsfsd"
+    str_a := 2
+    str_a := true
+end

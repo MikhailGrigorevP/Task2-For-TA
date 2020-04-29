@@ -118,6 +118,7 @@ class Interpreter:
         self.tree = None
         self.funcs = None
         self.robot = None
+        self.error = Error_handler()
         self.error_types = {
             'no_application': 1,
             'value_redeclare': 2,
@@ -128,8 +129,8 @@ class Interpreter:
             'value': 7
         }
 
-    def interpreter(self, robot=None, program=None):
-        self.robot = robot
+    def interpreter(self, _robot=None, program=None):
+        self.robot = _robot
         self.program = program
         self.sym_table = [dict()]
         # noinspection PyBroadException
@@ -137,7 +138,7 @@ class Interpreter:
             self.tree, self.funcs = self.parser.parse(self.program)
         except Exception:
             if 'application' not in self.funcs.keys():
-                print(Error_handler(self.error_types['no_application']))
+                print(self.error.call(self.error_types['no_application']))
                 return
         self.interpreter_tree(self.tree)
         self.interpreter_node(self.funcs['application'].child['body'])
@@ -149,6 +150,7 @@ class Interpreter:
         print("\n")
 
     def interpreter_node(self, node):
+
         # nothing
         if node is None:
             return
@@ -193,16 +195,12 @@ class Interpreter:
                             children = children.child
                     for i in range(len(indexes)):
                         indexes[i] = self.converse.converse('integer', self.interpreter_node(indexes[i])).value
-                    current_type = self.sym_table[self.scope][var][0].split(" ")[2]
                     current_var = self.sym_table[self.scope][var][1]
-                    full_size = self.sym_table[self.scope][var][2]
                     for index in indexes:
                         if index == len(current_var):
                             current_var.append(Variable())
                         elif index > len(current_var):
-                            print(Error_handler(self.error_types['index_error'], node))
-                        if index != indexes[len(indexes) - 1]:
-                            current_var = current_var[index]
+                            print(self.error.call(self.error_types['index_error'], node))
                         else:
                             expression = self.interpreter_node(node.child[1])
                             if isinstance(expression, list):
@@ -216,15 +214,15 @@ class Interpreter:
                                 self.sym_table[self.scope]['result'] = expression.value
                         return
                 except InterpreterConverseError:
-                    print(Error_handler(self.error_types['cast'], node))
+                    print(self.error.call(self.error_types['cast'], node))
                 except InterpreterValueError:
-                    print(Error_handler(self.error_types['value'], node))
+                    print(self.error.call(self.error_types['value'], node))
                 except InterpreterNameError:
-                    print(Error_handler(self.error_types['undeclared_value'], node))
+                    print(self.error.call(self.error_types['undeclared_value'], node))
             else:
                 variable = node.child[0].value
             if variable not in self.sym_table[self.scope].keys():
-                print(Error_handler(self.error_types['undeclared_value'], node))
+                print(self.error.call(self.error_types['undeclared_value'], node))
             else:
                 if isinstance(self.sym_table[self.scope][variable], list):
                     _type = self.sym_table[self.scope][variable][0]
@@ -237,9 +235,9 @@ class Interpreter:
                     self.assign(_type, variable, expression)
                     self.sym_table[self.scope]['result'] = expression
                 except InterpreterConverseError:
-                    print(Error_handler(self.error_types['cast'], node))
+                    print(self.error.call(self.error_types['cast'], node))
                 except InterpreterValueError:
-                    print(Error_handler(self.error_types['value'], node))
+                    print(self.error.call(self.error_types['value'], node))
         # statements -> while
         elif node.type == 'while':
             self.op_while(node)
@@ -381,7 +379,7 @@ class Interpreter:
         elif node.type == 'variable':
             var = node.value
             if var not in self.sym_table[self.scope].keys():
-                print(Error_handler(self.error_types['undeclared_value'], node))
+                print(self.error.call(self.error_types['undeclared_value'], node))
                 return
             return self.sym_table[self.scope][var]
         # variable -> indexing
@@ -406,7 +404,7 @@ class Interpreter:
                     if index == len(current_var):
                         current_var.append(Variable())
                     elif index > len(current_var):
-                        print(Error_handler(self.error_types['index_error'], node))
+                        print(self.error.call(self.error_types['index_error'], node))
                     if isinstance(current_var[index], list):
                         if len(current_var[index]) == 0:
                             return current_var
@@ -419,11 +417,11 @@ class Interpreter:
                 else:
                     return current_var
             except InterpreterConverseError:
-                print(Error_handler(self.error_types['cast'], node))
+                print(self.error.call(self.error_types['cast'], node))
             except InterpreterValueError:
-                print(Error_handler(self.error_types['value'], node))
+                print(self.error.call(self.error_types['value'], node))
             except InterpreterNameError:
-                print(Error_handler(self.error_types['undeclared_value'], node))
+                print(self.error.call(self.error_types['undeclared_value'], node))
         elif node.type == 'indexing':
             try:
                 var = node.value
@@ -438,14 +436,13 @@ class Interpreter:
                         children = children.child
                 for i in range(len(indexes)):
                     indexes[i] = self.converse.converse('integer', self.interpreter_node(indexes[i])).value
-                current_type = self.sym_table[self.scope][var][0].split(" ")[2]
                 current_var = self.sym_table[self.scope][var][1]
                 full_size = self.sym_table[self.scope][var][2]
                 for index in indexes:
                     if index == len(current_var):
                         current_var.append(Variable())
                     elif index > len(current_var):
-                        print(Error_handler(self.error_types['index_error'], node))
+                        print(self.error.call(self.error_types['index_error'], node))
                     if isinstance(current_var[index], list):
                         if len(current_var[index]) == 0:
                             return current_var
@@ -455,11 +452,11 @@ class Interpreter:
                 else:
                     return current_var
             except InterpreterConverseError:
-                print(Error_handler(self.error_types['cast'], node))
+                print(self.error.call(self.error_types['cast'], node))
             except InterpreterValueError:
-                print(Error_handler(self.error_types['value'], node))
+                print(self.error.call(self.error_types['value'], node))
             except InterpreterNameError:
-                print(Error_handler(self.error_types['undeclared_value'], node))
+                print(self.error.call(self.error_types['undeclared_value'], node))
         # variable -> string
         elif node.type == 'string':
             return Variable('string', str(node.value))
@@ -479,7 +476,7 @@ class Interpreter:
                     else:
                         self.declare(_type, node.value)
                 except InterpreterRedeclarationError:
-                    print(Error_handler(self.error_types['value_redeclare'], node))
+                    print(self.error.call(self.error_types['value_redeclare'], node))
         else:
             try:
                 if node.type == 'assignment':
@@ -487,7 +484,7 @@ class Interpreter:
                 else:
                     self.declare(_type, node.value)
             except InterpreterRedeclarationError:
-                print(Error_handler(self.error_types['value_redeclare'], node))
+                print(self.error.call(self.error_types['value_redeclare'], node))
         if node.type == 'assignment':
             variable = node.child[0].value
             if node.child[1].type == "indexing":
@@ -496,9 +493,9 @@ class Interpreter:
             try:
                 self.assign(_type, variable, expression)
             except InterpreterConverseError:
-                print(Error_handler(self.error_types['cast'], node))
+                print(self.error.call(self.error_types['cast'], node))
             except InterpreterValueError:
-                print(Error_handler(self.error_types['value'], node))
+                print(self.error.call(self.error_types['value'], node))
 
     def declare(self, _type, _value):
         if _value in self.sym_table[self.scope].keys():
@@ -750,11 +747,11 @@ class Interpreter:
             while self.converse.converse('boolean', self.interpreter_node(node.child['condition'])).value:
                 self.interpreter_node(node.child['body'])
         except InterpreterConverseError:
-            print(Error_handler(self.error_types['cast'], node))
+            print(self.error.call(self.error_types['cast'], node))
         except InterpreterValueError:
-            print(Error_handler(self.error_types['value'], node))
+            print(self.error.call(self.error_types['value'], node))
         except InterpreterNameError:
-            print(Error_handler(self.error_types['undeclared_value'], node))
+            print(self.error.call(self.error_types['undeclared_value'], node))
 
     # for if
 
@@ -768,11 +765,11 @@ class Interpreter:
                 if 'else' in node.child:
                     self.interpreter_node(node.child['else'])
         except InterpreterConverseError:
-            print(Error_handler(self.error_types['cast'], node))
+            print(self.error.call(self.error_types['cast'], node))
         except InterpreterValueError:
-            print(Error_handler(self.error_types['value'], node))
+            print(self.error.call(self.error_types['value'], node))
         except InterpreterNameError:
-            print(Error_handler(self.error_types['undeclared_value'], node))
+            print(self.error.call(self.error_types['undeclared_value'], node))
 
     # for functions
 
@@ -790,7 +787,7 @@ class Interpreter:
                 func_param.reverse()
                 break
         if func_name not in self.funcs.keys() and func_name not in self.sym_table[self.scope].keys():
-            print(Error_handler(self.error_types['undeclared_value'], node))
+            print(self.error.call(self.error_types['undeclared_value'], node))
             return
         self.scope += 1
         self.sym_table.append(dict())
@@ -876,7 +873,7 @@ if __name__ == '__main__':
             #in_file = input()
             #print("Enter map file:")
             #map_file = input()
-            with open("Tests/robot") as f:
+            with open("Tests/Errors") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -890,7 +887,7 @@ if __name__ == '__main__':
     robot = create_robot("Tests/map")
 
     interpreter = Interpreter()
-    interpreter.interpreter(program=text, robot=robot)
+    interpreter.interpreter(program=text, _robot=robot)
     print(f'Symbols table:\n')
     for sym_table in interpreter.sym_table:
         for keys, values in sym_table.items():
@@ -903,3 +900,4 @@ if __name__ == '__main__':
     print('\nRobot:', interpreter.robot, '\n\nMap:')
     print()
     print('\nEnded:', interpreter.robot.show())
+    print('\nErrors:')

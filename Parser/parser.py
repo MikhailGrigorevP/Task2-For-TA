@@ -95,7 +95,7 @@ class parser(object):
     @staticmethod
     def p_declaration(p):
         """declaration : type variables"""
-        p[0] = node('declaration', val=p[1], ch=p[2])
+        p[0] = node('declaration', val=p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_comment(p):
@@ -137,9 +137,9 @@ class parser(object):
                 | variable
                 | assignment"""
         if len(p) == 4:
-            p[0] = node('variables', ch=[p[1], p[3]])
+            p[0] = node('variables', ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = node('variables', ch=p[1])
+            p[0] = node('variables', ch=p[1], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_assignment(p):
@@ -151,7 +151,7 @@ class parser(object):
         """variable : VARIABLE indexing
                     | VARIABLE"""
         if len(p) == 2:
-            p[0] = node('variable', p[1])
+            p[0] = node('variable', p[1], no=p.lineno(1), pos=p.lexpos(1))
         else:
             p[0] = node('indexing', p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
 
