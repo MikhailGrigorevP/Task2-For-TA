@@ -8,6 +8,7 @@ from Errors.errors import InterpreterNameError
 from Errors.errors import InterpreterConverseError
 from Errors.errors import InterpreterValueError
 from Errors.errors import InterpreterRedeclarationError
+from Errors.errors import InterpreterIndexError
 
 
 # Item of symbol table
@@ -34,27 +35,32 @@ class TypeConversion:
         pass
 
     def converse(self, _type, var):
-        if _type == var.type:
-            return var
-        if _type == 'boolean':
-            if var.type == 'integer':
-                return self.int_to_bool(var)
-            if var.type == 'string':
-                return self.string_to_bool(var)
-        if _type == 'integer':
-            if var.type == 'boolean':
-                return self.bool_to_int(var)
-            if var.type == 'string':
-                return self.string_to_int(var)
-        if _type == 'string':
-            if var.type == 'vector':
-                return self.vector_to_string(var)
-            if var.type == 'boolean':
-                return self.bool_to_string(var)
-            if var.type == 'integer':
-                return self.int_to_string(var)
-        else:
-            raise ValueError('wrong type')
+        try:
+            if _type == var.type:
+                return var
+            if _type == 'boolean':
+                if var.type == 'integer':
+                    return self.int_to_bool(var)
+                if var.type == 'string':
+                    return self.string_to_bool(var)
+            if _type == 'integer':
+                if var.type == 'boolean':
+                    return self.bool_to_int(var)
+                if var.type == 'string':
+                    return self.string_to_int(var)
+            if _type == 'string':
+                if var.type == 'vector':
+                    return self.vector_to_string(var)
+                if var.type == 'boolean':
+                    return self.bool_to_string(var)
+                if var.type == 'integer':
+                    return self.int_to_string(var)
+            else:
+                raise InterpreterValueError('wrong type')
+        except ValueError:
+            raise InterpreterValueError('wrong type')
+        except InterpreterValueError:
+            raise InterpreterValueError('wrong type')
 
     @staticmethod
     def bool_to_int(value):
@@ -230,7 +236,14 @@ class Interpreter:
                     _type = self.sym_table[self.scope][variable].type
                 if node.child[1].type == "indexing":
                     node.child[1].type = "get_indexing"
-                expression = self.interpreter_node(node.child[1])
+                try:
+                    expression = self.interpreter_node(node.child[1])
+                except InterpreterConverseError:
+                    print(self.error.call(self.error_types['cast'], node))
+                    return
+                except InterpreterValueError:
+                    print(self.error.call(self.error_types['value'], node))
+                    return
                 try:
                     self.assign(_type, variable, expression)
                     self.sym_table[self.scope]['result'] = expression
@@ -404,7 +417,7 @@ class Interpreter:
                     if index == len(current_var):
                         current_var.append(Variable())
                     elif index > len(current_var):
-                        print(self.error.call(self.error_types['index_error'], node))
+                        raise InterpreterIndexError
                     if isinstance(current_var[index], list):
                         if len(current_var[index]) == 0:
                             return current_var
@@ -417,11 +430,15 @@ class Interpreter:
                 else:
                     return current_var
             except InterpreterConverseError:
-                print(self.error.call(self.error_types['cast'], node))
+                raise InterpreterConverseError
             except InterpreterValueError:
-                print(self.error.call(self.error_types['value'], node))
+                raise InterpreterValueError
             except InterpreterNameError:
-                print(self.error.call(self.error_types['undeclared_value'], node))
+                raise InterpreterNameError
+            except InterpreterIndexError:
+                raise InterpreterIndexError
+            except IndexError:
+                raise InterpreterIndexError
         elif node.type == 'indexing':
             try:
                 var = node.value
@@ -489,7 +506,17 @@ class Interpreter:
             variable = node.child[0].value
             if node.child[1].type == "indexing":
                 node.child[1].type = "get_indexing"
-            expression = self.interpreter_node(node.child[1])
+            try:
+                expression = self.interpreter_node(node.child[1])
+            except InterpreterConverseError:
+                print(self.error.call(self.error_types['cast'], node))
+                return
+            except InterpreterValueError:
+                print(self.error.call(self.error_types['value'], node))
+                return
+            except InterpreterIndexError:
+                print(self.error.call(self.error_types['index_error'], node))
+                return
             try:
                 self.assign(_type, variable, expression)
             except InterpreterConverseError:
@@ -817,7 +844,6 @@ class Interpreter:
 
 
 def create_robot(descriptor):
-
     # Text file description
     # First line - ROBOT (0;0) is left-up corner
     # > Y X TURN POWER
@@ -869,10 +895,10 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            #print("Enter input file:")
-            #in_file = input()
-            #print("Enter map file:")
-            #map_file = input()
+            # print("Enter input file:")
+            # in_file = input()
+            # print("Enter map file:")
+            # map_file = input()
             with open("Tests/Errors") as f:
                 text = f.read()
             f.close()

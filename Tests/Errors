@@ -1,8 +1,10 @@
 function of integer application() begin
+    vector of integer v
+    integer f := v[1]
     integer a
     integer b
     integer c
-    f := 3
+    p := 9
     integer a
     integer d := 3
     integer c := "fsd"
@@ -13,4 +15,5 @@ function of integer application() begin
     string str_a := "fsfsd"
     str_a := 2
     str_a := true
+    a := "f" to integer
 end
