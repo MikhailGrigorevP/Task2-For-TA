@@ -7,52 +7,88 @@ class Error_handler:
     def __init__(self):
         self.type = None
         self.node = None
+        self.types = ['UnexpectedError',
+                      'NoInputPoint',
+                      'RedeclarationError',
+                      'UndeclaredError',
+                      'IndexError',
+                      'FuncCallError',
+                      'ConverseError',
+                      'ValueError',
+                      'ApplicationCall',
+                      'WrongParameters',
+                      'Recursion']
 
     def call(self, err_type, node=None):
         self.type = err_type
         self.node = node
-        sys.stderr.write(f'Error {self.type}: ')
+        sys.stderr.write(f'Error {self.types[int(err_type)]}: ')
+        if self.type == 0:
+            sys.stderr.write(f' incorrect syntax at '
+                                 f'{self.node.child[0].lineno} line \n')
+            return
         if self.type == 1:
-            sys.stderr.write(f'no input point\n')
+            sys.stderr.write(f'no "application" function detected\n')
             return
         elif self.type == 2:
             if node.type == 'assignment':
                 sys.stderr.write(f'variable "{self.node.child[0].value}" at '
-                                 f'{self.node.child[0].lineno}:{self.node.child[0].lexpos} is already declared\n')
+                                 f'{self.node.child[0].lineno} line is already declared\n')
             else:
                 sys.stderr.write(f'variable "{self.node.value}" at '
-                                 f'{self.node.lineno}:{self.node.lexpos} is already declared\n')
+                                 f'{self.node.lineno} line is already declared\n')
         elif self.type == 3:
             if node.type == 'assignment':
                 sys.stderr.write(f'variable "{self.node.child[0].value}" at '
-                                 f'{self.node.child[0].lineno}:{self.node.child[0].lexpos} is used before declaration\n')
+                                 f'{self.node.child[0].lineno} line is used before declaration\n')
             else:
                 sys.stderr.write(f'variable "{self.node.value}" at '
-                                 f'{self.node.lineno}:{self.node.lexpos} is used before declaration\n')
+                                 f'{self.node.lineno} line is used before declaration\n')
         elif self.type == 4:
             if node.type == 'assignment':
                 sys.stderr.write(f'index error "{self.node.child[0].value}" at '
-                             f'{self.node.child[0].lineno}:{self.node.child[0].lexpos}\n')
+                                 f'{self.node.child[0].lineno} line\n')
             else:
                 sys.stderr.write(f'index error "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos}\n')
+                                 f'{self.node.lineno} line\n')
         elif self.type == 5:
             sys.stderr.write(f'Unknown function call "{self.node.value}" at '
-                             f'{self.node.lineno}:{self.node.lexpos}\n')
+                             f'{self.node.lineno} line\n')
         elif self.type == 6:
             if node.type == 'assignment':
                 sys.stderr.write(f'wrong type variable "{self.node.child[0].value}" at '
-                                 f'{self.node.child[0].lineno}:{self.node.child[0].lexpos}\n')
+                                 f'{self.node.child[0].lineno} line\n')
             else:
                 sys.stderr.write(f'failed to converse variable "{self.node.value}" at '
-                                 f'{self.node.lineno}:{self.node.lexpos}\n')
+                                 f'{self.node.lineno} line\n')
         elif self.type == 7:
             if node.type == 'assignment':
                 sys.stderr.write(f'incompatible value and type: "{self.node.child[0].value}" at'
-                             f' {self.node.child[0].lineno}:{self.node.child[0].lexpos}\n')
+                                 f' {self.node.child[0].lineno} line\n')
             else:
-                sys.stderr.write(f'incompatible value and type: "{self.node.value}" at'
-                             f' {self.node.lineno}:{self.node.lexpos}\n')
+                sys.stderr.write(f'unexpected value type: "{self.node.value}" at'
+                                 f' {self.node.lineno} line\n')
+        elif self.type == 8:
+            if node.type == 'assignment':
+                sys.stderr.write(f'tried to call application function: "{self.node.child[0].value}" at'
+                                 f' {self.node.child[0].lineno} line\n')
+            else:
+                sys.stderr.write(f'tried to call application function: "{self.node.value}" at'
+                                 f' {self.node.lineno} line\n')
+        elif self.type == 9:
+            if node.type == 'assignment':
+                sys.stderr.write(f'tried to call function with wrong parameters: "{self.node.child[0].value}" at'
+                                 f' {self.node.child[0].lineno} line\n')
+            else:
+                sys.stderr.write(f'tried to call function with wrong parameters: "{self.node.value}" at'
+                                 f' {self.node.lineno} line\n')
+        elif self.type == 10:
+            if node.type == 'assignment':
+                sys.stderr.write(f'function calls itself too many times: "{self.node.child[0].value}" at'
+                                 f' {self.node.child[0].lineno} line\n')
+            else:
+                sys.stderr.write(f'function calls itself too many times: "{self.node.value}" at'
+                                 f' {self.node.lineno} line\n')
 
 
 class InterpreterNameError(Exception):
@@ -72,4 +108,12 @@ class InterpreterConverseError(Exception):
 
 
 class InterpreterValueError(Exception):
+    pass
+
+
+class InterpreterApplicationCall(Exception):
+    pass
+
+
+class InterpreterRecursion(Exception):
     pass

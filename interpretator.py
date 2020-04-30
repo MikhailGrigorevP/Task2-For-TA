@@ -9,6 +9,8 @@ from Errors.errors import InterpreterConverseError
 from Errors.errors import InterpreterValueError
 from Errors.errors import InterpreterRedeclarationError
 from Errors.errors import InterpreterIndexError
+from Errors.errors import InterpreterApplicationCall
+from Errors.errors import InterpreterRecursion
 
 
 # Item of symbol table
@@ -126,26 +128,27 @@ class Interpreter:
         self.robot = None
         self.error = Error_handler()
         self.error_types = {
-            'no_application': 1,
-            'value_redeclare': 2,
-            'undeclared_value': 3,
-            'index_error': 4,
-            'func_call_error': 5,
-            'cast': 6,
-            'value': 7
+            'UnexpectedError': 0,
+            'NoInputPoint': 1,
+            'RedeclarationError': 2,
+            'UndeclaredError': 3,
+            'IndexError': 4,
+            'FuncCallError': 5,
+            'ConserveError': 6,
+            'ValueError': 7,
+            'ApplicationCall': 8,
+            'WrongParameters': 9,
+            'Recursion': 10
         }
 
     def interpreter(self, _robot=None, program=None):
         self.robot = _robot
         self.program = program
         self.sym_table = [dict()]
-        # noinspection PyBroadException
-        try:
-            self.tree, self.funcs = self.parser.parse(self.program)
-        except Exception:
-            if 'application' not in self.funcs.keys():
-                print(self.error.call(self.error_types['no_application']))
-                return
+        self.tree, self.funcs = self.parser.parse(self.program)
+        if 'application' not in self.funcs.keys():
+            print(self.error.call(self.error_types['NoInputPoint']))
+            return
         self.interpreter_tree(self.tree)
         self.interpreter_node(self.funcs['application'].child['body'])
 
@@ -169,7 +172,14 @@ class Interpreter:
         # program - statements
         elif node.type == 'statements':
             for ch in node.child:
-                self.interpreter_node(ch)
+                try:
+                    self.interpreter_node(ch)
+                except InterpreterRecursion:
+                    print(self.error.call(self.error_types['Recursion'], node))
+                    break
+
+        elif node.type == 'error':
+            print(self.error.call(self.error_types['UnexpectedError'], node))
 
         # STATEMENTS BLOCK
 
@@ -206,7 +216,7 @@ class Interpreter:
                         if index == len(current_var):
                             current_var.append(Variable())
                         elif index > len(current_var):
-                            print(self.error.call(self.error_types['index_error'], node))
+                            print(self.error.call(self.error_types['IndexError'], node))
                         else:
                             expression = self.interpreter_node(node.child[1])
                             if isinstance(expression, list):
@@ -220,15 +230,15 @@ class Interpreter:
                                 self.sym_table[self.scope]['result'] = expression.value
                         return
                 except InterpreterConverseError:
-                    print(self.error.call(self.error_types['cast'], node))
+                    print(self.error.call(self.error_types['ConserveError'], node))
                 except InterpreterValueError:
-                    print(self.error.call(self.error_types['value'], node))
+                    print(self.error.call(self.error_types['ValueError'], node))
                 except InterpreterNameError:
-                    print(self.error.call(self.error_types['undeclared_value'], node))
+                    print(self.error.call(self.error_types['UndeclaredError'], node))
             else:
                 variable = node.child[0].value
             if variable not in self.sym_table[self.scope].keys():
-                print(self.error.call(self.error_types['undeclared_value'], node))
+                print(self.error.call(self.error_types['UndeclaredError'], node))
             else:
                 if isinstance(self.sym_table[self.scope][variable], list):
                     _type = self.sym_table[self.scope][variable][0]
@@ -239,18 +249,20 @@ class Interpreter:
                 try:
                     expression = self.interpreter_node(node.child[1])
                 except InterpreterConverseError:
-                    print(self.error.call(self.error_types['cast'], node))
+                    print(self.error.call(self.error_types['ConserveError'], node))
                     return
                 except InterpreterValueError:
-                    print(self.error.call(self.error_types['value'], node))
+                    print(self.error.call(self.error_types['ValueError'], node))
                     return
                 try:
                     self.assign(_type, variable, expression)
                     self.sym_table[self.scope]['result'] = expression
+                except InterpreterNameError:
+                    print(self.error.call(self.error_types['UndeclaredError'], node))
                 except InterpreterConverseError:
-                    print(self.error.call(self.error_types['cast'], node))
+                    print(self.error.call(self.error_types['ConserveError'], node))
                 except InterpreterValueError:
-                    print(self.error.call(self.error_types['value'], node))
+                    print(self.error.call(self.error_types['ValueError'], node))
         # statements -> while
         elif node.type == 'while':
             self.op_while(node)
@@ -364,7 +376,13 @@ class Interpreter:
             pass
         # statements -> call
         elif node.type == 'call':
-            return self.function_call(node)
+            try:
+                return self.function_call(node)
+            except InterpreterApplicationCall:
+                print(self.error.call(self.error_types['ApplicationCall'], node))
+                return None
+            except InterpreterRecursion:
+                raise InterpreterRecursion
         # statements -> return
         elif node.type == 'return':
             self.sym_table[self.scope]['result'] = self.interpreter_node(node.value)
@@ -392,7 +410,7 @@ class Interpreter:
         elif node.type == 'variable':
             var = node.value
             if var not in self.sym_table[self.scope].keys():
-                print(self.error.call(self.error_types['undeclared_value'], node))
+                print(self.error.call(self.error_types['UndeclaredError'], node))
                 return
             return self.sym_table[self.scope][var]
         # variable -> indexing
@@ -459,7 +477,7 @@ class Interpreter:
                     if index == len(current_var):
                         current_var.append(Variable())
                     elif index > len(current_var):
-                        print(self.error.call(self.error_types['index_error'], node))
+                        print(self.error.call(self.error_types['IndexError'], node))
                     if isinstance(current_var[index], list):
                         if len(current_var[index]) == 0:
                             return current_var
@@ -469,11 +487,11 @@ class Interpreter:
                 else:
                     return current_var
             except InterpreterConverseError:
-                print(self.error.call(self.error_types['cast'], node))
+                print(self.error.call(self.error_types['ConserveError'], node))
             except InterpreterValueError:
-                print(self.error.call(self.error_types['value'], node))
+                print(self.error.call(self.error_types['ValueError'], node))
             except InterpreterNameError:
-                print(self.error.call(self.error_types['undeclared_value'], node))
+                print(self.error.call(self.error_types['UndeclaredError'], node))
         # variable -> string
         elif node.type == 'string':
             return Variable('string', str(node.value))
@@ -493,7 +511,8 @@ class Interpreter:
                     else:
                         self.declare(_type, node.value)
                 except InterpreterRedeclarationError:
-                    print(self.error.call(self.error_types['value_redeclare'], node))
+                    print(self.error.call(self.error_types['RedeclarationError'], node))
+                    return
         else:
             try:
                 if node.type == 'assignment':
@@ -501,7 +520,7 @@ class Interpreter:
                 else:
                     self.declare(_type, node.value)
             except InterpreterRedeclarationError:
-                print(self.error.call(self.error_types['value_redeclare'], node))
+                print(self.error.call(self.error_types['RedeclarationError'], node))
         if node.type == 'assignment':
             variable = node.child[0].value
             if node.child[1].type == "indexing":
@@ -509,20 +528,24 @@ class Interpreter:
             try:
                 expression = self.interpreter_node(node.child[1])
             except InterpreterConverseError:
-                print(self.error.call(self.error_types['cast'], node))
+                print(self.error.call(self.error_types['ConserveError'], node))
                 return
             except InterpreterValueError:
-                print(self.error.call(self.error_types['value'], node))
+                print(self.error.call(self.error_types['ValueError'], node))
                 return
             except InterpreterIndexError:
-                print(self.error.call(self.error_types['index_error'], node))
+                print(self.error.call(self.error_types['IndexError'], node))
                 return
             try:
                 self.assign(_type, variable, expression)
             except InterpreterConverseError:
-                print(self.error.call(self.error_types['cast'], node))
+                print(self.error.call(self.error_types['ConserveError'], node))
             except InterpreterValueError:
-                print(self.error.call(self.error_types['value'], node))
+                print(self.error.call(self.error_types['ValueError'], node))
+            except InterpreterIndexError:
+                print(self.error.call(self.error_types['IndexError'], node))
+            except InterpreterNameError:
+                print(self.error.call(self.error_types['UndeclaredError'], node))
 
     def declare(self, _type, _value):
         if _value in self.sym_table[self.scope].keys():
@@ -774,11 +797,13 @@ class Interpreter:
             while self.converse.converse('boolean', self.interpreter_node(node.child['condition'])).value:
                 self.interpreter_node(node.child['body'])
         except InterpreterConverseError:
-            print(self.error.call(self.error_types['cast'], node))
+            print(self.error.call(self.error_types['ConserveError'], node))
         except InterpreterValueError:
-            print(self.error.call(self.error_types['value'], node))
+            print(self.error.call(self.error_types['ValueError'], node))
         except InterpreterNameError:
-            print(self.error.call(self.error_types['undeclared_value'], node))
+            print(self.error.call(self.error_types['UndeclaredError'], node))
+        except IndexError:
+            print(self.error.call(self.error_types['UndeclaredError'], node))
 
     # for if
 
@@ -792,11 +817,13 @@ class Interpreter:
                 if 'else' in node.child:
                     self.interpreter_node(node.child['else'])
         except InterpreterConverseError:
-            print(self.error.call(self.error_types['cast'], node))
+            print(self.error.call(self.error_types['ConserveError'], node))
         except InterpreterValueError:
-            print(self.error.call(self.error_types['value'], node))
+            print(self.error.call(self.error_types['ValueError'], node))
         except InterpreterNameError:
-            print(self.error.call(self.error_types['undeclared_value'], node))
+            print(self.error.call(self.error_types['UndeclaredError'], node))
+        except IndexError:
+            print(self.error.call(self.error_types['UndeclaredError'], node))
 
     # for functions
 
@@ -804,20 +831,47 @@ class Interpreter:
         func_name = node.value
         param = node.child
         func_param = None
-        while isinstance(param, Node):
-            if func_param is None:
-                func_param = []
-            func_param.append(self.interpreter_node(param.child[1].value))
-            param = param.child[0]
-            if not isinstance(param.child, list):
-                func_param.append(self.interpreter_node(param.child.value))
-                func_param.reverse()
-                break
+        try:
+            while isinstance(param, Node):
+                if func_param is None:
+                    func_param = []
+                if len(param.child) > 1:
+                    func_param.append(self.interpreter_node(param.child[1].value))
+                else:
+                    func_param.append(self.interpreter_node(param.child[0].value))
+                param = param.child[0]
+                if not isinstance(param.child, list):
+                    func_param.append(self.interpreter_node(param.value))
+                    func_param.reverse()
+                    break
+        except InterpreterConverseError:
+            print(self.error.call(self.error_types['ConserveError'], node))
+            return None
+        except InterpreterValueError:
+            print(self.error.call(self.error_types['ValueError'], node))
+            return None
+        except InterpreterNameError:
+            print(self.error.call(self.error_types['UndeclaredError'], node))
+            return None
+        except IndexError:
+            print(self.error.call(self.error_types['UndeclaredError'], node))
         if func_name not in self.funcs.keys() and func_name not in self.sym_table[self.scope].keys():
-            print(self.error.call(self.error_types['undeclared_value'], node))
-            return
+            print(self.error.call(self.error_types['FuncCallError'], node))
+            return None
+        if func_name not in self.funcs.keys() and func_name not in self.sym_table[self.scope].keys():
+            print(self.error.call(self.error_types['FuncCallError'], node))
+            return None
+        if func_name == 'application':
+            raise InterpreterApplicationCall
         self.scope += 1
         self.sym_table.append(dict())
+        if '#'.join(func_name) not in self.sym_table[self.scope].keys():
+            self.sym_table[0]['#' + func_name] = 1
+        else:
+            self.sym_table[0]['#' + func_name] += 1
+        if self.sym_table[0]['#' + func_name] > 1000000000:
+            self.scope -= 1
+            raise InterpreterRecursion
         func_subtree = self.funcs[func_name] or self.sym_table[self.scope - 1][func_name]
         get = func_subtree.child['parameters']
         func_get = None
@@ -831,13 +885,42 @@ class Interpreter:
                 func_get.reverse()
                 break
         if func_param:
-            for i in range(len(func_get)):
-                if i < len(func_param):
-                    self.sym_table[self.scope][func_get[i][0]] = func_param[i]
-                else:
-                    self.sym_table[self.scope][func_get[i][0]] = func_get[i][1]
-        self.interpreter_node(func_subtree.child['body'])
-        result = self.sym_table[self.scope]['result']
+            try:
+                for i in range(len(func_get)):
+                    if i < len(func_param):
+                        self.sym_table[self.scope][func_get[i][0]] = func_param[i]
+                    else:
+                        self.sym_table[self.scope][func_get[i][0]] = func_get[i][1]
+            except TypeError:
+                print(self.error.call(self.error_types['WrongParameters'], node))
+                self.scope -= 1
+                return None
+        if func_param and len(func_get) < len(func_param):
+            print(self.error.call(self.error_types['WrongParameters'], node))
+            self.scope -= 1
+            return None
+        result = None
+        try:
+            self.interpreter_node(func_subtree.child['body'])
+            if 'result' in self.sym_table[self.scope].keys():
+                result = self.sym_table[self.scope]['result']
+        except InterpreterRecursion:
+            self.scope -= 1
+            raise InterpreterRecursion
+        except InterpreterApplicationCall:
+            print(self.error.call(self.error_types['ApplicationCall'], node))
+        except RecursionError:
+            self.scope -= 1
+            raise InterpreterRecursion
+        except InterpreterConverseError:
+            print(self.error.call(self.error_types['ConserveError'], node))
+        except InterpreterValueError:
+            print(self.error.call(self.error_types['ValueError'], node))
+        except InterpreterNameError:
+            print(self.error.call(self.error_types['UndeclaredError'], node))
+        except IndexError:
+            print(self.error.call(self.error_types['UndeclaredError'], node))
+        self.sym_table[0]['#' + func_name] -= 1
         self.scope -= 1
         self.sym_table.pop()
         return result
@@ -888,21 +971,30 @@ def create_robot(descriptor):
 if __name__ == '__main__':
     correct = False
     text = None
+    isRobot = False
     while not correct:
-        print("Input type? (console, file)")
+        print("Input type? (console, file, robot)")
         inputType = input()
         correct = True
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            # print("Enter input file:")
-            # in_file = input()
-            # print("Enter map file:")
-            # map_file = input()
             with open("Tests/Errors") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
+        elif inputType == "robot":
+            # print("Enter input file:")
+            # in_file = input()
+            # print("Enter map file:")
+            # map_file = input()
+            isRobot = True
+            robot = create_robot("Tests/map")
+            with open("Tests/robot") as f:
+                text = f.read()
+            f.close()
+            print(f'Your file:\n {text}')
+
         else:
             print("I think, you're wrong :)")
             correct = False
@@ -922,8 +1014,10 @@ if __name__ == '__main__':
             if isinstance(values, Variable):
                 print(values.type, keys, '=', values.value)
             else:
-                print(values[0], keys, ':', values[1], 'dim:', values[2])
-    print('\nRobot:', interpreter.robot, '\n\nMap:')
-    print()
-    print('\nEnded:', interpreter.robot.show())
+                if not isinstance(values, int):
+                    print(values[0], keys, ':', values[1], 'dim:', values[2])
+    if isRobot:
+        print('\nRobot:', interpreter.robot, '\n\nMap:')
+        print()
+        print('\nEnded:', interpreter.robot.show())
     print('\nErrors:')

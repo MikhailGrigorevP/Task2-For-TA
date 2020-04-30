@@ -4,6 +4,8 @@ function of integer application() begin
     integer a
     integer b
     integer c
+    integersdf
+    integer d : 3
     p := 9
     integer a
     integer d := 3
@@ -14,6 +16,23 @@ function of integer application() begin
     b_a := "fsd"
     string str_a := "fsfsd"
     str_a := 2
-    str_a := true
-    a := "f" to integer
+    app(5)
+    app2()
+    integer res
+    res := app3()
+    integer str_a := 2
+end
+
+function of integer app() begin
+    integer c := 42
+    integer e := 42
+end
+
+function of integer app2() begin
+    application()
+end
+
+function of integer app3() begin
+    app3()
+    return 1
 end

@@ -1,5 +1,4 @@
 import sys
-
 import ply.lex as lex
 
 reserved = {
@@ -66,7 +65,6 @@ class lexer(object):
     t_BRACKETS = r'\(\)'
     t_DOUBLE_QUOTE = r'\"'
     t_QUOTE = r'\''
-    #t_SPACE = r'\ ' 'SPACE'
     t_LESS = r'\<'
     t_GREATER = r'\>'
     t_EQ = r'\='
@@ -77,36 +75,41 @@ class lexer(object):
     t_COMMA = r'\,'
     t_COMMENT = r'\#'
 
-    def t_VARIABLE(self, t):
+    @staticmethod
+    def t_VARIABLE(t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
         t.type = reserved.get(t.value, 'VARIABLE')
         return t
 
-    def t_DECIMAL(self, t):
+    @staticmethod
+    def t_DECIMAL(t):
         r'\d+'
         t.value = int(t.value)
         return t
 
-    def t_NEWLINE(self, t):
+    @staticmethod
+    def t_NEWLINE(t):
         r'\n+'
-        t.lexer.lineno += len(t.value)
+        t.lexer.lineno += t.value.count('\n')
+        t.lexer.linestart = t.lexer.lexpos
         return t
 
-    def t_error(self, t):
-        sys.stderr.write(f'Illegal character: {t.value[0]} at line {t.lexer.lineno}\n')
+    @staticmethod
+    def t_error(t):
+        sys.stderr.write(f'Error: Illegal character: {t.value[0]} at line {t.lexer.lineno}\n')
         t.lexer.skip(1)
 
     t_ignore = ' \t'
 
-    def input(self, data):
-        return self.lexer.input(data)
+    def input(self, _data):
+        return self.lexer.input(_data)
 
     def token(self):
         return self.lexer.token()
 
 
 if __name__ == '__main__':
-    f = open('../Tests/bubble_sorting')
+    f = open('../Tests/Errors')
     data = f.read()
     f.close()
     lexer = lexer()

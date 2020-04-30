@@ -85,12 +85,14 @@ class parser(object):
     @staticmethod
     def p_statement_error(p):
         """statement : errors NEWLINE"""
-        sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
+        # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
+        # p[0] = node('error', no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_statement_error_no_nl(p):
         """statement : errors"""
-        sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
+        # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
+        p[0] = node('error', no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_declaration(p):
@@ -160,9 +162,9 @@ class parser(object):
         """indexing : L_QBRACKET expression R_QBRACKET indexing
                     | L_QBRACKET expression R_QBRACKET"""
         if len(p) == 5:
-            p[0] = node('indexing', ch=[p[2], p[4]])
+            p[0] = node('indexing', ch=[p[2], p[4]], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = node('indexing', ch=p[2])
+            p[0] = node('indexing', ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_expression(p):
@@ -300,9 +302,9 @@ class parser(object):
         """call : VARIABLE LBRACKET parameters RBRACKET
                 | VARIABLE BRACKETS"""
         if len(p) == 5:
-            p[0] = node('call', p[1], ch=p[3])
+            p[0] = node('call', p[1], ch=p[3], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = node('call', p[1], ch=[])
+            p[0] = node('call', p[1], ch=[], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_empty(p):
@@ -315,18 +317,18 @@ class parser(object):
                       | parameter
                       | CONTINUE"""
         if len(p) == 2:
-            p[0] = node('parameters', ch=p[1])
+            p[0] = node('parameters', ch=[p[1]], no=p.lineno(1), pos=p.lexpos(1))
         elif len(p) == 4:
-            p[0] = node('parameters', ch=[p[1], p[3]])
+            p[0] = node('parameters', ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_parameter(p):
         """parameter : expression
                      | VARIABLE EQ expression"""
         if len(p) == 2:
-            p[0] = node('parameter', p[1])
+            p[0] = node('parameter', p[1], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = node('parameter', p[1], ch=p[3])
+            p[0] = node('parameter', p[1], ch=p[3], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_errors(p):
