@@ -340,7 +340,10 @@ class parser(object):
             p[0] = p[1] + p[2]
 
     def p_error(self, p):
-        sys.stderr.write(f'Syntax error at {p.lineno} line\n')
+        if p.lineno:
+            sys.stderr.write(f'Syntax error at {p.lineno} line\n')
+        else:
+            sys.stderr.write(f'Syntax error\n')
         self.ok = False
 
     def get_f(self):

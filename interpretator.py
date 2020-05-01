@@ -291,41 +291,69 @@ class Interpreter:
         # statements -> command -> vector
         elif node.type == 'vector':
             if node.value == 'pushback':
-                expression = self.interpreter_node(node.child[1])
-                if isinstance(expression, list) and len(expression) > 1:
-                    expression = Variable(expression[0], expression[1])
-                elif isinstance(expression, list):
-                    _type = self.sym_table[self.scope][node.child[1].value][0].split()[2]
-                    expression = Variable(_type, expression[0])
-                if node.child[0].type == 'indexing':
-                    var = self.interpreter_node(node.child[0])
-                    if isinstance(var, list) and isinstance(var[0], list) and len(var[0]) == 0:
-                        var[0].append(expression.value)
+                try:
+                    expression = self.interpreter_node(node.child[1])
+                    if isinstance(expression, list) and len(expression) > 1:
+                        expression = Variable(expression[0], expression[1])
+                    elif isinstance(expression, list):
+                        _type = self.sym_table[self.scope][node.child[1].value][0].split()[2]
+                        expression = Variable(_type, expression[0])
+                    if node.child[0].type == 'indexing':
+                        var = self.interpreter_node(node.child[0])
+                        if isinstance(var, list) and isinstance(var[0], list) and len(var[0]) == 0:
+                            var[0].append(expression.value)
+                        else:
+                            self.vector_push_back_2(var, expression)
+                            self.sym_table[self.scope]['result'] = expression.value
                     else:
-                        self.vector_push_back_2(var, expression)
-                        self.sym_table[self.scope]['result'] = expression.value
-                else:
-                    self.vector_push_back(node.child[0], expression)
+                        self.vector_push_back(node.child[0], expression)
+                except InterpreterConverseError:
+                    self.error.call(self.error_types['ConserveError'], node)
+                except InterpreterValueError:
+                    self.error.call(self.error_types['ValueError'], node)
+                except InterpreterNameError:
+                    self.error.call(self.error_types['UndeclaredError'], node)
             if node.value == 'pushfront':
-                expression = self.interpreter_node(node.child[1])
-                if node.child[0].type == 'indexing':
-                    var = self.interpreter_node(node.child[0])
-                    self.vector_push_front_2(var, expression)
-                    self.sym_table[self.scope]['result'] = expression.value
-                else:
-                    self.vector_push_front(node.child[0], expression)
+                try:
+                    expression = self.interpreter_node(node.child[1])
+                    if node.child[0].type == 'indexing':
+                        var = self.interpreter_node(node.child[0])
+                        self.vector_push_front_2(var, expression)
+                        self.sym_table[self.scope]['result'] = expression.value
+                    else:
+                        self.vector_push_front(node.child[0], expression)
+                except InterpreterConverseError:
+                    self.error.call(self.error_types['ConserveError'], node)
+                except InterpreterValueError:
+                    self.error.call(self.error_types['ValueError'], node)
+                except InterpreterNameError:
+                    self.error.call(self.error_types['UndeclaredError'], node)
             if node.value == 'popback':
-                if node.child.type == 'indexing':
-                    var = self.interpreter_node(node.child)
-                    return self.vector_pop_back_2(var)
-                else:
-                    return self.vector_pop_back(node.child)
+                try:
+                    if node.child.type == 'indexing':
+                        var = self.interpreter_node(node.child)
+                        return self.vector_pop_back_2(var)
+                    else:
+                        return self.vector_pop_back(node.child)
+                except InterpreterConverseError:
+                    self.error.call(self.error_types['ConserveError'], node)
+                except InterpreterValueError:
+                    self.error.call(self.error_types['ValueError'], node)
+                except InterpreterNameError:
+                    self.error.call(self.error_types['UndeclaredError'], node)
             if node.value == 'popfront':
-                if node.child.type == 'indexing':
-                    var = self.interpreter_node(node.child)
-                    return self.vector_pop_front_2(var)
-                else:
-                    return self.vector_pop_front(node.child)
+                try:
+                    if node.child.type == 'indexing':
+                        var = self.interpreter_node(node.child)
+                        return self.vector_pop_front_2(var)
+                    else:
+                        return self.vector_pop_front(node.child)
+                except InterpreterConverseError:
+                    self.error.call(self.error_types['ConserveError'], node)
+                except InterpreterValueError:
+                    self.error.call(self.error_types['ValueError'], node)
+                except InterpreterNameError:
+                    self.error.call(self.error_types['UndeclaredError'], node)
         # statements -> command -> converting
         elif node.type == 'converting':
             expression_from = self.interpreter_node(node.value)
@@ -899,10 +927,18 @@ class Interpreter:
             if func_get is None:
                 func_get = []
             if len(get.child) > 1:
-                func_get.append([get.child[1].value, self.interpreter_node(get.child[1].child).value])
+                try:
+                    func_get.append([get.child[1].value, self.interpreter_node(get.child[1].child).value])
+                except AttributeError:
+                    self.error.call(self.error_types['WrongParameters'], node)
+                    return None
             get = get.child[0]
             if isinstance(get.child, Node):
-                func_get.append([get.value, self.interpreter_node(get.child).value])
+                try:
+                    func_get.append([get.value, self.interpreter_node(get.child).value])
+                except AttributeError:
+                    self.error.call(self.error_types['WrongParameters'], node)
+                    return None
                 func_get.reverse()
                 break
         if func_param:

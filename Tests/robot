@@ -1,10 +1,12 @@
 function of integer application() begin
-lms
-do forward until lms > 0
-rotate_right
-do forward until lms > 0
-drill
-do forward until lms > 0
-rotate_left
-reflect
+    vector of integer stack_x
+    integer x := 0
+    integer y := 0
+    stack_x push front x
+    stack_y push front y
+    integer res := findPath(x, y)
+end
+
+function of integer findPath(x, y) begin
+    return 0
 end
