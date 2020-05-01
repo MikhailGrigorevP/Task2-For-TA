@@ -4,8 +4,6 @@ function of integer application() begin
     integer a
     integer b
     integer c
-    integersdf
-    integer d : 3
     p := 9
     integer a
     integer d := 3

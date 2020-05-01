@@ -152,8 +152,9 @@ class Interpreter:
         self.interpreter_tree(self.tree)
         try:
             self.interpreter_node(self.funcs['application'].child['body'])
-        except:
-            sys.stderr.write("========= Program has finished with fatal error =========")
+        except RecursionError:
+            sys.stderr.write(f'RecursionError: function calls itself too many times\n')
+            sys.stderr.write("========= Program has finished with fatal error =========\n")
 
     @staticmethod
     def interpreter_tree(_tree):
@@ -171,12 +172,7 @@ class Interpreter:
             return
         # program
         if node.type == 'program':
-            try:
-                self.interpreter_node(node.child)
-            except RecursionError:
-                if self.fatal_error:
-                    sys.stderr.write("========= Program has finished with fatal error =========")
-                    return
+            self.interpreter_node(node.child)
         # program - statements
         elif node.type == 'statements':
             try:
@@ -1016,23 +1012,26 @@ if __name__ == '__main__':
 
     # prepare
     parser = parser()
-    tree, func_table = parser.parse(text)
-    robot = create_robot("Tests/map")
+    tree, func_table, correctness = parser.parse(text)
+    if correctness:
+        robot = create_robot("Tests/map")
 
-    interpreter = Interpreter()
-    interpreter.interpreter(program=text, _robot=robot)
-    print(f'Symbols table:\n')
-    for sym_table in interpreter.sym_table:
-        for keys, values in sym_table.items():
-            if keys == "result":
-                continue
-            if isinstance(values, Variable):
-                print(values.type, keys, '=', values.value)
-            else:
-                if not isinstance(values, int):
-                    print(values[0], keys, ':', values[1], 'dim:', values[2])
-    if isRobot:
-        print('\nRobot:', interpreter.robot, '\n\nMap:')
-        print()
-        print('\nEnded:', interpreter.robot.show())
-    print('\nErrors:')
+        interpreter = Interpreter()
+        interpreter.interpreter(program=text, _robot=robot)
+        print(f'Symbols table:\n')
+        for sym_table in interpreter.sym_table:
+            for keys, values in sym_table.items():
+                if keys == "result":
+                    continue
+                if isinstance(values, Variable):
+                    print(values.type, keys, '=', values.value)
+                else:
+                    if not isinstance(values, int):
+                        print(values[0], keys, ':', values[1], 'dim:', values[2])
+        if isRobot:
+            print('\nRobot:', interpreter.robot, '\n\nMap:')
+            print()
+            print('\nEnded:', interpreter.robot.show())
+        print('\nErrors:')
+    else:
+        sys.stderr.write(f'Can\'t intemperate incorrect input file\n')

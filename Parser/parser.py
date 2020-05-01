@@ -20,7 +20,7 @@ class parser(object):
     def parse(self, s):
         try:
             res = self.parser.parse(s)
-            return res, self._functions
+            return res, self._functions, self.ok
         except LexError:
             sys.stderr.write(f'Illegal token {s}\n')
 
@@ -129,8 +129,8 @@ class parser(object):
     @staticmethod
     def p_type_error(p):
         """type : errors"""
-        sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
-        p[0] = node('error')
+        # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
+        p[0] = node('error', no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_variables(p):
@@ -340,7 +340,7 @@ class parser(object):
             p[0] = p[1] + p[2]
 
     def p_error(self, p):
-        print(f'Syntax error at {p}')
+        sys.stderr.write(f'Syntax error at {p}\n')
         self.ok = False
 
     def get_f(self):
@@ -366,6 +366,8 @@ if __name__ == '__main__':
             correct = False
 
     parser = parser()
-    tree, func_table = parser.parse(text)
+    tree, func_table, correctness = parser.parse(text)
+    if not correctness:
+        sys.stderr.write(f'Can\'t intemperate incorrect algorithm\n')
     tree.print()
     print(func_table)
