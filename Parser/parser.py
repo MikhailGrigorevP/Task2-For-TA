@@ -360,7 +360,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests/multidimentional_vectors and type_converse")
+            f = open("../Tests/multidimentionalVectorsAndTypeConverse")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')

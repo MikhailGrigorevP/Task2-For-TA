@@ -1034,7 +1034,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            with open("Tests/Errors") as f:
+            with open("Tests/errors") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -1080,6 +1080,6 @@ if __name__ == '__main__':
             print('\nRobot:', interpreter.robot, '\n\nMap:')
             print()
             print('\nEnded:', interpreter.robot.show())
-        print('\nErrors:')
+        print('\nerrors:')
     else:
         sys.stderr.write(f'Can\'t interpretate incorrect input file\n')
