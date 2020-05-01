@@ -172,7 +172,7 @@ class Robot:
         return True
 
     def rotate_left(self):
-        self.turn = (abs(self.turn - 1)) % 4
+        self.turn = (self.turn - 1) % 4
         return True
 
     def lms(self):
@@ -199,34 +199,59 @@ class Robot:
 
     def drill(self):
         if self.turn == 0:
+            if self.x == len(self.map[0])-2:
+                return 0
             if self.power > self.scan_next(0).solidity[0]:
                 self.power -= self.scan_next(0).solidity[0]
-                self.map[self.y][self.x + 1].solidity[0] = 0
-                self.map[self.y][self.x + 1].type[0] = "EMPTY"
+                if len(self.map[self.y][self.x + 1].type) == 1:
+                    self.map[self.y][self.x + 1].solidity[0] = 0
+                    self.map[self.y][self.x + 1].type[0] = "EMPTY"
+                else:
+                    self.map[self.y][self.x + 1].solidity.pop(0)
+                    self.map[self.y][self.x + 1].type.pop(0)
             else:
                 self.power = 0
             return self.power
         if self.turn == 1:
+            if self.y == len(self.map)-2:
+                return 0
             if self.power > self.scan_next(1).solidity[0]:
                 self.power -= self.scan_next(1).solidity[0]
-                self.map[self.y + 1][self.x].solidity[0] = 0
-                self.map[self.y + 1][self.x].type[0] = "EMPTY"
+                if len(self.map[self.y + 1][self.x].type) == 1:
+                    self.map[self.y + 1][self.x].solidity[0] = 0
+                    self.map[self.y + 1][self.x].type[0] = "EMPTY"
+                else:
+                    self.map[self.y + 1][self.x].solidity.pop(0)
+                    self.map[self.y + 1][self.x].type.pop(0)
             else:
                 self.power = 0
             return self.power
         if self.turn == 2:
+            if self.x == 1:
+                return 0
             if self.power > self.scan_next(2).solidity[0]:
                 self.power -= self.scan_next(2).solidity[0]
-                self.map[self.y][self.x - 1].solidity[0] = 0
-                self.map[self.y][self.x - 1].type[0] = "EMPTY"
+                if len(self.map[self.y][self.x - 1].type) == 1:
+                    self.map[self.y][self.x - 1].solidity[0] = 0
+                    self.map[self.y][self.x - 1].type[0] = "EMPTY"
+                else:
+                    self.map[self.y][self.x - 1].solidity.pop(0)
+                    self.map[self.y][self.x - 1].type.pop(0)
             else:
                 self.power = 0
             return self.power
         if self.turn == 3:
+            if self.y == 1:
+                return 0
             if self.power > self.scan_next(3).solidity[0]:
                 self.power -= self.scan_next(3).solidity[0]
-                self.map[self.y -1][self.x].solidity[0] = 0
-                self.map[self.y - 1][self.x].type[0] = "EMPTY"
+                if len(self.map[self.y - 1][self.x].type) == 1:
+                    self.map[self.y -1][self.x].solidity[0] = 0
+                    self.map[self.y - 1][self.x].type[0] = "EMPTY"
+                else:
+                    self.map[self.y -1][self.x].solidity.pop(0)
+                    self.map[self.y - 1][self.x].type.pop(0)
+
             else:
                 self.power = 0
             return self.power
@@ -235,8 +260,8 @@ class Robot:
         if self.turn == 0:
             return self.map[self.y][self.x + self.lms() + 1].type[0]
         if self.turn == 1:
-            return self.map[self.y + self.lms() - 1][self.x].type[0]
+            return self.map[self.y + self.lms() + 1][self.x].type[0]
         if self.turn == 2:
             return self.map[self.y][self.x - self.lms() - 1].type[0]
         if self.turn == 3:
-            return self.map[self.y - self.lms() + 1][self.x].type[0]
+            return self.map[self.y - self.lms() - 1][self.x].type[0]

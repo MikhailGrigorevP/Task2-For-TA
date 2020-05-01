@@ -1,7 +1,4 @@
-    function of integer return_y (stack_y, size_y, y)
-        return y + stack_y[size_y-1] - stack_y[size_y-2]
-    function of integer return_x (stack_x, size_x, x)
-        return x + stack_x[size_x-1] - stack_x[size_x-2]
+
     function of integer expand_x_back (vm, size_y, y, size_x, lms1) begin
         if x + lms1 < size_x - 1 then begin
         integer steps := x + lms1 - size_x + 1
@@ -114,7 +111,6 @@
                     if lms then
                         if willTurn <> 1 then begin
                             if turn = 0 then expand_x_back (vm, size_y, y, size_x, lms) else if turn = 1 then expand_y_back(vm, size_x, y, x, size_y, stack_y, stack_y_size, lms) else if turn = 2 then expand_x_front (vm, size_y, y, x, size_x, stack_x, stack_x_size, lms) else if turn = 3 then expand_y_front(vm, size_x, x, size_y, lms)
-                            i := lms
                             i := lms
                             do begin
                                 forward

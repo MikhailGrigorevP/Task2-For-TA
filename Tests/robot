@@ -1,12 +1,72 @@
 function of integer application() begin
-    vector of integer stack_x
-    integer x := 0
-    integer y := 0
-    stack_x push front x
-    stack_y push front y
-    integer res := findPath(x, y)
+    integer res := findPath()
+    reflect
 end
 
-function of integer findPath(x, y) begin
+function of integer findPath() begin
+    vector of integer stack_x, stack_y
+    stack_x push front 0
+    stack_y push front 0
+    vector of vector of boolean vm
+    vector of boolean part
+    part push back true
+    vm push back part
+    integer x := 0
+    integer y := 0
+    integer size_x := 0
+    integer size_y := 0
+    integer turn := 0
+    integer numOfTurns := 0
+    boolean willTurn := true
+    boolean exit := false
+    do begin
+        if reflect = "EXIT" then exit := true else begin
+            if lms <> 0 then begin
+                numOfTurns := 0
+                willTurn := false
+                integer i := lms
+                integer free := lms
+                if turn = 0 then free := size_x - 1 - x else if turn = 3 then free := y else if turn = 2 then free := x else if turn = 1 then free := size_y - 1 - y
+                if free < i then i := free
+                do begin
+                    forward
+                    if vm[y] = false then begin
+                        if turn = 0 then x := x + 1 else if turn = 1 then y := y + 1 else if turn = 2 then x := x - 1 else if turn = 3 then y := y - 1
+                        stack_x push front x
+                        stack_y push front y
+                        i := i - 1
+                    end else begin
+                        i:= 0
+                        willTurn := true
+                        end
+                end until i <> 0
+                if lms then if willTurn <> 1 then begin
+                        if turn = 0 then begin
+
+                        end
+                        integer f:= 323
+                        i := lms
+                        do begin
+                            forward
+                            if turn = 0 then x := x + 1 else if turn = 1 then y := y + 1 else if turn = 2 then x := x - 1 else if turn = 3 then y := y - 1
+                            stack_x push front x
+                            stack_y push front y
+                            i := i - 1
+                        end until i <> 0
+                    end
+            end
+            if willTurn then begin
+                    right
+                    turn := turn + 1
+                    numOfTurns := numOfTurns + 1
+                end
+            if numOfTurns = 4 then begin
+                numOfTurns := 0
+                x := stack_x pop front
+                y := stack_y pop front
+            end
+            exit := true
+        end
+    end until exit <> true
     return 0
 end

@@ -11,7 +11,6 @@ from Errors.errors import InterpreterRedeclarationError
 from Errors.errors import InterpreterIndexError
 from Errors.errors import InterpreterApplicationCall
 
-
 # Item of symbol table
 class Variable:
     def __init__(self, var_type='integer', var_value=None):
@@ -123,6 +122,7 @@ class Interpreter:
         self.scope = 0
         self.program = None
         self.fatal_error = False
+        self.find_exit = False
         self.tree = None
         self.funcs = None
         self.robot = None
@@ -166,7 +166,8 @@ class Interpreter:
         print("\n")
 
     def interpreter_node(self, node):
-
+        # log robot
+        # print(self.robot.x, self.robot.y, self.robot.turn, self.robot.power)
         # nothing
         if node is None:
             return
@@ -771,11 +772,11 @@ class Interpreter:
     def robot_reflect(self):
         result = self.robot.reflect()
         if result == 'EXIT':
-            print("\n\n========== END HAS BEEN FOUND ==========\n\n")
-        return result
+            self.find_exit = True
+        return Variable("string", result)
 
     def robot_drill(self):
-        return self.robot.drill()
+        return Variable("integer",  self.robot.drill())
 
     # for vector
     def vector_push_back(self, _value, val: Variable):
@@ -1033,7 +1034,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            with open("Tests/bubble_sorting") as f:
+            with open("Tests/Errors") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -1044,7 +1045,7 @@ if __name__ == '__main__':
             # map_file = input()
             isRobot = True
             robot = create_robot("Tests/map")
-            with open("Tests/robot") as f:
+            with open("Tests/pathFinder") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -1072,6 +1073,10 @@ if __name__ == '__main__':
                     if not isinstance(values, int):
                         print(values[0], keys, ':', values[1], 'dim:', values[2])
         if isRobot:
+            if interpreter.find_exit:
+                print("\n\n========== END HAS BEEN FOUND ==========\n\n")
+            else:
+                print("\n\n========== END HAS NOT BEEN FOUND ==========\n\n")
             print('\nRobot:', interpreter.robot, '\n\nMap:')
             print()
             print('\nEnded:', interpreter.robot.show())

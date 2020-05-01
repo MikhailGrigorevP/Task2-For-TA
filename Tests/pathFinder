@@ -1,0 +1,30 @@
+function of integer application() begin
+    findPath()
+end
+
+function of integer findPath() begin
+    integer turn := 0, x := 0, y :=0
+    integer can
+    boolean noexit := true
+    boolean drillMode := false
+    do begin
+        if reflect = 'EXIT' then noexit := false else if lms > 0 then begin
+                forward
+                if turn = 0 then x := x + 1 else if turn = 1 then y := y + 1 else if turn = 2 then x := x - 1 else if turn = 3 then y := y - 1
+                turn := turn + 1
+                if turn = 4 then turn := 0
+                rotate_right
+                if lms = 0 then begin rotate_left
+                    turn := turn - 1
+                    if turn = 0-1 then turn := 3
+                end
+            end else if drillMode = false then begin rotate_left
+                    turn := turn - 1
+                    if turn = 0-1 then turn := 3
+                end else if drill = 0 then begin rotate_left
+                    turn := turn - 1
+                    if turn = 0-1 then turn := 3
+                end
+            if x = 0 then if y = 0 then if turn = 0 then if drillMode = true then if drill <> 0 then rotate_left else noexit := false else drillMode := true
+    end until noexit
+end
