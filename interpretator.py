@@ -145,16 +145,19 @@ class Interpreter:
         self.robot = _robot
         self.program = program
         self.sym_table = [dict()]
-        self.tree, self.funcs = self.parser.parse(self.program)
-        if 'application' not in self.funcs.keys():
-            self.error.call(self.error_types['NoInputPoint'])
-            return
-        self.interpreter_tree(self.tree)
-        try:
-            self.interpreter_node(self.funcs['application'].child['body'])
-        except RecursionError:
-            sys.stderr.write(f'RecursionError: function calls itself too many times\n')
-            sys.stderr.write("========= Program has finished with fatal error =========\n")
+        self.tree, self.funcs, _correctness = self.parser.parse(self.program)
+        if _correctness:
+            if 'application' not in self.funcs.keys():
+                self.error.call(self.error_types['NoInputPoint'])
+                return
+            self.interpreter_tree(self.tree)
+            try:
+                self.interpreter_node(self.funcs['application'].child['body'])
+            except RecursionError:
+                sys.stderr.write(f'RecursionError: function calls itself too many times\n')
+                sys.stderr.write("========= Program has finished with fatal error =========\n")
+        else:
+            sys.stderr.write(f'Can\'t intemperate incorrect input file\n')
 
     @staticmethod
     def interpreter_tree(_tree):
@@ -856,6 +859,8 @@ class Interpreter:
                     func_param = []
                 if len(param.child) > 1:
                     func_param.append(self.interpreter_node(param.child[1].value))
+                elif len(param.child) == 0:
+                    break
                 else:
                     func_param.append(self.interpreter_node(param.child[0].value))
                 param = param.child[0]
@@ -893,13 +898,15 @@ class Interpreter:
         while isinstance(get, Node):
             if func_get is None:
                 func_get = []
-            func_get.append([get.child[1].value, self.interpreter_node(get.child[1].child).value])
+            if len(get.child) > 1:
+                func_get.append([get.child[1].value, self.interpreter_node(get.child[1].child).value])
             get = get.child[0]
             if isinstance(get.child, Node):
-                func_get.append([get.child.value, self.interpreter_node(get.child.child).value])
+                func_get.append([get.value, self.interpreter_node(get.child).value])
                 func_get.reverse()
                 break
         if func_param:
+            func_param.reverse()
             try:
                 for i in range(len(func_get)):
                     if i < len(func_param):
@@ -990,7 +997,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            with open("Tests/Errors") as f:
+            with open("Tests/bubble_sorting") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -1034,4 +1041,4 @@ if __name__ == '__main__':
             print('\nEnded:', interpreter.robot.show())
         print('\nErrors:')
     else:
-        sys.stderr.write(f'Can\'t intemperate incorrect input file\n')
+        sys.stderr.write(f'Can\'t interpretate incorrect input file\n')

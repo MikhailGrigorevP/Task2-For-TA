@@ -368,6 +368,6 @@ if __name__ == '__main__':
     parser = parser()
     tree, func_table, correctness = parser.parse(text)
     if not correctness:
-        sys.stderr.write(f'Can\'t intemperate incorrect algorithm\n')
+        sys.stderr.write(f'Can\'t interpretate incorrect algorithm\n')
     tree.print()
     print(func_table)
