@@ -1,0 +1,13 @@
+function of integer application() begin
+    integer n := 25
+    integer res := fib( n )
+end
+function of integer fib( n = 25 ) begin
+    integer a,b,result
+    if n = 1 then result := 0 else if n = 2 then result := 1 else begin
+        a := fib( n-1 )
+        b := fib( n-2 )
+        result := a + b
+    end
+    return result
+end

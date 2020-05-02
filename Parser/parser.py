@@ -340,9 +340,9 @@ class parser(object):
             p[0] = p[1] + p[2]
 
     def p_error(self, p):
-        if p.lineno:
+        try:
             sys.stderr.write(f'Syntax error at {p.lineno} line\n')
-        else:
+        except:
             sys.stderr.write(f'Syntax error\n')
         self.ok = False
 
@@ -360,7 +360,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests/multidimentionalVectorsAndTypeConverse")
+            f = open("../Tests/fibonacci")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')

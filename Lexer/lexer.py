@@ -109,7 +109,7 @@ class lexer(object):
 
 
 if __name__ == '__main__':
-    f = open('../Tests/errors')
+    f = open('../Tests/fibonacci')
     data = f.read()
     f.close()
     lexer = lexer()

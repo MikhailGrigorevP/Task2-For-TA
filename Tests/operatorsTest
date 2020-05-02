@@ -1,0 +1,43 @@
+function of integer application() begin
+    integer a, b := 3
+    a := 15
+    b := 32 + 3
+    b := b - 1
+    b := b + a + 1
+    b := b - 8
+    boolean c := false, d := false
+    boolean cdor := c + d
+    boolean cdxor := c - d
+    string x := "abcxyz"
+    string y := "xyz"
+    string xyp := x + y
+    string xym := x - y
+    vector of vector of vector of integer v1, v2
+    v1[0][0][0] push back 1
+    v2[0][0][0] push back 2
+    vector of integer vv1, vv2
+    vv1 push back 1
+    vv1 push back 1
+    vv2 push back 1
+    vv2 push back 2
+    vv1 := vv1 + vv2
+    v1 := v1 + v2
+    vector of vector of vector of integer v3
+    v3 := v2 - v1
+    boolean op_int_g := a > b
+    boolean op_int_l := a < b
+    boolean op_int_eq := a = b
+    boolean op_int_neq := a <> b
+    boolean op_str_g := x > y
+    boolean op_str_l := x < y
+    boolean op_str_eq := x = y
+    boolean op_str_neq := x <> y
+    boolean op_bool_g := c > d
+    boolean op_bool_l := c < d
+    boolean op_bool_eq := c = d
+    boolean op_bool_neq := c <> d
+    boolean op_v_g := v1 > v2
+    boolean op_v_l := v1 < v2
+    boolean op_v_eq := v1 = v2
+    boolean op_v_neq := v1 <> v2
+end

@@ -199,6 +199,7 @@ class Interpreter:
 
         # statements -> declaration
         elif node.type == 'declaration':
+            self.sym_table[self.scope]['#result'] = "error"
             declaration_type = node.value.value
             declaration_child = node.child.child
             # if declare a group of variables
@@ -208,7 +209,6 @@ class Interpreter:
             # if declare a variables
             else:
                 self.declare_variable(declaration_child, declaration_type)
-            self.sym_table[self.scope]['result'] = "error"
         # statements -> assignment
         elif node.type == 'assignment':
             if node.child[0].type == 'indexing':
@@ -235,13 +235,13 @@ class Interpreter:
                             expression = self.interpreter_node(node.child[1])
                             if isinstance(expression, list):
                                 current_var[index] = expression
-                                self.sym_table[self.scope]['result'] = expression
+                                self.sym_table[self.scope]['#result'] = expression
                             elif not isinstance(expression, Variable):
                                 current_var[index] = expression
-                                self.sym_table[self.scope]['result'] = expression
+                                self.sym_table[self.scope]['#result'] = expression
                             else:
                                 current_var[index] = expression.value
-                                self.sym_table[self.scope]['result'] = expression.value
+                                self.sym_table[self.scope]['#result'] = expression.value
                         return
                 except InterpreterConverseError:
                     self.error.call(self.error_types['ConserveError'], node)
@@ -272,7 +272,7 @@ class Interpreter:
                     return
                 try:
                     self.assign(_type, variable, expression)
-                    self.sym_table[self.scope]['result'] = expression
+                    self.sym_table[self.scope]['#result'] = expression
                 except InterpreterNameError:
                     self.error.call(self.error_types['UndeclaredError'], node)
                 except InterpreterConverseError:
@@ -284,11 +284,11 @@ class Interpreter:
         # statements -> while
         elif node.type == 'while':
             self.op_while(node)
-            self.sym_table[self.scope]['result'] = "error"
+            self.sym_table[self.scope]['#result'] = "error"
         # statements -> if
         elif node.type == 'if':
             self.op_if(node)
-            self.sym_table[self.scope]['result'] = "error"
+            self.sym_table[self.scope]['#result'] = "error"
         # statements -> command -> vector
         elif node.type == 'vector':
             if node.value == 'pushback':
@@ -305,7 +305,7 @@ class Interpreter:
                             var[0].append(expression.value)
                         else:
                             self.vector_push_back_2(var, expression)
-                            self.sym_table[self.scope]['result'] = expression.value
+                            self.sym_table[self.scope]['#result'] = expression.value
                     else:
                         self.vector_push_back(node.child[0], expression)
                 except InterpreterConverseError:
@@ -314,13 +314,15 @@ class Interpreter:
                     self.error.call(self.error_types['ValueError'], node)
                 except InterpreterNameError:
                     self.error.call(self.error_types['UndeclaredError'], node)
+                except InterpreterIndexError:
+                    self.error.call(self.error_types['IndexError'], node)
             if node.value == 'pushfront':
                 try:
                     expression = self.interpreter_node(node.child[1])
                     if node.child[0].type == 'indexing':
                         var = self.interpreter_node(node.child[0])
                         self.vector_push_front_2(var, expression)
-                        self.sym_table[self.scope]['result'] = expression.value
+                        self.sym_table[self.scope]['#result'] = expression.value
                     else:
                         self.vector_push_front(node.child[0], expression)
                 except InterpreterConverseError:
@@ -329,6 +331,8 @@ class Interpreter:
                     self.error.call(self.error_types['ValueError'], node)
                 except InterpreterNameError:
                     self.error.call(self.error_types['UndeclaredError'], node)
+                except InterpreterIndexError:
+                    self.error.call(self.error_types['IndexError'], node)
             if node.value == 'popback':
                 try:
                     if node.child.type == 'indexing':
@@ -342,6 +346,8 @@ class Interpreter:
                     self.error.call(self.error_types['ValueError'], node)
                 except InterpreterNameError:
                     self.error.call(self.error_types['UndeclaredError'], node)
+                except InterpreterIndexError:
+                    self.error.call(self.error_types['IndexError'], node)
             if node.value == 'popfront':
                 try:
                     if node.child.type == 'indexing':
@@ -355,6 +361,8 @@ class Interpreter:
                     self.error.call(self.error_types['ValueError'], node)
                 except InterpreterNameError:
                     self.error.call(self.error_types['UndeclaredError'], node)
+                except InterpreterIndexError:
+                    self.error.call(self.error_types['IndexError'], node)
         # statements -> command -> converting
         elif node.type == 'converting':
             expression_from = self.interpreter_node(node.value)
@@ -416,7 +424,7 @@ class Interpreter:
                 return self.robot_reflect()
             elif node.value == 'drill':
                 return self.robot_drill()
-            self.sym_table[self.scope]['result'] = "error"
+            self.sym_table[self.scope]['#result'] = "error"
         # statements -> function
         elif node.type == 'function_description':
             pass
@@ -431,7 +439,7 @@ class Interpreter:
                 raise RecursionError from None
         # statements -> return
         elif node.type == 'return':
-            self.sym_table[self.scope]['result'] = self.interpreter_node(node.value)
+            self.sym_table[self.scope]['#result'] = self.interpreter_node(node.value)
 
         # EXPRESSION BLOCK
 
@@ -538,6 +546,8 @@ class Interpreter:
                 self.error.call(self.error_types['ValueError'], node)
             except InterpreterNameError:
                 self.error.call(self.error_types['UndeclaredError'], node)
+            except IndexError:
+                self.error.call(self.error_types['IndexError'], node)
         # variable -> string
         elif node.type == 'string':
             return Variable('string', str(node.value))
@@ -584,6 +594,7 @@ class Interpreter:
                 return
             try:
                 self.assign(_type, variable, expression)
+                self.sym_table[self.scope]['#result'] = expression
             except InterpreterConverseError:
                 self.error.call(self.error_types['ConserveError'], node)
             except InterpreterValueError:
@@ -793,8 +804,11 @@ class Interpreter:
 
     @staticmethod
     def vector_push_back_2(_value, val: Variable):
-        if not isinstance(_value, Variable):
-            _value.append(val.value)
+        try:
+            if not isinstance(_value, Variable):
+                _value.append(val.value)
+        except AttributeError:
+            raise InterpreterIndexError
 
     def vector_push_front(self, _value, val: Variable):
         _value = _value.value
@@ -810,8 +824,12 @@ class Interpreter:
 
     @staticmethod
     def vector_push_front_2(_value, val: Variable):
-        if not isinstance(_value, Variable):
-            _value.insert(0, val.value)
+        try:
+            if not isinstance(_value, Variable):
+                _value.insert(0, val.value)
+        except AttributeError:
+            raise InterpreterIndexError
+
 
     def vector_pop_front(self, _value):
         _value = _value.value
@@ -961,8 +979,8 @@ class Interpreter:
         result = None
         try:
             self.interpreter_node(func_subtree.child['body'])
-            if 'result' in self.sym_table[self.scope].keys():
-                result = self.sym_table[self.scope]['result']
+            if '#result' in self.sym_table[self.scope].keys():
+                result = self.sym_table[self.scope]['#result']
         except RecursionError:
             raise RecursionError from None
         except InterpreterApplicationCall:
@@ -1065,7 +1083,7 @@ if __name__ == '__main__':
         print(f'Symbols table:\n')
         for sym_table in interpreter.sym_table:
             for keys, values in sym_table.items():
-                if keys == "result":
+                if keys == "#result":
                     continue
                 if isinstance(values, Variable):
                     print(values.type, keys, '=', values.value)
