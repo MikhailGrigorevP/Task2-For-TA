@@ -1,8 +1,8 @@
 function of integer application() begin
     vector of vector of vector of integer triple_int
     triple_int[0][0][0] push back 1
-    triple_int[0][0][0] push back 1
-    triple_int[0][0][0] push back 9
+    triple_int[0][0][0] push back 2
+    triple_int[0][0][0] push back 3
     triple_int[0] push back 9 to vector of vector
     vector of integer ones
     ones push back 2

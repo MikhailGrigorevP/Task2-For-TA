@@ -1,0 +1,188 @@
+function of integer application() begin
+    return findPath()
+end
+function of integer findPath() begin
+    vector of vector of boolean vm, vm_t, vm_f
+    vm[0][0] push back true
+    vm_t[0][0] push back true
+    vm_f[0][0] push back false
+    integer x := 0, y := 0, steps
+    integer t_x, t_y, t_t
+    integer size_x := 1
+    integer size_y := 1, st := 1
+    vector of integer stack_x, stack_y, stack_t
+    stack_x push back x
+    stack_y push back y
+    stack_t push back 0
+    vector of boolean v_true, v_false, empty
+    v_true push back true
+    v_false push back false
+    integer turn := 0, a, b, need_turn
+    integer numOfTurns := 0
+    boolean willTurn := true
+    boolean testv := false
+    boolean exit := false, nvisited, lost := false
+    integer free, i, j
+    do begin
+        willTurn := true
+        i := 0
+        nvisited := false
+        free := 0
+        if reflect = "EXIT" then exit := true else if st = 0 then exit := true else begin
+            if lms <> 0 then begin
+                willTurn := false
+                nvisited := true
+                i := lms
+                free := lms
+                if turn = 0 then free := size_x - 1 - x else if turn = 1 then free := size_y - 1 - y else if turn = 2 then free := x else if turn = 3 then free := y
+                if free < i then i := free
+                if i = 0 then willTurn := true
+            end
+            do begin
+                forward
+                if turn = 0 then x := x + 1 else if turn = 1 then y := y + 1 else if turn = 2 then x := x - 1 else if turn = 3 then y := y - 1
+                if vm[y][x][0] = false then begin
+                    vm[y][x][0] := true
+                    if lost = true then begin
+                        stack_t push front t_t
+                        stack_x push front t_x
+                        stack_y push front t_y
+                        st := st + 1
+                        lost := false
+                    end
+                    numOfTurns := 0
+                    st := st + 1
+                    stack_t push front turn
+                    stack_x push front x
+                    stack_y push front y
+                    i := i - 1
+                end else begin
+                    back
+                    if turn = 0 then x := x - 1 else if turn = 1 then y := y - 1 else if turn = 2 then x := x + 1 else if turn = 3 then y := y + 1
+                    i:= 0
+                    willTurn := true
+                    nvisited := false
+                end
+            end until i <> 0
+            # walkRight
+            if lms then begin if nvisited = true then begin
+                if turn = 0 then begin
+                    a := x + lms
+                    b := size_x - 1
+                    if a > b then begin
+                        steps := a - b
+                        size_x := size_x + steps
+                        do begin
+                           i := size_y - 1
+                           do begin
+                               if i = y then vm[i] push back v_true else vm[i] push back v_false
+                               i := i - 1
+                           end until i <> 0-1
+                           steps := steps - 1
+                        end until steps <> 0
+                    end
+                end else if turn = 1 then begin
+                    a := y + lms
+                    b := size_y - 1
+                    if a > b then begin
+                        steps := a - b
+                        j := 0
+                        size_y := size_y + steps
+                        do begin
+                           i := 0
+                           if i = x then vm push back vm_t[0] else vm push back vm_f[0]
+                           i := 1
+                           do begin
+                               if i = x then vm[y + j + 1] push back v_true else vm[y + j + 1] push back v_false
+                               i := i + 1
+                           end until i <> size_x
+                           j := j + 1
+                        end until steps <> j
+                    end
+                end else if turn = 2 then begin
+                    if x - lms < 0 then begin
+                        steps := lms - x
+                        size_x := size_x + steps
+                        do begin
+                            integer i := size_y - 1
+                            do begin
+                                if i = y then vm[i] push front v_true else vm[i] push front v_false
+                                i := i - 1
+                            end until i <> 0-1
+                            steps := steps - 1
+                            end until steps <> 0
+                        steps := lms - x
+                        x := x + steps
+                        i := 0
+                        do begin
+                            stack_x [i] := stack_x [i] + steps
+                            i := i + 1
+                        end until i <> st
+                    end
+                end else if turn = 3 then begin
+                    if y - lms < 0 then begin
+                        steps := lms - y
+                        size_y := size_y + steps
+                        do begin
+                           i := 0
+                           if i = x then vm push front vm_t[0] else vm push front vm_f[0]
+                           i := 1
+                           do begin
+                               if i = x then vm[0] push back v_true else vm[0] push back v_false
+                               i := i + 1
+                           end until i <> size_x
+                           j := j + 1
+                        end until steps <> j
+                        steps := lms - y
+                        y := y + steps
+                        i := 0
+                        do begin
+                            stack_y [i] := stack_y [i] + steps
+                            i := i + 1
+                        end until i <> st
+                    end
+                end
+                steps := a - b
+                do begin
+                    forward
+                    willTurn := false
+                    if turn = 0 then x := x + 1 else if turn = 1 then y := y + 1 else if turn = 2 then x := x - 1 else if turn = 3 then y := y - 1
+                    st := st + 1
+                    stack_t push front turn
+                    stack_x push front x
+                    stack_y push front y
+                    steps := steps - 1
+                end until steps <> 0
+            end
+            end
+            if willTurn = true then begin
+                rotate_right
+                turn := turn + 1
+                if turn = 4 then turn := 0
+                stack_t[0] := turn
+                if lost = true then t_t := turn
+                numOfTurns := numOfTurns + 1
+            end
+            if numOfTurns = 4 then begin
+                numOfTurns := 0
+                st := st - 1
+                a := stack_x pop front
+                b := stack_y pop front
+                need_turn := stack_t pop front
+                if a <> x then back else if b <> y then back
+                do begin
+                    rotate_right
+                    turn := turn + 1
+                    if turn = 4 then turn := 0
+                end until turn <> need_turn
+                x := a
+                y := b
+                lost := true
+                t_t := turn
+                t_x := x
+                t_y := y
+            end
+        end
+    end until exit <> true
+    return 0
+end

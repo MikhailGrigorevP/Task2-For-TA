@@ -11,6 +11,7 @@ from Errors.errors import InterpreterRedeclarationError
 from Errors.errors import InterpreterIndexError
 from Errors.errors import InterpreterApplicationCall
 
+
 # Item of symbol table
 class Variable:
     def __init__(self, var_type='integer', var_value=None):
@@ -74,7 +75,7 @@ class TypeConversion:
 
     @staticmethod
     def int_to_bool(value):
-        if value.value == '0':
+        if int(value.value) == 0:
             return Variable('boolean', False)
         elif isinstance(value.value, int):
             return Variable('boolean', True)
@@ -168,6 +169,16 @@ class Interpreter:
     def interpreter_node(self, node):
         # log robot
         # print(self.robot.x, self.robot.y, self.robot.turn, self.robot.power)
+        if 'free' in self.sym_table[self.scope]:
+            print("stack_x:", self.sym_table[self.scope]['stack_x'])
+            print("stack_y:", self.sym_table[self.scope]['stack_y'])
+            print("stack_t:", self.sym_table[self.scope]['stack_t'])
+            # # # print("size:", self.sym_table[self.scope]['st'])
+            # #print("vm:", self.sym_table[self.scope]['vm'])
+            # # # print(self.robot.lms(), self.sym_table[self.scope]['turn'], self.sym_table[self.scope]['numOfTurns'])
+            # print(self.robot.lms(), "-", self.sym_table[self.scope]['free'].value)
+            print("real:", self.robot.turn, self.robot.x, self.robot.y)
+            print("x,y:", self.sym_table[self.scope]['turn'].value, self.sym_table[self.scope]['x'].value, self.sym_table[self.scope]['y'].value)
         # nothing
         if node is None:
             return
@@ -226,7 +237,10 @@ class Interpreter:
                     for i in range(len(indexes)):
                         indexes[i] = self.converse.converse('integer', self.interpreter_node(indexes[i])).value
                     current_var = self.sym_table[self.scope][var][1]
+                    fullPath = len(indexes)
+                    p = 0
                     for index in indexes:
+                        p += 1
                         if index == len(current_var):
                             current_var.append(Variable())
                         elif index > len(current_var):
@@ -240,9 +254,12 @@ class Interpreter:
                                 current_var[index] = expression
                                 self.sym_table[self.scope]['#result'] = expression
                             else:
-                                current_var[index] = expression.value
-                                self.sym_table[self.scope]['#result'] = expression.value
-                        return
+                                if p == fullPath:
+                                    current_var[index] = expression.value
+                                    self.sym_table[self.scope]['#result'] = expression.value
+                                else:
+                                    current_var = current_var[index]
+                    return
                 except InterpreterConverseError:
                     self.error.call(self.error_types['ConserveError'], node)
                 except InterpreterValueError:
@@ -500,7 +517,7 @@ class Interpreter:
                     else:
                         return Variable(current_type, current_var)
                 else:
-                    return current_var
+                    return Variable(current_type, current_var)
             except InterpreterConverseError:
                 raise InterpreterConverseError
             except InterpreterValueError:
@@ -652,6 +669,10 @@ class Interpreter:
 
     # binary plus
     def bin_plus(self, _val1, _val2):
+        if _val1.type == "indexing":
+            _val1.type = "get_indexing"
+        if _val2.type == "indexing":
+            _val2.type = "get_indexing"
         if isinstance(_val1, Node):
             _val1 = self.interpreter_node(_val1)
             _val2 = self.interpreter_node(_val2)
@@ -683,6 +704,10 @@ class Interpreter:
 
     # binary minus
     def bin_minus(self, _val1, _val2):
+        if _val1.type == "indexing":
+            _val1.type = "get_indexing"
+        if _val2.type == "indexing":
+            _val2.type = "get_indexing"
         if isinstance(_val1, Node):
             _val1 = self.interpreter_node(_val1)
             _val2 = self.interpreter_node(_val2)
@@ -714,6 +739,10 @@ class Interpreter:
 
     # binary greater
     def bin_gr(self, _val1, _val2):
+        if _val1.type == "indexing":
+            _val1.type = "get_indexing"
+        if _val2.type == "indexing":
+            _val2.type = "get_indexing"
         expression1 = self.interpreter_node(_val1)
         expression2 = self.interpreter_node(_val2)
         if isinstance(expression1, Variable) and isinstance(expression2, Variable):
@@ -725,6 +754,10 @@ class Interpreter:
 
     # binary less
     def bin_ls(self, _val1, _val2):
+        if _val1.type == "indexing":
+            _val1.type = "get_indexing"
+        if _val2.type == "indexing":
+            _val2.type = "get_indexing"
         expression1 = self.interpreter_node(_val1)
         expression2 = self.interpreter_node(_val2)
         if isinstance(expression1, Variable) and isinstance(expression2, Variable):
@@ -736,6 +769,10 @@ class Interpreter:
 
     # binary equal
     def bin_eq(self, _val1, _val2):
+        if _val1.type == "indexing":
+            _val1.type = "get_indexing"
+        if _val2.type == "indexing":
+            _val2.type = "get_indexing"
         expression1 = self.interpreter_node(_val1)
         expression2 = self.interpreter_node(_val2)
         if isinstance(expression1, Variable) and isinstance(expression2, Variable):
@@ -747,6 +784,10 @@ class Interpreter:
 
     # binary not equal
     def bin_not_eq(self, _val1, _val2):
+        if _val1.type == "indexing":
+            _val1.type = "get_indexing"
+        if _val2.type == "indexing":
+            _val2.type = "get_indexing"
         expression1 = self.interpreter_node(_val1)
         expression2 = self.interpreter_node(_val2)
         if isinstance(expression1, Variable) and isinstance(expression2, Variable):
@@ -787,7 +828,7 @@ class Interpreter:
         return Variable("string", result)
 
     def robot_drill(self):
-        return Variable("integer",  self.robot.drill())
+        return Variable("integer", self.robot.drill())
 
     # for vector
     def vector_push_back(self, _value, val: Variable):
@@ -806,7 +847,10 @@ class Interpreter:
     def vector_push_back_2(_value, val: Variable):
         try:
             if not isinstance(_value, Variable):
-                _value.append(val.value)
+                if isinstance(val.value, list):
+                    _value.append(val.value.copy())
+                else:
+                    _value.append(val.value)
         except AttributeError:
             raise InterpreterIndexError
 
@@ -826,10 +870,12 @@ class Interpreter:
     def vector_push_front_2(_value, val: Variable):
         try:
             if not isinstance(_value, Variable):
-                _value.insert(0, val.value)
+                if isinstance(val.value, list):
+                    _value.insert(0, val.value.copy())
+                else:
+                    _value.append(val.value)
         except AttributeError:
             raise InterpreterIndexError
-
 
     def vector_pop_front(self, _value):
         _value = _value.value
@@ -878,6 +924,9 @@ class Interpreter:
 
     def op_if(self, node):
         try:
+            if self.sym_table[self.scope]['turn'] == 0 and self.sym_table[self.scope]['x'] == 1 and\
+                    self.sym_table[self.scope]['y'] == 12:
+                print("F")
             condition = self.interpreter_node(node.child['condition'])
             condition = self.converse.converse('boolean', condition).value
             if condition:
@@ -1062,8 +1111,7 @@ if __name__ == '__main__':
             # print("Enter map file:")
             # map_file = input()
             isRobot = True
-            robot = create_robot("Tests/map")
-            with open("Tests/pathFinder") as f:
+            with open("Tests/pathFinder2") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -1075,8 +1123,8 @@ if __name__ == '__main__':
     # prepare
     parser = parser()
     tree, func_table, correctness = parser.parse(text)
+    robot = create_robot("Tests/map")
     if correctness:
-        robot = create_robot("Tests/map")
 
         interpreter = Interpreter()
         interpreter.interpreter(program=text, _robot=robot)

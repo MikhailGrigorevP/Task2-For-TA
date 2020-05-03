@@ -218,12 +218,12 @@ class parser(object):
 
     @staticmethod
     def p_math_expression(p):
-        """math_expression : expression PLUS expression
-                           | expression MINUS expression
-                           | expression LESS expression
+        """math_expression : expression LESS expression
                            | expression GREATER expression
                            | expression EQ expression
-                           | expression NOTEQ expression"""
+                           | expression NOTEQ expression
+                           | expression PLUS expression
+                           | expression MINUS expression"""
         p[0] = node('binary_expression', p[2], ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod

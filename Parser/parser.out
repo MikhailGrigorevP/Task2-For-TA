@@ -75,12 +75,12 @@ Rule 69    const -> STEEL
 Rule 70    const -> GLASS
 Rule 71    const -> CONCRETE
 Rule 72    const -> PLASTIC
-Rule 73    math_expression -> expression PLUS expression
-Rule 74    math_expression -> expression MINUS expression
-Rule 75    math_expression -> expression LESS expression
-Rule 76    math_expression -> expression GREATER expression
-Rule 77    math_expression -> expression EQ expression
-Rule 78    math_expression -> expression NOTEQ expression
+Rule 73    math_expression -> expression LESS expression
+Rule 74    math_expression -> expression GREATER expression
+Rule 75    math_expression -> expression EQ expression
+Rule 76    math_expression -> expression NOTEQ expression
+Rule 77    math_expression -> expression PLUS expression
+Rule 78    math_expression -> expression MINUS expression
 Rule 79    while -> DO statements_group UNTIL expression
 Rule 80    if -> IF expression THEN statements_group
 Rule 81    if -> IF expression THEN statements_group ELSE statements_group
@@ -134,27 +134,27 @@ DOUBLE_QUOTE         : 53 53
 DRILL                : 103
 ELSE                 : 81
 END                  : 2
-EQ                   : 77 111
+EQ                   : 75 111
 EXIT                 : 67
 FALSE                : 57 59 64
 FORWARD              : 97
 FRONT                : 92 94
 FUNCTION             : 82 83
 GLASS                : 70
-GREATER              : 76
+GREATER              : 74
 IF                   : 80 81
 INTEGER              : 31
 LBRACKET             : 82 104
 LEFT                 : 95
-LESS                 : 75
+LESS                 : 73
 LMS                  : 101
 L_QBRACKET           : 43 44
-MINUS                : 74
+MINUS                : 78
 NEWLINE              : 15 16 17 18 19 20 21 22 23 24 25
-NOTEQ                : 78
+NOTEQ                : 76
 OF                   : 34 82 83 89
 PLASTIC              : 72
-PLUS                 : 73
+PLUS                 : 77
 POP                  : 93 94
 PUSH                 : 91 92
 QUOTE                : 54 54
@@ -511,12 +511,12 @@ state 12
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -761,12 +761,12 @@ state 19
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -887,12 +887,12 @@ state 24
     DRILL           reduce using rule 113 (errors -> error .)
     $end            reduce using rule 113 (errors -> error .)
     END             reduce using rule 113 (errors -> error .)
-    PLUS            reduce using rule 113 (errors -> error .)
-    MINUS           reduce using rule 113 (errors -> error .)
     LESS            reduce using rule 113 (errors -> error .)
     GREATER         reduce using rule 113 (errors -> error .)
     EQ              reduce using rule 113 (errors -> error .)
     NOTEQ           reduce using rule 113 (errors -> error .)
+    PLUS            reduce using rule 113 (errors -> error .)
+    MINUS           reduce using rule 113 (errors -> error .)
     TO              reduce using rule 113 (errors -> error .)
     THEN            reduce using rule 113 (errors -> error .)
     COMMA           reduce using rule 113 (errors -> error .)
@@ -908,12 +908,12 @@ state 25
 
     VARIABLE        reduce using rule 31 (type -> INTEGER .)
     NEWLINE         reduce using rule 31 (type -> INTEGER .)
-    PLUS            reduce using rule 31 (type -> INTEGER .)
-    MINUS           reduce using rule 31 (type -> INTEGER .)
     LESS            reduce using rule 31 (type -> INTEGER .)
     GREATER         reduce using rule 31 (type -> INTEGER .)
     EQ              reduce using rule 31 (type -> INTEGER .)
     NOTEQ           reduce using rule 31 (type -> INTEGER .)
+    PLUS            reduce using rule 31 (type -> INTEGER .)
+    MINUS           reduce using rule 31 (type -> INTEGER .)
     TO              reduce using rule 31 (type -> INTEGER .)
     THEN            reduce using rule 31 (type -> INTEGER .)
     COMMA           reduce using rule 31 (type -> INTEGER .)
@@ -929,12 +929,12 @@ state 26
 
     VARIABLE        reduce using rule 32 (type -> STRING .)
     NEWLINE         reduce using rule 32 (type -> STRING .)
-    PLUS            reduce using rule 32 (type -> STRING .)
-    MINUS           reduce using rule 32 (type -> STRING .)
     LESS            reduce using rule 32 (type -> STRING .)
     GREATER         reduce using rule 32 (type -> STRING .)
     EQ              reduce using rule 32 (type -> STRING .)
     NOTEQ           reduce using rule 32 (type -> STRING .)
+    PLUS            reduce using rule 32 (type -> STRING .)
+    MINUS           reduce using rule 32 (type -> STRING .)
     TO              reduce using rule 32 (type -> STRING .)
     THEN            reduce using rule 32 (type -> STRING .)
     COMMA           reduce using rule 32 (type -> STRING .)
@@ -950,12 +950,12 @@ state 27
 
     VARIABLE        reduce using rule 33 (type -> BOOL .)
     NEWLINE         reduce using rule 33 (type -> BOOL .)
-    PLUS            reduce using rule 33 (type -> BOOL .)
-    MINUS           reduce using rule 33 (type -> BOOL .)
     LESS            reduce using rule 33 (type -> BOOL .)
     GREATER         reduce using rule 33 (type -> BOOL .)
     EQ              reduce using rule 33 (type -> BOOL .)
     NOTEQ           reduce using rule 33 (type -> BOOL .)
+    PLUS            reduce using rule 33 (type -> BOOL .)
+    MINUS           reduce using rule 33 (type -> BOOL .)
     TO              reduce using rule 33 (type -> BOOL .)
     THEN            reduce using rule 33 (type -> BOOL .)
     COMMA           reduce using rule 33 (type -> BOOL .)
@@ -977,12 +977,12 @@ state 29
     (98) robot_command -> BACK .
 
     NEWLINE         reduce using rule 98 (robot_command -> BACK .)
-    PLUS            reduce using rule 98 (robot_command -> BACK .)
-    MINUS           reduce using rule 98 (robot_command -> BACK .)
     LESS            reduce using rule 98 (robot_command -> BACK .)
     GREATER         reduce using rule 98 (robot_command -> BACK .)
     EQ              reduce using rule 98 (robot_command -> BACK .)
     NOTEQ           reduce using rule 98 (robot_command -> BACK .)
+    PLUS            reduce using rule 98 (robot_command -> BACK .)
+    MINUS           reduce using rule 98 (robot_command -> BACK .)
     TO              reduce using rule 98 (robot_command -> BACK .)
     UNTIL           reduce using rule 98 (robot_command -> BACK .)
     THEN            reduce using rule 98 (robot_command -> BACK .)
@@ -997,12 +997,12 @@ state 30
     (95) robot_command -> LEFT .
 
     NEWLINE         reduce using rule 95 (robot_command -> LEFT .)
-    PLUS            reduce using rule 95 (robot_command -> LEFT .)
-    MINUS           reduce using rule 95 (robot_command -> LEFT .)
     LESS            reduce using rule 95 (robot_command -> LEFT .)
     GREATER         reduce using rule 95 (robot_command -> LEFT .)
     EQ              reduce using rule 95 (robot_command -> LEFT .)
     NOTEQ           reduce using rule 95 (robot_command -> LEFT .)
+    PLUS            reduce using rule 95 (robot_command -> LEFT .)
+    MINUS           reduce using rule 95 (robot_command -> LEFT .)
     TO              reduce using rule 95 (robot_command -> LEFT .)
     UNTIL           reduce using rule 95 (robot_command -> LEFT .)
     THEN            reduce using rule 95 (robot_command -> LEFT .)
@@ -1017,12 +1017,12 @@ state 31
     (96) robot_command -> RIGHT .
 
     NEWLINE         reduce using rule 96 (robot_command -> RIGHT .)
-    PLUS            reduce using rule 96 (robot_command -> RIGHT .)
-    MINUS           reduce using rule 96 (robot_command -> RIGHT .)
     LESS            reduce using rule 96 (robot_command -> RIGHT .)
     GREATER         reduce using rule 96 (robot_command -> RIGHT .)
     EQ              reduce using rule 96 (robot_command -> RIGHT .)
     NOTEQ           reduce using rule 96 (robot_command -> RIGHT .)
+    PLUS            reduce using rule 96 (robot_command -> RIGHT .)
+    MINUS           reduce using rule 96 (robot_command -> RIGHT .)
     TO              reduce using rule 96 (robot_command -> RIGHT .)
     UNTIL           reduce using rule 96 (robot_command -> RIGHT .)
     THEN            reduce using rule 96 (robot_command -> RIGHT .)
@@ -1037,12 +1037,12 @@ state 32
     (97) robot_command -> FORWARD .
 
     NEWLINE         reduce using rule 97 (robot_command -> FORWARD .)
-    PLUS            reduce using rule 97 (robot_command -> FORWARD .)
-    MINUS           reduce using rule 97 (robot_command -> FORWARD .)
     LESS            reduce using rule 97 (robot_command -> FORWARD .)
     GREATER         reduce using rule 97 (robot_command -> FORWARD .)
     EQ              reduce using rule 97 (robot_command -> FORWARD .)
     NOTEQ           reduce using rule 97 (robot_command -> FORWARD .)
+    PLUS            reduce using rule 97 (robot_command -> FORWARD .)
+    MINUS           reduce using rule 97 (robot_command -> FORWARD .)
     TO              reduce using rule 97 (robot_command -> FORWARD .)
     UNTIL           reduce using rule 97 (robot_command -> FORWARD .)
     THEN            reduce using rule 97 (robot_command -> FORWARD .)
@@ -1057,12 +1057,12 @@ state 33
     (99) robot_command -> ROTATE_RIGHT .
 
     NEWLINE         reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
-    PLUS            reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
-    MINUS           reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
     LESS            reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
     GREATER         reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
     EQ              reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
     NOTEQ           reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
+    PLUS            reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
+    MINUS           reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
     TO              reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
     UNTIL           reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
     THEN            reduce using rule 99 (robot_command -> ROTATE_RIGHT .)
@@ -1077,12 +1077,12 @@ state 34
     (100) robot_command -> ROTATE_LEFT .
 
     NEWLINE         reduce using rule 100 (robot_command -> ROTATE_LEFT .)
-    PLUS            reduce using rule 100 (robot_command -> ROTATE_LEFT .)
-    MINUS           reduce using rule 100 (robot_command -> ROTATE_LEFT .)
     LESS            reduce using rule 100 (robot_command -> ROTATE_LEFT .)
     GREATER         reduce using rule 100 (robot_command -> ROTATE_LEFT .)
     EQ              reduce using rule 100 (robot_command -> ROTATE_LEFT .)
     NOTEQ           reduce using rule 100 (robot_command -> ROTATE_LEFT .)
+    PLUS            reduce using rule 100 (robot_command -> ROTATE_LEFT .)
+    MINUS           reduce using rule 100 (robot_command -> ROTATE_LEFT .)
     TO              reduce using rule 100 (robot_command -> ROTATE_LEFT .)
     UNTIL           reduce using rule 100 (robot_command -> ROTATE_LEFT .)
     THEN            reduce using rule 100 (robot_command -> ROTATE_LEFT .)
@@ -1097,12 +1097,12 @@ state 35
     (101) robot_command -> LMS .
 
     NEWLINE         reduce using rule 101 (robot_command -> LMS .)
-    PLUS            reduce using rule 101 (robot_command -> LMS .)
-    MINUS           reduce using rule 101 (robot_command -> LMS .)
     LESS            reduce using rule 101 (robot_command -> LMS .)
     GREATER         reduce using rule 101 (robot_command -> LMS .)
     EQ              reduce using rule 101 (robot_command -> LMS .)
     NOTEQ           reduce using rule 101 (robot_command -> LMS .)
+    PLUS            reduce using rule 101 (robot_command -> LMS .)
+    MINUS           reduce using rule 101 (robot_command -> LMS .)
     TO              reduce using rule 101 (robot_command -> LMS .)
     UNTIL           reduce using rule 101 (robot_command -> LMS .)
     THEN            reduce using rule 101 (robot_command -> LMS .)
@@ -1117,12 +1117,12 @@ state 36
     (102) robot_command -> REFLECT .
 
     NEWLINE         reduce using rule 102 (robot_command -> REFLECT .)
-    PLUS            reduce using rule 102 (robot_command -> REFLECT .)
-    MINUS           reduce using rule 102 (robot_command -> REFLECT .)
     LESS            reduce using rule 102 (robot_command -> REFLECT .)
     GREATER         reduce using rule 102 (robot_command -> REFLECT .)
     EQ              reduce using rule 102 (robot_command -> REFLECT .)
     NOTEQ           reduce using rule 102 (robot_command -> REFLECT .)
+    PLUS            reduce using rule 102 (robot_command -> REFLECT .)
+    MINUS           reduce using rule 102 (robot_command -> REFLECT .)
     TO              reduce using rule 102 (robot_command -> REFLECT .)
     UNTIL           reduce using rule 102 (robot_command -> REFLECT .)
     THEN            reduce using rule 102 (robot_command -> REFLECT .)
@@ -1137,12 +1137,12 @@ state 37
     (103) robot_command -> DRILL .
 
     NEWLINE         reduce using rule 103 (robot_command -> DRILL .)
-    PLUS            reduce using rule 103 (robot_command -> DRILL .)
-    MINUS           reduce using rule 103 (robot_command -> DRILL .)
     LESS            reduce using rule 103 (robot_command -> DRILL .)
     GREATER         reduce using rule 103 (robot_command -> DRILL .)
     EQ              reduce using rule 103 (robot_command -> DRILL .)
     NOTEQ           reduce using rule 103 (robot_command -> DRILL .)
+    PLUS            reduce using rule 103 (robot_command -> DRILL .)
+    MINUS           reduce using rule 103 (robot_command -> DRILL .)
     TO              reduce using rule 103 (robot_command -> DRILL .)
     UNTIL           reduce using rule 103 (robot_command -> DRILL .)
     THEN            reduce using rule 103 (robot_command -> DRILL .)
@@ -1416,23 +1416,23 @@ state 46
 state 47
 
     (23) statement -> RETURN expression . NEWLINE
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
     NEWLINE         shift and go to state 100
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
@@ -1443,12 +1443,12 @@ state 48
     (94) vector_pop -> variable . POP FRONT
 
     NEWLINE         reduce using rule 45 (expression -> variable .)
-    PLUS            reduce using rule 45 (expression -> variable .)
-    MINUS           reduce using rule 45 (expression -> variable .)
     LESS            reduce using rule 45 (expression -> variable .)
     GREATER         reduce using rule 45 (expression -> variable .)
     EQ              reduce using rule 45 (expression -> variable .)
     NOTEQ           reduce using rule 45 (expression -> variable .)
+    PLUS            reduce using rule 45 (expression -> variable .)
+    MINUS           reduce using rule 45 (expression -> variable .)
     TO              reduce using rule 45 (expression -> variable .)
     THEN            reduce using rule 45 (expression -> variable .)
     COMMA           reduce using rule 45 (expression -> variable .)
@@ -1464,12 +1464,12 @@ state 49
     (46) expression -> const .
 
     NEWLINE         reduce using rule 46 (expression -> const .)
-    PLUS            reduce using rule 46 (expression -> const .)
-    MINUS           reduce using rule 46 (expression -> const .)
     LESS            reduce using rule 46 (expression -> const .)
     GREATER         reduce using rule 46 (expression -> const .)
     EQ              reduce using rule 46 (expression -> const .)
     NOTEQ           reduce using rule 46 (expression -> const .)
+    PLUS            reduce using rule 46 (expression -> const .)
+    MINUS           reduce using rule 46 (expression -> const .)
     TO              reduce using rule 46 (expression -> const .)
     THEN            reduce using rule 46 (expression -> const .)
     COMMA           reduce using rule 46 (expression -> const .)
@@ -1484,12 +1484,12 @@ state 50
     (47) expression -> qstring .
 
     NEWLINE         reduce using rule 47 (expression -> qstring .)
-    PLUS            reduce using rule 47 (expression -> qstring .)
-    MINUS           reduce using rule 47 (expression -> qstring .)
     LESS            reduce using rule 47 (expression -> qstring .)
     GREATER         reduce using rule 47 (expression -> qstring .)
     EQ              reduce using rule 47 (expression -> qstring .)
     NOTEQ           reduce using rule 47 (expression -> qstring .)
+    PLUS            reduce using rule 47 (expression -> qstring .)
+    MINUS           reduce using rule 47 (expression -> qstring .)
     TO              reduce using rule 47 (expression -> qstring .)
     THEN            reduce using rule 47 (expression -> qstring .)
     COMMA           reduce using rule 47 (expression -> qstring .)
@@ -1504,12 +1504,12 @@ state 51
     (48) expression -> math_expression .
 
     NEWLINE         reduce using rule 48 (expression -> math_expression .)
-    PLUS            reduce using rule 48 (expression -> math_expression .)
-    MINUS           reduce using rule 48 (expression -> math_expression .)
     LESS            reduce using rule 48 (expression -> math_expression .)
     GREATER         reduce using rule 48 (expression -> math_expression .)
     EQ              reduce using rule 48 (expression -> math_expression .)
     NOTEQ           reduce using rule 48 (expression -> math_expression .)
+    PLUS            reduce using rule 48 (expression -> math_expression .)
+    MINUS           reduce using rule 48 (expression -> math_expression .)
     TO              reduce using rule 48 (expression -> math_expression .)
     THEN            reduce using rule 48 (expression -> math_expression .)
     COMMA           reduce using rule 48 (expression -> math_expression .)
@@ -1524,12 +1524,12 @@ state 52
     (49) expression -> robot_command .
 
     NEWLINE         reduce using rule 49 (expression -> robot_command .)
-    PLUS            reduce using rule 49 (expression -> robot_command .)
-    MINUS           reduce using rule 49 (expression -> robot_command .)
     LESS            reduce using rule 49 (expression -> robot_command .)
     GREATER         reduce using rule 49 (expression -> robot_command .)
     EQ              reduce using rule 49 (expression -> robot_command .)
     NOTEQ           reduce using rule 49 (expression -> robot_command .)
+    PLUS            reduce using rule 49 (expression -> robot_command .)
+    MINUS           reduce using rule 49 (expression -> robot_command .)
     TO              reduce using rule 49 (expression -> robot_command .)
     THEN            reduce using rule 49 (expression -> robot_command .)
     COMMA           reduce using rule 49 (expression -> robot_command .)
@@ -1544,12 +1544,12 @@ state 53
     (50) expression -> converting_command .
 
     NEWLINE         reduce using rule 50 (expression -> converting_command .)
-    PLUS            reduce using rule 50 (expression -> converting_command .)
-    MINUS           reduce using rule 50 (expression -> converting_command .)
     LESS            reduce using rule 50 (expression -> converting_command .)
     GREATER         reduce using rule 50 (expression -> converting_command .)
     EQ              reduce using rule 50 (expression -> converting_command .)
     NOTEQ           reduce using rule 50 (expression -> converting_command .)
+    PLUS            reduce using rule 50 (expression -> converting_command .)
+    MINUS           reduce using rule 50 (expression -> converting_command .)
     TO              reduce using rule 50 (expression -> converting_command .)
     THEN            reduce using rule 50 (expression -> converting_command .)
     COMMA           reduce using rule 50 (expression -> converting_command .)
@@ -1564,12 +1564,12 @@ state 54
     (51) expression -> vector_pop .
 
     NEWLINE         reduce using rule 51 (expression -> vector_pop .)
-    PLUS            reduce using rule 51 (expression -> vector_pop .)
-    MINUS           reduce using rule 51 (expression -> vector_pop .)
     LESS            reduce using rule 51 (expression -> vector_pop .)
     GREATER         reduce using rule 51 (expression -> vector_pop .)
     EQ              reduce using rule 51 (expression -> vector_pop .)
     NOTEQ           reduce using rule 51 (expression -> vector_pop .)
+    PLUS            reduce using rule 51 (expression -> vector_pop .)
+    MINUS           reduce using rule 51 (expression -> vector_pop .)
     TO              reduce using rule 51 (expression -> vector_pop .)
     THEN            reduce using rule 51 (expression -> vector_pop .)
     COMMA           reduce using rule 51 (expression -> vector_pop .)
@@ -1584,12 +1584,12 @@ state 55
     (52) expression -> call .
 
     NEWLINE         reduce using rule 52 (expression -> call .)
-    PLUS            reduce using rule 52 (expression -> call .)
-    MINUS           reduce using rule 52 (expression -> call .)
     LESS            reduce using rule 52 (expression -> call .)
     GREATER         reduce using rule 52 (expression -> call .)
     EQ              reduce using rule 52 (expression -> call .)
     NOTEQ           reduce using rule 52 (expression -> call .)
+    PLUS            reduce using rule 52 (expression -> call .)
+    MINUS           reduce using rule 52 (expression -> call .)
     TO              reduce using rule 52 (expression -> call .)
     THEN            reduce using rule 52 (expression -> call .)
     COMMA           reduce using rule 52 (expression -> call .)
@@ -1610,12 +1610,12 @@ state 56
 
     POP             reduce using rule 42 (variable -> VARIABLE .)
     NEWLINE         reduce using rule 42 (variable -> VARIABLE .)
-    PLUS            reduce using rule 42 (variable -> VARIABLE .)
-    MINUS           reduce using rule 42 (variable -> VARIABLE .)
     LESS            reduce using rule 42 (variable -> VARIABLE .)
     GREATER         reduce using rule 42 (variable -> VARIABLE .)
     EQ              reduce using rule 42 (variable -> VARIABLE .)
     NOTEQ           reduce using rule 42 (variable -> VARIABLE .)
+    PLUS            reduce using rule 42 (variable -> VARIABLE .)
+    MINUS           reduce using rule 42 (variable -> VARIABLE .)
     TO              reduce using rule 42 (variable -> VARIABLE .)
     THEN            reduce using rule 42 (variable -> VARIABLE .)
     COMMA           reduce using rule 42 (variable -> VARIABLE .)
@@ -1634,12 +1634,12 @@ state 57
     (63) const -> TRUE .
 
     NEWLINE         reduce using rule 63 (const -> TRUE .)
-    PLUS            reduce using rule 63 (const -> TRUE .)
-    MINUS           reduce using rule 63 (const -> TRUE .)
     LESS            reduce using rule 63 (const -> TRUE .)
     GREATER         reduce using rule 63 (const -> TRUE .)
     EQ              reduce using rule 63 (const -> TRUE .)
     NOTEQ           reduce using rule 63 (const -> TRUE .)
+    PLUS            reduce using rule 63 (const -> TRUE .)
+    MINUS           reduce using rule 63 (const -> TRUE .)
     TO              reduce using rule 63 (const -> TRUE .)
     THEN            reduce using rule 63 (const -> TRUE .)
     COMMA           reduce using rule 63 (const -> TRUE .)
@@ -1654,12 +1654,12 @@ state 58
     (64) const -> FALSE .
 
     NEWLINE         reduce using rule 64 (const -> FALSE .)
-    PLUS            reduce using rule 64 (const -> FALSE .)
-    MINUS           reduce using rule 64 (const -> FALSE .)
     LESS            reduce using rule 64 (const -> FALSE .)
     GREATER         reduce using rule 64 (const -> FALSE .)
     EQ              reduce using rule 64 (const -> FALSE .)
     NOTEQ           reduce using rule 64 (const -> FALSE .)
+    PLUS            reduce using rule 64 (const -> FALSE .)
+    MINUS           reduce using rule 64 (const -> FALSE .)
     TO              reduce using rule 64 (const -> FALSE .)
     THEN            reduce using rule 64 (const -> FALSE .)
     COMMA           reduce using rule 64 (const -> FALSE .)
@@ -1674,12 +1674,12 @@ state 59
     (65) const -> UNDEFINED .
 
     NEWLINE         reduce using rule 65 (const -> UNDEFINED .)
-    PLUS            reduce using rule 65 (const -> UNDEFINED .)
-    MINUS           reduce using rule 65 (const -> UNDEFINED .)
     LESS            reduce using rule 65 (const -> UNDEFINED .)
     GREATER         reduce using rule 65 (const -> UNDEFINED .)
     EQ              reduce using rule 65 (const -> UNDEFINED .)
     NOTEQ           reduce using rule 65 (const -> UNDEFINED .)
+    PLUS            reduce using rule 65 (const -> UNDEFINED .)
+    MINUS           reduce using rule 65 (const -> UNDEFINED .)
     TO              reduce using rule 65 (const -> UNDEFINED .)
     THEN            reduce using rule 65 (const -> UNDEFINED .)
     COMMA           reduce using rule 65 (const -> UNDEFINED .)
@@ -1694,12 +1694,12 @@ state 60
     (66) const -> DECIMAL .
 
     NEWLINE         reduce using rule 66 (const -> DECIMAL .)
-    PLUS            reduce using rule 66 (const -> DECIMAL .)
-    MINUS           reduce using rule 66 (const -> DECIMAL .)
     LESS            reduce using rule 66 (const -> DECIMAL .)
     GREATER         reduce using rule 66 (const -> DECIMAL .)
     EQ              reduce using rule 66 (const -> DECIMAL .)
     NOTEQ           reduce using rule 66 (const -> DECIMAL .)
+    PLUS            reduce using rule 66 (const -> DECIMAL .)
+    MINUS           reduce using rule 66 (const -> DECIMAL .)
     TO              reduce using rule 66 (const -> DECIMAL .)
     THEN            reduce using rule 66 (const -> DECIMAL .)
     COMMA           reduce using rule 66 (const -> DECIMAL .)
@@ -1714,12 +1714,12 @@ state 61
     (67) const -> EXIT .
 
     NEWLINE         reduce using rule 67 (const -> EXIT .)
-    PLUS            reduce using rule 67 (const -> EXIT .)
-    MINUS           reduce using rule 67 (const -> EXIT .)
     LESS            reduce using rule 67 (const -> EXIT .)
     GREATER         reduce using rule 67 (const -> EXIT .)
     EQ              reduce using rule 67 (const -> EXIT .)
     NOTEQ           reduce using rule 67 (const -> EXIT .)
+    PLUS            reduce using rule 67 (const -> EXIT .)
+    MINUS           reduce using rule 67 (const -> EXIT .)
     TO              reduce using rule 67 (const -> EXIT .)
     THEN            reduce using rule 67 (const -> EXIT .)
     COMMA           reduce using rule 67 (const -> EXIT .)
@@ -1734,12 +1734,12 @@ state 62
     (68) const -> WOOD .
 
     NEWLINE         reduce using rule 68 (const -> WOOD .)
-    PLUS            reduce using rule 68 (const -> WOOD .)
-    MINUS           reduce using rule 68 (const -> WOOD .)
     LESS            reduce using rule 68 (const -> WOOD .)
     GREATER         reduce using rule 68 (const -> WOOD .)
     EQ              reduce using rule 68 (const -> WOOD .)
     NOTEQ           reduce using rule 68 (const -> WOOD .)
+    PLUS            reduce using rule 68 (const -> WOOD .)
+    MINUS           reduce using rule 68 (const -> WOOD .)
     TO              reduce using rule 68 (const -> WOOD .)
     THEN            reduce using rule 68 (const -> WOOD .)
     COMMA           reduce using rule 68 (const -> WOOD .)
@@ -1754,12 +1754,12 @@ state 63
     (69) const -> STEEL .
 
     NEWLINE         reduce using rule 69 (const -> STEEL .)
-    PLUS            reduce using rule 69 (const -> STEEL .)
-    MINUS           reduce using rule 69 (const -> STEEL .)
     LESS            reduce using rule 69 (const -> STEEL .)
     GREATER         reduce using rule 69 (const -> STEEL .)
     EQ              reduce using rule 69 (const -> STEEL .)
     NOTEQ           reduce using rule 69 (const -> STEEL .)
+    PLUS            reduce using rule 69 (const -> STEEL .)
+    MINUS           reduce using rule 69 (const -> STEEL .)
     TO              reduce using rule 69 (const -> STEEL .)
     THEN            reduce using rule 69 (const -> STEEL .)
     COMMA           reduce using rule 69 (const -> STEEL .)
@@ -1774,12 +1774,12 @@ state 64
     (70) const -> GLASS .
 
     NEWLINE         reduce using rule 70 (const -> GLASS .)
-    PLUS            reduce using rule 70 (const -> GLASS .)
-    MINUS           reduce using rule 70 (const -> GLASS .)
     LESS            reduce using rule 70 (const -> GLASS .)
     GREATER         reduce using rule 70 (const -> GLASS .)
     EQ              reduce using rule 70 (const -> GLASS .)
     NOTEQ           reduce using rule 70 (const -> GLASS .)
+    PLUS            reduce using rule 70 (const -> GLASS .)
+    MINUS           reduce using rule 70 (const -> GLASS .)
     TO              reduce using rule 70 (const -> GLASS .)
     THEN            reduce using rule 70 (const -> GLASS .)
     COMMA           reduce using rule 70 (const -> GLASS .)
@@ -1794,12 +1794,12 @@ state 65
     (71) const -> CONCRETE .
 
     NEWLINE         reduce using rule 71 (const -> CONCRETE .)
-    PLUS            reduce using rule 71 (const -> CONCRETE .)
-    MINUS           reduce using rule 71 (const -> CONCRETE .)
     LESS            reduce using rule 71 (const -> CONCRETE .)
     GREATER         reduce using rule 71 (const -> CONCRETE .)
     EQ              reduce using rule 71 (const -> CONCRETE .)
     NOTEQ           reduce using rule 71 (const -> CONCRETE .)
+    PLUS            reduce using rule 71 (const -> CONCRETE .)
+    MINUS           reduce using rule 71 (const -> CONCRETE .)
     TO              reduce using rule 71 (const -> CONCRETE .)
     THEN            reduce using rule 71 (const -> CONCRETE .)
     COMMA           reduce using rule 71 (const -> CONCRETE .)
@@ -1814,12 +1814,12 @@ state 66
     (72) const -> PLASTIC .
 
     NEWLINE         reduce using rule 72 (const -> PLASTIC .)
-    PLUS            reduce using rule 72 (const -> PLASTIC .)
-    MINUS           reduce using rule 72 (const -> PLASTIC .)
     LESS            reduce using rule 72 (const -> PLASTIC .)
     GREATER         reduce using rule 72 (const -> PLASTIC .)
     EQ              reduce using rule 72 (const -> PLASTIC .)
     NOTEQ           reduce using rule 72 (const -> PLASTIC .)
+    PLUS            reduce using rule 72 (const -> PLASTIC .)
+    MINUS           reduce using rule 72 (const -> PLASTIC .)
     TO              reduce using rule 72 (const -> PLASTIC .)
     THEN            reduce using rule 72 (const -> PLASTIC .)
     COMMA           reduce using rule 72 (const -> PLASTIC .)
@@ -1952,12 +1952,12 @@ state 71
     DRILL           reduce using rule 112 (errors -> errors error .)
     $end            reduce using rule 112 (errors -> errors error .)
     END             reduce using rule 112 (errors -> errors error .)
-    PLUS            reduce using rule 112 (errors -> errors error .)
-    MINUS           reduce using rule 112 (errors -> errors error .)
     LESS            reduce using rule 112 (errors -> errors error .)
     GREATER         reduce using rule 112 (errors -> errors error .)
     EQ              reduce using rule 112 (errors -> errors error .)
     NOTEQ           reduce using rule 112 (errors -> errors error .)
+    PLUS            reduce using rule 112 (errors -> errors error .)
+    MINUS           reduce using rule 112 (errors -> errors error .)
     TO              reduce using rule 112 (errors -> errors error .)
     THEN            reduce using rule 112 (errors -> errors error .)
     COMMA           reduce using rule 112 (errors -> errors error .)
@@ -2058,12 +2058,12 @@ state 78
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -2317,12 +2317,12 @@ state 90
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -2389,12 +2389,12 @@ state 92
 
     VARIABLE        reduce using rule 35 (type -> errors .)
     NEWLINE         reduce using rule 35 (type -> errors .)
-    PLUS            reduce using rule 35 (type -> errors .)
-    MINUS           reduce using rule 35 (type -> errors .)
     LESS            reduce using rule 35 (type -> errors .)
     GREATER         reduce using rule 35 (type -> errors .)
     EQ              reduce using rule 35 (type -> errors .)
     NOTEQ           reduce using rule 35 (type -> errors .)
+    PLUS            reduce using rule 35 (type -> errors .)
+    MINUS           reduce using rule 35 (type -> errors .)
     TO              reduce using rule 35 (type -> errors .)
     THEN            reduce using rule 35 (type -> errors .)
     COMMA           reduce using rule 35 (type -> errors .)
@@ -2409,23 +2409,23 @@ state 93
 
     (80) if -> IF expression . THEN statements_group
     (81) if -> IF expression . THEN statements_group ELSE statements_group
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
     THEN            shift and go to state 124
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
@@ -2480,12 +2480,12 @@ state 95
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -2544,12 +2544,12 @@ state 96
     (105) call -> VARIABLE BRACKETS .
 
     NEWLINE         reduce using rule 105 (call -> VARIABLE BRACKETS .)
-    PLUS            reduce using rule 105 (call -> VARIABLE BRACKETS .)
-    MINUS           reduce using rule 105 (call -> VARIABLE BRACKETS .)
     LESS            reduce using rule 105 (call -> VARIABLE BRACKETS .)
     GREATER         reduce using rule 105 (call -> VARIABLE BRACKETS .)
     EQ              reduce using rule 105 (call -> VARIABLE BRACKETS .)
     NOTEQ           reduce using rule 105 (call -> VARIABLE BRACKETS .)
+    PLUS            reduce using rule 105 (call -> VARIABLE BRACKETS .)
+    MINUS           reduce using rule 105 (call -> VARIABLE BRACKETS .)
     TO              reduce using rule 105 (call -> VARIABLE BRACKETS .)
     UNTIL           reduce using rule 105 (call -> VARIABLE BRACKETS .)
     THEN            reduce using rule 105 (call -> VARIABLE BRACKETS .)
@@ -2567,12 +2567,12 @@ state 97
     PUSH            reduce using rule 41 (variable -> VARIABLE indexing .)
     POP             reduce using rule 41 (variable -> VARIABLE indexing .)
     NEWLINE         reduce using rule 41 (variable -> VARIABLE indexing .)
-    PLUS            reduce using rule 41 (variable -> VARIABLE indexing .)
-    MINUS           reduce using rule 41 (variable -> VARIABLE indexing .)
     LESS            reduce using rule 41 (variable -> VARIABLE indexing .)
     GREATER         reduce using rule 41 (variable -> VARIABLE indexing .)
     EQ              reduce using rule 41 (variable -> VARIABLE indexing .)
     NOTEQ           reduce using rule 41 (variable -> VARIABLE indexing .)
+    PLUS            reduce using rule 41 (variable -> VARIABLE indexing .)
+    MINUS           reduce using rule 41 (variable -> VARIABLE indexing .)
     TO              reduce using rule 41 (variable -> VARIABLE indexing .)
     COMMA           reduce using rule 41 (variable -> VARIABLE indexing .)
     UNTIL           reduce using rule 41 (variable -> VARIABLE indexing .)
@@ -2608,12 +2608,12 @@ state 98
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -2715,7 +2715,7 @@ state 100
 
 state 101
 
-    (73) math_expression -> expression PLUS . expression
+    (73) math_expression -> expression LESS . expression
     (45) expression -> . variable
     (46) expression -> . const
     (47) expression -> . qstring
@@ -2738,12 +2738,12 @@ state 101
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -2796,7 +2796,7 @@ state 101
 
 state 102
 
-    (74) math_expression -> expression MINUS . expression
+    (74) math_expression -> expression GREATER . expression
     (45) expression -> . variable
     (46) expression -> . const
     (47) expression -> . qstring
@@ -2819,12 +2819,12 @@ state 102
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -2877,7 +2877,7 @@ state 102
 
 state 103
 
-    (75) math_expression -> expression LESS . expression
+    (75) math_expression -> expression EQ . expression
     (45) expression -> . variable
     (46) expression -> . const
     (47) expression -> . qstring
@@ -2900,12 +2900,12 @@ state 103
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -2958,7 +2958,7 @@ state 103
 
 state 104
 
-    (76) math_expression -> expression GREATER . expression
+    (76) math_expression -> expression NOTEQ . expression
     (45) expression -> . variable
     (46) expression -> . const
     (47) expression -> . qstring
@@ -2981,12 +2981,12 @@ state 104
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -3039,7 +3039,7 @@ state 104
 
 state 105
 
-    (77) math_expression -> expression EQ . expression
+    (77) math_expression -> expression PLUS . expression
     (45) expression -> . variable
     (46) expression -> . const
     (47) expression -> . qstring
@@ -3062,12 +3062,12 @@ state 105
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -3120,7 +3120,7 @@ state 105
 
 state 106
 
-    (78) math_expression -> expression NOTEQ . expression
+    (78) math_expression -> expression MINUS . expression
     (45) expression -> . variable
     (46) expression -> . const
     (47) expression -> . qstring
@@ -3143,12 +3143,12 @@ state 106
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -3235,12 +3235,12 @@ state 107
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -3455,12 +3455,12 @@ state 117
 state 118
 
     (40) assignment -> variable ASSIGNMENT expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
@@ -3469,12 +3469,12 @@ state 118
     COMMA           reduce using rule 40 (assignment -> variable ASSIGNMENT expression .)
     UNTIL           reduce using rule 40 (assignment -> variable ASSIGNMENT expression .)
     ELSE            reduce using rule 40 (assignment -> variable ASSIGNMENT expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
@@ -3503,12 +3503,12 @@ state 119
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -3584,12 +3584,12 @@ state 120
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -3665,12 +3665,12 @@ state 121
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -3813,12 +3813,12 @@ state 122
 state 123
 
     (11) inner_statement -> RETURN expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
@@ -3826,12 +3826,12 @@ state 123
     UNTIL           reduce using rule 11 (inner_statement -> RETURN expression .)
     ELSE            reduce using rule 11 (inner_statement -> RETURN expression .)
     NEWLINE         reduce using rule 11 (inner_statement -> RETURN expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
@@ -3944,11 +3944,11 @@ state 126
   ! shift/reduce conflict for EQ resolved as shift
     EQ              shift and go to state 159
     POP             reduce using rule 42 (variable -> VARIABLE .)
-    PLUS            reduce using rule 42 (variable -> VARIABLE .)
-    MINUS           reduce using rule 42 (variable -> VARIABLE .)
     LESS            reduce using rule 42 (variable -> VARIABLE .)
     GREATER         reduce using rule 42 (variable -> VARIABLE .)
     NOTEQ           reduce using rule 42 (variable -> VARIABLE .)
+    PLUS            reduce using rule 42 (variable -> VARIABLE .)
+    MINUS           reduce using rule 42 (variable -> VARIABLE .)
     TO              reduce using rule 42 (variable -> VARIABLE .)
     RBRACKET        reduce using rule 42 (variable -> VARIABLE .)
     COMMA           reduce using rule 42 (variable -> VARIABLE .)
@@ -3988,24 +3988,24 @@ state 129
 state 130
 
     (110) parameter -> expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
     RBRACKET        reduce using rule 110 (parameter -> expression .)
     COMMA           reduce using rule 110 (parameter -> expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
@@ -4013,23 +4013,23 @@ state 131
 
     (43) indexing -> L_QBRACKET expression . R_QBRACKET indexing
     (44) indexing -> L_QBRACKET expression . R_QBRACKET
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
     R_QBRACKET      shift and go to state 162
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
@@ -4039,12 +4039,12 @@ state 132
 
     VARIABLE        reduce using rule 34 (type -> VECTOR OF type .)
     NEWLINE         reduce using rule 34 (type -> VECTOR OF type .)
-    PLUS            reduce using rule 34 (type -> VECTOR OF type .)
-    MINUS           reduce using rule 34 (type -> VECTOR OF type .)
     LESS            reduce using rule 34 (type -> VECTOR OF type .)
     GREATER         reduce using rule 34 (type -> VECTOR OF type .)
     EQ              reduce using rule 34 (type -> VECTOR OF type .)
     NOTEQ           reduce using rule 34 (type -> VECTOR OF type .)
+    PLUS            reduce using rule 34 (type -> VECTOR OF type .)
+    MINUS           reduce using rule 34 (type -> VECTOR OF type .)
     TO              reduce using rule 34 (type -> VECTOR OF type .)
     THEN            reduce using rule 34 (type -> VECTOR OF type .)
     COMMA           reduce using rule 34 (type -> VECTOR OF type .)
@@ -4056,287 +4056,287 @@ state 132
 
 state 133
 
-    (73) math_expression -> expression PLUS expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression LESS expression .
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for LESS resolved as shift
   ! shift/reduce conflict for GREATER resolved as shift
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for TO resolved as shift
-    NEWLINE         reduce using rule 73 (math_expression -> expression PLUS expression .)
-    THEN            reduce using rule 73 (math_expression -> expression PLUS expression .)
-    COMMA           reduce using rule 73 (math_expression -> expression PLUS expression .)
-    UNTIL           reduce using rule 73 (math_expression -> expression PLUS expression .)
-    ELSE            reduce using rule 73 (math_expression -> expression PLUS expression .)
-    RBRACKET        reduce using rule 73 (math_expression -> expression PLUS expression .)
-    R_QBRACKET      reduce using rule 73 (math_expression -> expression PLUS expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    NEWLINE         reduce using rule 73 (math_expression -> expression LESS expression .)
+    THEN            reduce using rule 73 (math_expression -> expression LESS expression .)
+    COMMA           reduce using rule 73 (math_expression -> expression LESS expression .)
+    UNTIL           reduce using rule 73 (math_expression -> expression LESS expression .)
+    ELSE            reduce using rule 73 (math_expression -> expression LESS expression .)
+    RBRACKET        reduce using rule 73 (math_expression -> expression LESS expression .)
+    R_QBRACKET      reduce using rule 73 (math_expression -> expression LESS expression .)
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
-  ! PLUS            [ reduce using rule 73 (math_expression -> expression PLUS expression .) ]
-  ! MINUS           [ reduce using rule 73 (math_expression -> expression PLUS expression .) ]
-  ! LESS            [ reduce using rule 73 (math_expression -> expression PLUS expression .) ]
-  ! GREATER         [ reduce using rule 73 (math_expression -> expression PLUS expression .) ]
-  ! EQ              [ reduce using rule 73 (math_expression -> expression PLUS expression .) ]
-  ! NOTEQ           [ reduce using rule 73 (math_expression -> expression PLUS expression .) ]
-  ! TO              [ reduce using rule 73 (math_expression -> expression PLUS expression .) ]
+  ! LESS            [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
+  ! GREATER         [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
+  ! EQ              [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
+  ! NOTEQ           [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
+  ! PLUS            [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
+  ! MINUS           [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
+  ! TO              [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
 
 
 state 134
 
-    (74) math_expression -> expression MINUS expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (74) math_expression -> expression GREATER expression .
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for LESS resolved as shift
   ! shift/reduce conflict for GREATER resolved as shift
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for TO resolved as shift
-    NEWLINE         reduce using rule 74 (math_expression -> expression MINUS expression .)
-    THEN            reduce using rule 74 (math_expression -> expression MINUS expression .)
-    COMMA           reduce using rule 74 (math_expression -> expression MINUS expression .)
-    UNTIL           reduce using rule 74 (math_expression -> expression MINUS expression .)
-    ELSE            reduce using rule 74 (math_expression -> expression MINUS expression .)
-    RBRACKET        reduce using rule 74 (math_expression -> expression MINUS expression .)
-    R_QBRACKET      reduce using rule 74 (math_expression -> expression MINUS expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    NEWLINE         reduce using rule 74 (math_expression -> expression GREATER expression .)
+    THEN            reduce using rule 74 (math_expression -> expression GREATER expression .)
+    COMMA           reduce using rule 74 (math_expression -> expression GREATER expression .)
+    UNTIL           reduce using rule 74 (math_expression -> expression GREATER expression .)
+    ELSE            reduce using rule 74 (math_expression -> expression GREATER expression .)
+    RBRACKET        reduce using rule 74 (math_expression -> expression GREATER expression .)
+    R_QBRACKET      reduce using rule 74 (math_expression -> expression GREATER expression .)
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
-  ! PLUS            [ reduce using rule 74 (math_expression -> expression MINUS expression .) ]
-  ! MINUS           [ reduce using rule 74 (math_expression -> expression MINUS expression .) ]
-  ! LESS            [ reduce using rule 74 (math_expression -> expression MINUS expression .) ]
-  ! GREATER         [ reduce using rule 74 (math_expression -> expression MINUS expression .) ]
-  ! EQ              [ reduce using rule 74 (math_expression -> expression MINUS expression .) ]
-  ! NOTEQ           [ reduce using rule 74 (math_expression -> expression MINUS expression .) ]
-  ! TO              [ reduce using rule 74 (math_expression -> expression MINUS expression .) ]
+  ! LESS            [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
+  ! GREATER         [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
+  ! EQ              [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
+  ! NOTEQ           [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
+  ! PLUS            [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
+  ! MINUS           [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
+  ! TO              [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
 
 
 state 135
 
-    (75) math_expression -> expression LESS expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (75) math_expression -> expression EQ expression .
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for LESS resolved as shift
   ! shift/reduce conflict for GREATER resolved as shift
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for TO resolved as shift
-    NEWLINE         reduce using rule 75 (math_expression -> expression LESS expression .)
-    THEN            reduce using rule 75 (math_expression -> expression LESS expression .)
-    COMMA           reduce using rule 75 (math_expression -> expression LESS expression .)
-    UNTIL           reduce using rule 75 (math_expression -> expression LESS expression .)
-    ELSE            reduce using rule 75 (math_expression -> expression LESS expression .)
-    RBRACKET        reduce using rule 75 (math_expression -> expression LESS expression .)
-    R_QBRACKET      reduce using rule 75 (math_expression -> expression LESS expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    NEWLINE         reduce using rule 75 (math_expression -> expression EQ expression .)
+    THEN            reduce using rule 75 (math_expression -> expression EQ expression .)
+    COMMA           reduce using rule 75 (math_expression -> expression EQ expression .)
+    UNTIL           reduce using rule 75 (math_expression -> expression EQ expression .)
+    ELSE            reduce using rule 75 (math_expression -> expression EQ expression .)
+    RBRACKET        reduce using rule 75 (math_expression -> expression EQ expression .)
+    R_QBRACKET      reduce using rule 75 (math_expression -> expression EQ expression .)
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
-  ! PLUS            [ reduce using rule 75 (math_expression -> expression LESS expression .) ]
-  ! MINUS           [ reduce using rule 75 (math_expression -> expression LESS expression .) ]
-  ! LESS            [ reduce using rule 75 (math_expression -> expression LESS expression .) ]
-  ! GREATER         [ reduce using rule 75 (math_expression -> expression LESS expression .) ]
-  ! EQ              [ reduce using rule 75 (math_expression -> expression LESS expression .) ]
-  ! NOTEQ           [ reduce using rule 75 (math_expression -> expression LESS expression .) ]
-  ! TO              [ reduce using rule 75 (math_expression -> expression LESS expression .) ]
+  ! LESS            [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
+  ! GREATER         [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
+  ! EQ              [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
+  ! NOTEQ           [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
+  ! PLUS            [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
+  ! MINUS           [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
+  ! TO              [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
 
 
 state 136
 
-    (76) math_expression -> expression GREATER expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (76) math_expression -> expression NOTEQ expression .
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for LESS resolved as shift
   ! shift/reduce conflict for GREATER resolved as shift
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for TO resolved as shift
-    NEWLINE         reduce using rule 76 (math_expression -> expression GREATER expression .)
-    THEN            reduce using rule 76 (math_expression -> expression GREATER expression .)
-    COMMA           reduce using rule 76 (math_expression -> expression GREATER expression .)
-    UNTIL           reduce using rule 76 (math_expression -> expression GREATER expression .)
-    ELSE            reduce using rule 76 (math_expression -> expression GREATER expression .)
-    RBRACKET        reduce using rule 76 (math_expression -> expression GREATER expression .)
-    R_QBRACKET      reduce using rule 76 (math_expression -> expression GREATER expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    NEWLINE         reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    THEN            reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    COMMA           reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    UNTIL           reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    ELSE            reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    RBRACKET        reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    R_QBRACKET      reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
-  ! PLUS            [ reduce using rule 76 (math_expression -> expression GREATER expression .) ]
-  ! MINUS           [ reduce using rule 76 (math_expression -> expression GREATER expression .) ]
-  ! LESS            [ reduce using rule 76 (math_expression -> expression GREATER expression .) ]
-  ! GREATER         [ reduce using rule 76 (math_expression -> expression GREATER expression .) ]
-  ! EQ              [ reduce using rule 76 (math_expression -> expression GREATER expression .) ]
-  ! NOTEQ           [ reduce using rule 76 (math_expression -> expression GREATER expression .) ]
-  ! TO              [ reduce using rule 76 (math_expression -> expression GREATER expression .) ]
+  ! LESS            [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
+  ! GREATER         [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
+  ! EQ              [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
+  ! NOTEQ           [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
+  ! PLUS            [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
+  ! MINUS           [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
+  ! TO              [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
 
 
 state 137
 
-    (77) math_expression -> expression EQ expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression PLUS expression .
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for LESS resolved as shift
   ! shift/reduce conflict for GREATER resolved as shift
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for TO resolved as shift
-    NEWLINE         reduce using rule 77 (math_expression -> expression EQ expression .)
-    THEN            reduce using rule 77 (math_expression -> expression EQ expression .)
-    COMMA           reduce using rule 77 (math_expression -> expression EQ expression .)
-    UNTIL           reduce using rule 77 (math_expression -> expression EQ expression .)
-    ELSE            reduce using rule 77 (math_expression -> expression EQ expression .)
-    RBRACKET        reduce using rule 77 (math_expression -> expression EQ expression .)
-    R_QBRACKET      reduce using rule 77 (math_expression -> expression EQ expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    NEWLINE         reduce using rule 77 (math_expression -> expression PLUS expression .)
+    THEN            reduce using rule 77 (math_expression -> expression PLUS expression .)
+    COMMA           reduce using rule 77 (math_expression -> expression PLUS expression .)
+    UNTIL           reduce using rule 77 (math_expression -> expression PLUS expression .)
+    ELSE            reduce using rule 77 (math_expression -> expression PLUS expression .)
+    RBRACKET        reduce using rule 77 (math_expression -> expression PLUS expression .)
+    R_QBRACKET      reduce using rule 77 (math_expression -> expression PLUS expression .)
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
-  ! PLUS            [ reduce using rule 77 (math_expression -> expression EQ expression .) ]
-  ! MINUS           [ reduce using rule 77 (math_expression -> expression EQ expression .) ]
-  ! LESS            [ reduce using rule 77 (math_expression -> expression EQ expression .) ]
-  ! GREATER         [ reduce using rule 77 (math_expression -> expression EQ expression .) ]
-  ! EQ              [ reduce using rule 77 (math_expression -> expression EQ expression .) ]
-  ! NOTEQ           [ reduce using rule 77 (math_expression -> expression EQ expression .) ]
-  ! TO              [ reduce using rule 77 (math_expression -> expression EQ expression .) ]
+  ! LESS            [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
+  ! GREATER         [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
+  ! EQ              [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
+  ! NOTEQ           [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
+  ! PLUS            [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
+  ! MINUS           [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
+  ! TO              [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
 
 
 state 138
 
-    (78) math_expression -> expression NOTEQ expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (78) math_expression -> expression MINUS expression .
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for LESS resolved as shift
   ! shift/reduce conflict for GREATER resolved as shift
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for TO resolved as shift
-    NEWLINE         reduce using rule 78 (math_expression -> expression NOTEQ expression .)
-    THEN            reduce using rule 78 (math_expression -> expression NOTEQ expression .)
-    COMMA           reduce using rule 78 (math_expression -> expression NOTEQ expression .)
-    UNTIL           reduce using rule 78 (math_expression -> expression NOTEQ expression .)
-    ELSE            reduce using rule 78 (math_expression -> expression NOTEQ expression .)
-    RBRACKET        reduce using rule 78 (math_expression -> expression NOTEQ expression .)
-    R_QBRACKET      reduce using rule 78 (math_expression -> expression NOTEQ expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    NEWLINE         reduce using rule 78 (math_expression -> expression MINUS expression .)
+    THEN            reduce using rule 78 (math_expression -> expression MINUS expression .)
+    COMMA           reduce using rule 78 (math_expression -> expression MINUS expression .)
+    UNTIL           reduce using rule 78 (math_expression -> expression MINUS expression .)
+    ELSE            reduce using rule 78 (math_expression -> expression MINUS expression .)
+    RBRACKET        reduce using rule 78 (math_expression -> expression MINUS expression .)
+    R_QBRACKET      reduce using rule 78 (math_expression -> expression MINUS expression .)
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
-  ! PLUS            [ reduce using rule 78 (math_expression -> expression NOTEQ expression .) ]
-  ! MINUS           [ reduce using rule 78 (math_expression -> expression NOTEQ expression .) ]
-  ! LESS            [ reduce using rule 78 (math_expression -> expression NOTEQ expression .) ]
-  ! GREATER         [ reduce using rule 78 (math_expression -> expression NOTEQ expression .) ]
-  ! EQ              [ reduce using rule 78 (math_expression -> expression NOTEQ expression .) ]
-  ! NOTEQ           [ reduce using rule 78 (math_expression -> expression NOTEQ expression .) ]
-  ! TO              [ reduce using rule 78 (math_expression -> expression NOTEQ expression .) ]
+  ! LESS            [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
+  ! GREATER         [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
+  ! EQ              [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
+  ! NOTEQ           [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
+  ! PLUS            [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
+  ! MINUS           [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
+  ! TO              [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
 
 
 state 139
 
     (87) converting_command -> expression TO expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for LESS resolved as shift
   ! shift/reduce conflict for GREATER resolved as shift
   ! shift/reduce conflict for EQ resolved as shift
   ! shift/reduce conflict for NOTEQ resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for TO resolved as shift
     NEWLINE         reduce using rule 87 (converting_command -> expression TO expression .)
     THEN            reduce using rule 87 (converting_command -> expression TO expression .)
@@ -4345,20 +4345,20 @@ state 139
     ELSE            reduce using rule 87 (converting_command -> expression TO expression .)
     RBRACKET        reduce using rule 87 (converting_command -> expression TO expression .)
     R_QBRACKET      reduce using rule 87 (converting_command -> expression TO expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
-  ! PLUS            [ reduce using rule 87 (converting_command -> expression TO expression .) ]
-  ! MINUS           [ reduce using rule 87 (converting_command -> expression TO expression .) ]
   ! LESS            [ reduce using rule 87 (converting_command -> expression TO expression .) ]
   ! GREATER         [ reduce using rule 87 (converting_command -> expression TO expression .) ]
   ! EQ              [ reduce using rule 87 (converting_command -> expression TO expression .) ]
   ! NOTEQ           [ reduce using rule 87 (converting_command -> expression TO expression .) ]
+  ! PLUS            [ reduce using rule 87 (converting_command -> expression TO expression .) ]
+  ! MINUS           [ reduce using rule 87 (converting_command -> expression TO expression .) ]
   ! TO              [ reduce using rule 87 (converting_command -> expression TO expression .) ]
 
 
@@ -4367,12 +4367,12 @@ state 140
     (86) converting_command -> expression TO type .
 
     NEWLINE         reduce using rule 86 (converting_command -> expression TO type .)
-    PLUS            reduce using rule 86 (converting_command -> expression TO type .)
-    MINUS           reduce using rule 86 (converting_command -> expression TO type .)
     LESS            reduce using rule 86 (converting_command -> expression TO type .)
     GREATER         reduce using rule 86 (converting_command -> expression TO type .)
     EQ              reduce using rule 86 (converting_command -> expression TO type .)
     NOTEQ           reduce using rule 86 (converting_command -> expression TO type .)
+    PLUS            reduce using rule 86 (converting_command -> expression TO type .)
+    MINUS           reduce using rule 86 (converting_command -> expression TO type .)
     TO              reduce using rule 86 (converting_command -> expression TO type .)
     THEN            reduce using rule 86 (converting_command -> expression TO type .)
     COMMA           reduce using rule 86 (converting_command -> expression TO type .)
@@ -4387,12 +4387,12 @@ state 141
     (88) converting_command -> expression TO vector_of .
 
     NEWLINE         reduce using rule 88 (converting_command -> expression TO vector_of .)
-    PLUS            reduce using rule 88 (converting_command -> expression TO vector_of .)
-    MINUS           reduce using rule 88 (converting_command -> expression TO vector_of .)
     LESS            reduce using rule 88 (converting_command -> expression TO vector_of .)
     GREATER         reduce using rule 88 (converting_command -> expression TO vector_of .)
     EQ              reduce using rule 88 (converting_command -> expression TO vector_of .)
     NOTEQ           reduce using rule 88 (converting_command -> expression TO vector_of .)
+    PLUS            reduce using rule 88 (converting_command -> expression TO vector_of .)
+    MINUS           reduce using rule 88 (converting_command -> expression TO vector_of .)
     TO              reduce using rule 88 (converting_command -> expression TO vector_of .)
     THEN            reduce using rule 88 (converting_command -> expression TO vector_of .)
     COMMA           reduce using rule 88 (converting_command -> expression TO vector_of .)
@@ -4410,12 +4410,12 @@ state 142
 
     OF              shift and go to state 163
     NEWLINE         reduce using rule 90 (vector_of -> VECTOR .)
-    PLUS            reduce using rule 90 (vector_of -> VECTOR .)
-    MINUS           reduce using rule 90 (vector_of -> VECTOR .)
     LESS            reduce using rule 90 (vector_of -> VECTOR .)
     GREATER         reduce using rule 90 (vector_of -> VECTOR .)
     EQ              reduce using rule 90 (vector_of -> VECTOR .)
     NOTEQ           reduce using rule 90 (vector_of -> VECTOR .)
+    PLUS            reduce using rule 90 (vector_of -> VECTOR .)
+    MINUS           reduce using rule 90 (vector_of -> VECTOR .)
     TO              reduce using rule 90 (vector_of -> VECTOR .)
     THEN            reduce using rule 90 (vector_of -> VECTOR .)
     COMMA           reduce using rule 90 (vector_of -> VECTOR .)
@@ -4430,12 +4430,12 @@ state 143
     (93) vector_pop -> variable POP BACK .
 
     NEWLINE         reduce using rule 93 (vector_pop -> variable POP BACK .)
-    PLUS            reduce using rule 93 (vector_pop -> variable POP BACK .)
-    MINUS           reduce using rule 93 (vector_pop -> variable POP BACK .)
     LESS            reduce using rule 93 (vector_pop -> variable POP BACK .)
     GREATER         reduce using rule 93 (vector_pop -> variable POP BACK .)
     EQ              reduce using rule 93 (vector_pop -> variable POP BACK .)
     NOTEQ           reduce using rule 93 (vector_pop -> variable POP BACK .)
+    PLUS            reduce using rule 93 (vector_pop -> variable POP BACK .)
+    MINUS           reduce using rule 93 (vector_pop -> variable POP BACK .)
     TO              reduce using rule 93 (vector_pop -> variable POP BACK .)
     THEN            reduce using rule 93 (vector_pop -> variable POP BACK .)
     COMMA           reduce using rule 93 (vector_pop -> variable POP BACK .)
@@ -4450,12 +4450,12 @@ state 144
     (94) vector_pop -> variable POP FRONT .
 
     NEWLINE         reduce using rule 94 (vector_pop -> variable POP FRONT .)
-    PLUS            reduce using rule 94 (vector_pop -> variable POP FRONT .)
-    MINUS           reduce using rule 94 (vector_pop -> variable POP FRONT .)
     LESS            reduce using rule 94 (vector_pop -> variable POP FRONT .)
     GREATER         reduce using rule 94 (vector_pop -> variable POP FRONT .)
     EQ              reduce using rule 94 (vector_pop -> variable POP FRONT .)
     NOTEQ           reduce using rule 94 (vector_pop -> variable POP FRONT .)
+    PLUS            reduce using rule 94 (vector_pop -> variable POP FRONT .)
+    MINUS           reduce using rule 94 (vector_pop -> variable POP FRONT .)
     TO              reduce using rule 94 (vector_pop -> variable POP FRONT .)
     THEN            reduce using rule 94 (vector_pop -> variable POP FRONT .)
     COMMA           reduce using rule 94 (vector_pop -> variable POP FRONT .)
@@ -4470,12 +4470,12 @@ state 145
     (53) qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .
 
     NEWLINE         reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
-    PLUS            reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
-    MINUS           reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     LESS            reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     GREATER         reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     EQ              reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     NOTEQ           reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
+    PLUS            reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
+    MINUS           reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     TO              reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     THEN            reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
     COMMA           reduce using rule 53 (qstring -> DOUBLE_QUOTE string DOUBLE_QUOTE .)
@@ -4522,12 +4522,12 @@ state 150
     (54) qstring -> QUOTE string QUOTE .
 
     NEWLINE         reduce using rule 54 (qstring -> QUOTE string QUOTE .)
-    PLUS            reduce using rule 54 (qstring -> QUOTE string QUOTE .)
-    MINUS           reduce using rule 54 (qstring -> QUOTE string QUOTE .)
     LESS            reduce using rule 54 (qstring -> QUOTE string QUOTE .)
     GREATER         reduce using rule 54 (qstring -> QUOTE string QUOTE .)
     EQ              reduce using rule 54 (qstring -> QUOTE string QUOTE .)
     NOTEQ           reduce using rule 54 (qstring -> QUOTE string QUOTE .)
+    PLUS            reduce using rule 54 (qstring -> QUOTE string QUOTE .)
+    MINUS           reduce using rule 54 (qstring -> QUOTE string QUOTE .)
     TO              reduce using rule 54 (qstring -> QUOTE string QUOTE .)
     THEN            reduce using rule 54 (qstring -> QUOTE string QUOTE .)
     COMMA           reduce using rule 54 (qstring -> QUOTE string QUOTE .)
@@ -4558,12 +4558,12 @@ state 152
 state 153
 
     (91) vector_command -> variable PUSH BACK expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
@@ -4571,24 +4571,24 @@ state 153
     NEWLINE         reduce using rule 91 (vector_command -> variable PUSH BACK expression .)
     UNTIL           reduce using rule 91 (vector_command -> variable PUSH BACK expression .)
     ELSE            reduce using rule 91 (vector_command -> variable PUSH BACK expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
 state 154
 
     (92) vector_command -> variable PUSH FRONT expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
@@ -4596,24 +4596,24 @@ state 154
     NEWLINE         reduce using rule 92 (vector_command -> variable PUSH FRONT expression .)
     UNTIL           reduce using rule 92 (vector_command -> variable PUSH FRONT expression .)
     ELSE            reduce using rule 92 (vector_command -> variable PUSH FRONT expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
 state 155
 
     (79) while -> DO statements_group UNTIL expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
@@ -4621,12 +4621,12 @@ state 155
     NEWLINE         reduce using rule 79 (while -> DO statements_group UNTIL expression .)
     UNTIL           reduce using rule 79 (while -> DO statements_group UNTIL expression .)
     ELSE            reduce using rule 79 (while -> DO statements_group UNTIL expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
@@ -4686,12 +4686,12 @@ state 159
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -4747,12 +4747,12 @@ state 160
     (104) call -> VARIABLE LBRACKET parameters RBRACKET .
 
     NEWLINE         reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
-    PLUS            reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
-    MINUS           reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     LESS            reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     GREATER         reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     EQ              reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     NOTEQ           reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
+    PLUS            reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
+    MINUS           reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     TO              reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     UNTIL           reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
     THEN            reduce using rule 104 (call -> VARIABLE LBRACKET parameters RBRACKET .)
@@ -4789,12 +4789,12 @@ state 161
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -4857,12 +4857,12 @@ state 162
     PUSH            reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     POP             reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     NEWLINE         reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
-    PLUS            reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
-    MINUS           reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     LESS            reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     GREATER         reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     EQ              reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     NOTEQ           reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
+    PLUS            reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
+    MINUS           reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     TO              reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     THEN            reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
     COMMA           reduce using rule 44 (indexing -> L_QBRACKET expression R_QBRACKET .)
@@ -5015,12 +5015,12 @@ state 165
     (72) const -> . PLASTIC
     (53) qstring -> . DOUBLE_QUOTE string DOUBLE_QUOTE
     (54) qstring -> . QUOTE string QUOTE
-    (73) math_expression -> . expression PLUS expression
-    (74) math_expression -> . expression MINUS expression
-    (75) math_expression -> . expression LESS expression
-    (76) math_expression -> . expression GREATER expression
-    (77) math_expression -> . expression EQ expression
-    (78) math_expression -> . expression NOTEQ expression
+    (73) math_expression -> . expression LESS expression
+    (74) math_expression -> . expression GREATER expression
+    (75) math_expression -> . expression EQ expression
+    (76) math_expression -> . expression NOTEQ expression
+    (77) math_expression -> . expression PLUS expression
+    (78) math_expression -> . expression MINUS expression
     (95) robot_command -> . LEFT
     (96) robot_command -> . RIGHT
     (97) robot_command -> . FORWARD
@@ -5164,24 +5164,24 @@ state 166
 state 167
 
     (111) parameter -> VARIABLE EQ expression .
-    (73) math_expression -> expression . PLUS expression
-    (74) math_expression -> expression . MINUS expression
-    (75) math_expression -> expression . LESS expression
-    (76) math_expression -> expression . GREATER expression
-    (77) math_expression -> expression . EQ expression
-    (78) math_expression -> expression . NOTEQ expression
+    (73) math_expression -> expression . LESS expression
+    (74) math_expression -> expression . GREATER expression
+    (75) math_expression -> expression . EQ expression
+    (76) math_expression -> expression . NOTEQ expression
+    (77) math_expression -> expression . PLUS expression
+    (78) math_expression -> expression . MINUS expression
     (86) converting_command -> expression . TO type
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
     RBRACKET        reduce using rule 111 (parameter -> VARIABLE EQ expression .)
     COMMA           reduce using rule 111 (parameter -> VARIABLE EQ expression .)
-    PLUS            shift and go to state 101
-    MINUS           shift and go to state 102
-    LESS            shift and go to state 103
-    GREATER         shift and go to state 104
-    EQ              shift and go to state 105
-    NOTEQ           shift and go to state 106
+    LESS            shift and go to state 101
+    GREATER         shift and go to state 102
+    EQ              shift and go to state 103
+    NOTEQ           shift and go to state 104
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
     TO              shift and go to state 107
 
 
@@ -5201,12 +5201,12 @@ state 169
     PUSH            reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     POP             reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     NEWLINE         reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
-    PLUS            reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
-    MINUS           reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     LESS            reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     GREATER         reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     EQ              reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     NOTEQ           reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
+    PLUS            reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
+    MINUS           reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     TO              reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     THEN            reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
     COMMA           reduce using rule 43 (indexing -> L_QBRACKET expression R_QBRACKET indexing .)
@@ -5221,12 +5221,12 @@ state 170
     (89) vector_of -> VECTOR OF vector_of .
 
     NEWLINE         reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
-    PLUS            reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
-    MINUS           reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
     LESS            reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
     GREATER         reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
     EQ              reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
     NOTEQ           reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
+    PLUS            reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
+    MINUS           reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
     TO              reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
     THEN            reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
     COMMA           reduce using rule 89 (vector_of -> VECTOR OF vector_of .)
@@ -5364,54 +5364,54 @@ WARNING:
 WARNING: shift/reduce conflict for NEWLINE in state 14 resolved as shift
 WARNING: shift/reduce conflict for error in state 14 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 126 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 133 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 133 resolved as shift
 WARNING: shift/reduce conflict for LESS in state 133 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 133 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 133 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 133 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 133 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 133 resolved as shift
 WARNING: shift/reduce conflict for TO in state 133 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 134 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 134 resolved as shift
 WARNING: shift/reduce conflict for LESS in state 134 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 134 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 134 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 134 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 134 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 134 resolved as shift
 WARNING: shift/reduce conflict for TO in state 134 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 135 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 135 resolved as shift
 WARNING: shift/reduce conflict for LESS in state 135 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 135 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 135 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 135 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 135 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 135 resolved as shift
 WARNING: shift/reduce conflict for TO in state 135 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 136 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 136 resolved as shift
 WARNING: shift/reduce conflict for LESS in state 136 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 136 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 136 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 136 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 136 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 136 resolved as shift
 WARNING: shift/reduce conflict for TO in state 136 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 137 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 137 resolved as shift
 WARNING: shift/reduce conflict for LESS in state 137 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 137 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 137 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 137 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 137 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 137 resolved as shift
 WARNING: shift/reduce conflict for TO in state 137 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 138 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 138 resolved as shift
 WARNING: shift/reduce conflict for LESS in state 138 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 138 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 138 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 138 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 138 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 138 resolved as shift
 WARNING: shift/reduce conflict for TO in state 138 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 139 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 139 resolved as shift
 WARNING: shift/reduce conflict for LESS in state 139 resolved as shift
 WARNING: shift/reduce conflict for GREATER in state 139 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 139 resolved as shift
 WARNING: shift/reduce conflict for NOTEQ in state 139 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 139 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 139 resolved as shift
 WARNING: shift/reduce conflict for TO in state 139 resolved as shift
 WARNING: shift/reduce conflict for ELSE in state 157 resolved as shift
 WARNING: reduce/reduce conflict in state 14 resolved using rule (statement -> errors)
