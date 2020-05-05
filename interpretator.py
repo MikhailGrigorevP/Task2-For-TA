@@ -11,6 +11,7 @@ from Errors.errors import InterpreterRedeclarationError
 from Errors.errors import InterpreterIndexError
 from Errors.errors import InterpreterApplicationCall
 
+
 # Item of symbol table
 class Variable:
     def __init__(self, var_type='integer', var_value=None):
@@ -168,21 +169,21 @@ class Interpreter:
 
     def interpreter_node(self, node):
         # log robot
-        if 'free' in self.sym_table[self.scope]:
-        #    print("stack_x:", self.sym_table[self.scope]['stack_x'])
-        #    print("stack_y:", self.sym_table[self.scope]['stack_y'])
-        #    print("stack_t:", self.sym_table[self.scope]['stack_t'])
-        #    print("size:", self.sym_table[self.scope]['st'])
-        #    print("vm:", self.sym_table[self.scope]['vm'])
-        #    print(self.robot.lms(), self.sym_table[self.scope]['turn'], self.sym_table[self.scope]['numOfTurns'])
-        #    print(self.robot.lms(), "-", self.sym_table[self.scope]['free'].value)
-            print("real:", self.robot.turn, self.robot.x, self.robot.y)
-            print("drill:", self.robot.power)
-            print("x,y:", self.sym_table[self.scope]['turn'].value, self.sym_table[self.scope]['x'].value,
-                  self.sym_table[self.scope]['y'].value)
-            if self.sym_table[self.scope]['x'].value == 17 and self.robot.power == 0 and self.sym_table[self.scope]['y'].value == 17:
-                  print("Fs")
-        # nothing
+        # if 'free' in self.sym_table[self.scope]:
+        # #    print("stack_x:", self.sym_table[self.scope]['stack_x'])
+        # #    print("stack_y:", self.sym_table[self.scope]['stack_y'])
+        # #    print("stack_t:", self.sym_table[self.scope]['stack_t'])
+        # #    print("size:", self.sym_table[self.scope]['st'])
+        # #    print("vm:", self.sym_table[self.scope]['vm'])
+        # #    print(self.robot.lms(), self.sym_table[self.scope]['turn'], self.sym_table[self.scope]['numOfTurns'])
+        # #    print(self.robot.lms(), "-", self.sym_table[self.scope]['free'].value)
+        #     print("real:", self.robot.turn, self.robot.x, self.robot.y)
+        #     print("drill:", self.robot.power)
+        #     print("x,y:", self.sym_table[self.scope]['turn'].value, self.sym_table[self.scope]['x'].value,
+        #           self.sym_table[self.scope]['y'].value)
+        #
+        # if self.sym_table[self.scope]['x'].value == 17 and self.robot.power == 0 and self.sym_table[self.scope][
+        # 'y'].value == 17 and self.robot.power == 0: print("Fs") nothing
         if node is None:
             return
         # comment
@@ -815,9 +816,6 @@ class Interpreter:
         return self.robot.forward()
 
     def robot_back(self):
-        if self.sym_table[self.scope]['turn'].value == 0 and self.sym_table[self.scope]['x'].value == 1 and \
-                self.sym_table[self.scope]['y'].value == 12:
-            print("F")
         return self.robot.back()
 
     def robot_rotate_left(self):
@@ -1132,7 +1130,7 @@ if __name__ == '__main__':
     # prepare
     parser = parser()
     tree, func_table, correctness = parser.parse(text)
-    robot = create_robot("Tests/Maps/no_exit_map")
+    robot = create_robot("Tests/Maps/correct_map")
     if correctness:
 
         interpreter = Interpreter()
