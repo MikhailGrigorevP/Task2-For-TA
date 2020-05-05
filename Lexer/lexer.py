@@ -58,7 +58,8 @@ class lexer(object):
               'CONTINUE', 'COMMA', 'COMMENT', 'NEWLINE'] + list(reserved.values())
 
     precedence = (
-        ('left', 'LESS', 'GREATER'), 
+        ('left', 'TO'),
+        ('left', 'LESS', 'GREATER', 'EQ', 'NOTEQ'),
         ('left', 'PLUS', 'MINUS'),
     )
 

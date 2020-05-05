@@ -4067,35 +4067,28 @@ state 133
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for LESS resolved as shift
-  ! shift/reduce conflict for GREATER resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for NOTEQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TO resolved as shift
     NEWLINE         reduce using rule 73 (math_expression -> expression LESS expression .)
+    LESS            reduce using rule 73 (math_expression -> expression LESS expression .)
+    GREATER         reduce using rule 73 (math_expression -> expression LESS expression .)
+    EQ              reduce using rule 73 (math_expression -> expression LESS expression .)
+    NOTEQ           reduce using rule 73 (math_expression -> expression LESS expression .)
+    TO              reduce using rule 73 (math_expression -> expression LESS expression .)
     THEN            reduce using rule 73 (math_expression -> expression LESS expression .)
     COMMA           reduce using rule 73 (math_expression -> expression LESS expression .)
     UNTIL           reduce using rule 73 (math_expression -> expression LESS expression .)
     ELSE            reduce using rule 73 (math_expression -> expression LESS expression .)
     RBRACKET        reduce using rule 73 (math_expression -> expression LESS expression .)
     R_QBRACKET      reduce using rule 73 (math_expression -> expression LESS expression .)
-    LESS            shift and go to state 101
-    GREATER         shift and go to state 102
-    EQ              shift and go to state 103
-    NOTEQ           shift and go to state 104
     PLUS            shift and go to state 105
     MINUS           shift and go to state 106
-    TO              shift and go to state 107
 
-  ! LESS            [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
-  ! GREATER         [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
-  ! EQ              [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
-  ! NOTEQ           [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
   ! PLUS            [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
   ! MINUS           [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
-  ! TO              [ reduce using rule 73 (math_expression -> expression LESS expression .) ]
+  ! LESS            [ shift and go to state 101 ]
+  ! GREATER         [ shift and go to state 102 ]
+  ! EQ              [ shift and go to state 103 ]
+  ! NOTEQ           [ shift and go to state 104 ]
+  ! TO              [ shift and go to state 107 ]
 
 
 state 134
@@ -4111,35 +4104,28 @@ state 134
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for LESS resolved as shift
-  ! shift/reduce conflict for GREATER resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for NOTEQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TO resolved as shift
     NEWLINE         reduce using rule 74 (math_expression -> expression GREATER expression .)
+    LESS            reduce using rule 74 (math_expression -> expression GREATER expression .)
+    GREATER         reduce using rule 74 (math_expression -> expression GREATER expression .)
+    EQ              reduce using rule 74 (math_expression -> expression GREATER expression .)
+    NOTEQ           reduce using rule 74 (math_expression -> expression GREATER expression .)
+    TO              reduce using rule 74 (math_expression -> expression GREATER expression .)
     THEN            reduce using rule 74 (math_expression -> expression GREATER expression .)
     COMMA           reduce using rule 74 (math_expression -> expression GREATER expression .)
     UNTIL           reduce using rule 74 (math_expression -> expression GREATER expression .)
     ELSE            reduce using rule 74 (math_expression -> expression GREATER expression .)
     RBRACKET        reduce using rule 74 (math_expression -> expression GREATER expression .)
     R_QBRACKET      reduce using rule 74 (math_expression -> expression GREATER expression .)
-    LESS            shift and go to state 101
-    GREATER         shift and go to state 102
-    EQ              shift and go to state 103
-    NOTEQ           shift and go to state 104
     PLUS            shift and go to state 105
     MINUS           shift and go to state 106
-    TO              shift and go to state 107
 
-  ! LESS            [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
-  ! GREATER         [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
-  ! EQ              [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
-  ! NOTEQ           [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
   ! PLUS            [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
   ! MINUS           [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
-  ! TO              [ reduce using rule 74 (math_expression -> expression GREATER expression .) ]
+  ! LESS            [ shift and go to state 101 ]
+  ! GREATER         [ shift and go to state 102 ]
+  ! EQ              [ shift and go to state 103 ]
+  ! NOTEQ           [ shift and go to state 104 ]
+  ! TO              [ shift and go to state 107 ]
 
 
 state 135
@@ -4155,35 +4141,28 @@ state 135
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for LESS resolved as shift
-  ! shift/reduce conflict for GREATER resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for NOTEQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TO resolved as shift
     NEWLINE         reduce using rule 75 (math_expression -> expression EQ expression .)
+    LESS            reduce using rule 75 (math_expression -> expression EQ expression .)
+    GREATER         reduce using rule 75 (math_expression -> expression EQ expression .)
+    EQ              reduce using rule 75 (math_expression -> expression EQ expression .)
+    NOTEQ           reduce using rule 75 (math_expression -> expression EQ expression .)
+    TO              reduce using rule 75 (math_expression -> expression EQ expression .)
     THEN            reduce using rule 75 (math_expression -> expression EQ expression .)
     COMMA           reduce using rule 75 (math_expression -> expression EQ expression .)
     UNTIL           reduce using rule 75 (math_expression -> expression EQ expression .)
     ELSE            reduce using rule 75 (math_expression -> expression EQ expression .)
     RBRACKET        reduce using rule 75 (math_expression -> expression EQ expression .)
     R_QBRACKET      reduce using rule 75 (math_expression -> expression EQ expression .)
-    LESS            shift and go to state 101
-    GREATER         shift and go to state 102
-    EQ              shift and go to state 103
-    NOTEQ           shift and go to state 104
     PLUS            shift and go to state 105
     MINUS           shift and go to state 106
-    TO              shift and go to state 107
 
-  ! LESS            [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
-  ! GREATER         [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
-  ! EQ              [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
-  ! NOTEQ           [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
   ! PLUS            [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
   ! MINUS           [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
-  ! TO              [ reduce using rule 75 (math_expression -> expression EQ expression .) ]
+  ! LESS            [ shift and go to state 101 ]
+  ! GREATER         [ shift and go to state 102 ]
+  ! EQ              [ shift and go to state 103 ]
+  ! NOTEQ           [ shift and go to state 104 ]
+  ! TO              [ shift and go to state 107 ]
 
 
 state 136
@@ -4199,35 +4178,28 @@ state 136
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for LESS resolved as shift
-  ! shift/reduce conflict for GREATER resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for NOTEQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TO resolved as shift
     NEWLINE         reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    LESS            reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    GREATER         reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    EQ              reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    NOTEQ           reduce using rule 76 (math_expression -> expression NOTEQ expression .)
+    TO              reduce using rule 76 (math_expression -> expression NOTEQ expression .)
     THEN            reduce using rule 76 (math_expression -> expression NOTEQ expression .)
     COMMA           reduce using rule 76 (math_expression -> expression NOTEQ expression .)
     UNTIL           reduce using rule 76 (math_expression -> expression NOTEQ expression .)
     ELSE            reduce using rule 76 (math_expression -> expression NOTEQ expression .)
     RBRACKET        reduce using rule 76 (math_expression -> expression NOTEQ expression .)
     R_QBRACKET      reduce using rule 76 (math_expression -> expression NOTEQ expression .)
-    LESS            shift and go to state 101
-    GREATER         shift and go to state 102
-    EQ              shift and go to state 103
-    NOTEQ           shift and go to state 104
     PLUS            shift and go to state 105
     MINUS           shift and go to state 106
-    TO              shift and go to state 107
 
-  ! LESS            [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
-  ! GREATER         [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
-  ! EQ              [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
-  ! NOTEQ           [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
   ! PLUS            [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
   ! MINUS           [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
-  ! TO              [ reduce using rule 76 (math_expression -> expression NOTEQ expression .) ]
+  ! LESS            [ shift and go to state 101 ]
+  ! GREATER         [ shift and go to state 102 ]
+  ! EQ              [ shift and go to state 103 ]
+  ! NOTEQ           [ shift and go to state 104 ]
+  ! TO              [ shift and go to state 107 ]
 
 
 state 137
@@ -4243,35 +4215,28 @@ state 137
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for LESS resolved as shift
-  ! shift/reduce conflict for GREATER resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for NOTEQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TO resolved as shift
     NEWLINE         reduce using rule 77 (math_expression -> expression PLUS expression .)
+    LESS            reduce using rule 77 (math_expression -> expression PLUS expression .)
+    GREATER         reduce using rule 77 (math_expression -> expression PLUS expression .)
+    EQ              reduce using rule 77 (math_expression -> expression PLUS expression .)
+    NOTEQ           reduce using rule 77 (math_expression -> expression PLUS expression .)
+    PLUS            reduce using rule 77 (math_expression -> expression PLUS expression .)
+    MINUS           reduce using rule 77 (math_expression -> expression PLUS expression .)
+    TO              reduce using rule 77 (math_expression -> expression PLUS expression .)
     THEN            reduce using rule 77 (math_expression -> expression PLUS expression .)
     COMMA           reduce using rule 77 (math_expression -> expression PLUS expression .)
     UNTIL           reduce using rule 77 (math_expression -> expression PLUS expression .)
     ELSE            reduce using rule 77 (math_expression -> expression PLUS expression .)
     RBRACKET        reduce using rule 77 (math_expression -> expression PLUS expression .)
     R_QBRACKET      reduce using rule 77 (math_expression -> expression PLUS expression .)
-    LESS            shift and go to state 101
-    GREATER         shift and go to state 102
-    EQ              shift and go to state 103
-    NOTEQ           shift and go to state 104
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 106
-    TO              shift and go to state 107
 
-  ! LESS            [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
-  ! GREATER         [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
-  ! EQ              [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
-  ! NOTEQ           [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
-  ! PLUS            [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
-  ! MINUS           [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
-  ! TO              [ reduce using rule 77 (math_expression -> expression PLUS expression .) ]
+  ! LESS            [ shift and go to state 101 ]
+  ! GREATER         [ shift and go to state 102 ]
+  ! EQ              [ shift and go to state 103 ]
+  ! NOTEQ           [ shift and go to state 104 ]
+  ! PLUS            [ shift and go to state 105 ]
+  ! MINUS           [ shift and go to state 106 ]
+  ! TO              [ shift and go to state 107 ]
 
 
 state 138
@@ -4287,35 +4252,28 @@ state 138
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for LESS resolved as shift
-  ! shift/reduce conflict for GREATER resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for NOTEQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TO resolved as shift
     NEWLINE         reduce using rule 78 (math_expression -> expression MINUS expression .)
+    LESS            reduce using rule 78 (math_expression -> expression MINUS expression .)
+    GREATER         reduce using rule 78 (math_expression -> expression MINUS expression .)
+    EQ              reduce using rule 78 (math_expression -> expression MINUS expression .)
+    NOTEQ           reduce using rule 78 (math_expression -> expression MINUS expression .)
+    PLUS            reduce using rule 78 (math_expression -> expression MINUS expression .)
+    MINUS           reduce using rule 78 (math_expression -> expression MINUS expression .)
+    TO              reduce using rule 78 (math_expression -> expression MINUS expression .)
     THEN            reduce using rule 78 (math_expression -> expression MINUS expression .)
     COMMA           reduce using rule 78 (math_expression -> expression MINUS expression .)
     UNTIL           reduce using rule 78 (math_expression -> expression MINUS expression .)
     ELSE            reduce using rule 78 (math_expression -> expression MINUS expression .)
     RBRACKET        reduce using rule 78 (math_expression -> expression MINUS expression .)
     R_QBRACKET      reduce using rule 78 (math_expression -> expression MINUS expression .)
-    LESS            shift and go to state 101
-    GREATER         shift and go to state 102
-    EQ              shift and go to state 103
-    NOTEQ           shift and go to state 104
-    PLUS            shift and go to state 105
-    MINUS           shift and go to state 106
-    TO              shift and go to state 107
 
-  ! LESS            [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
-  ! GREATER         [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
-  ! EQ              [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
-  ! NOTEQ           [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
-  ! PLUS            [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
-  ! MINUS           [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
-  ! TO              [ reduce using rule 78 (math_expression -> expression MINUS expression .) ]
+  ! LESS            [ shift and go to state 101 ]
+  ! GREATER         [ shift and go to state 102 ]
+  ! EQ              [ shift and go to state 103 ]
+  ! NOTEQ           [ shift and go to state 104 ]
+  ! PLUS            [ shift and go to state 105 ]
+  ! MINUS           [ shift and go to state 106 ]
+  ! TO              [ shift and go to state 107 ]
 
 
 state 139
@@ -4331,14 +4289,8 @@ state 139
     (87) converting_command -> expression . TO expression
     (88) converting_command -> expression . TO vector_of
 
-  ! shift/reduce conflict for LESS resolved as shift
-  ! shift/reduce conflict for GREATER resolved as shift
-  ! shift/reduce conflict for EQ resolved as shift
-  ! shift/reduce conflict for NOTEQ resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TO resolved as shift
     NEWLINE         reduce using rule 87 (converting_command -> expression TO expression .)
+    TO              reduce using rule 87 (converting_command -> expression TO expression .)
     THEN            reduce using rule 87 (converting_command -> expression TO expression .)
     COMMA           reduce using rule 87 (converting_command -> expression TO expression .)
     UNTIL           reduce using rule 87 (converting_command -> expression TO expression .)
@@ -4351,7 +4303,6 @@ state 139
     NOTEQ           shift and go to state 104
     PLUS            shift and go to state 105
     MINUS           shift and go to state 106
-    TO              shift and go to state 107
 
   ! LESS            [ reduce using rule 87 (converting_command -> expression TO expression .) ]
   ! GREATER         [ reduce using rule 87 (converting_command -> expression TO expression .) ]
@@ -4359,7 +4310,7 @@ state 139
   ! NOTEQ           [ reduce using rule 87 (converting_command -> expression TO expression .) ]
   ! PLUS            [ reduce using rule 87 (converting_command -> expression TO expression .) ]
   ! MINUS           [ reduce using rule 87 (converting_command -> expression TO expression .) ]
-  ! TO              [ reduce using rule 87 (converting_command -> expression TO expression .) ]
+  ! TO              [ shift and go to state 107 ]
 
 
 state 140
@@ -5364,55 +5315,6 @@ WARNING:
 WARNING: shift/reduce conflict for NEWLINE in state 14 resolved as shift
 WARNING: shift/reduce conflict for error in state 14 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 126 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 133 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 133 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 133 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 133 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 133 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 133 resolved as shift
-WARNING: shift/reduce conflict for TO in state 133 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 134 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 134 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 134 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 134 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 134 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 134 resolved as shift
-WARNING: shift/reduce conflict for TO in state 134 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 135 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 135 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 135 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 135 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 135 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 135 resolved as shift
-WARNING: shift/reduce conflict for TO in state 135 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 136 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 136 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 136 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 136 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 136 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 136 resolved as shift
-WARNING: shift/reduce conflict for TO in state 136 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 137 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 137 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 137 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 137 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 137 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 137 resolved as shift
-WARNING: shift/reduce conflict for TO in state 137 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 138 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 138 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 138 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 138 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 138 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 138 resolved as shift
-WARNING: shift/reduce conflict for TO in state 138 resolved as shift
-WARNING: shift/reduce conflict for LESS in state 139 resolved as shift
-WARNING: shift/reduce conflict for GREATER in state 139 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 139 resolved as shift
-WARNING: shift/reduce conflict for NOTEQ in state 139 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 139 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 139 resolved as shift
-WARNING: shift/reduce conflict for TO in state 139 resolved as shift
 WARNING: shift/reduce conflict for ELSE in state 157 resolved as shift
 WARNING: reduce/reduce conflict in state 14 resolved using rule (statement -> errors)
 WARNING: rejected rule (type -> errors) in state 14

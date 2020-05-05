@@ -10,6 +10,7 @@ from Tree.syntaxTree import node
 
 class parser(object):
     tokens = lexer.tokens
+    precedence = lexer.precedence
 
     def __init__(self):
         self.ok = True
