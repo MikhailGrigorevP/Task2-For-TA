@@ -809,6 +809,9 @@ class Interpreter:
         return self.robot.forward()
 
     def robot_back(self):
+        if self.sym_table[self.scope]['turn'].value == 0 and self.sym_table[self.scope]['x'].value == 1 and \
+                self.sym_table[self.scope]['y'].value == 12:
+            print("F")
         return self.robot.back()
 
     def robot_rotate_left(self):
@@ -924,9 +927,6 @@ class Interpreter:
 
     def op_if(self, node):
         try:
-            if self.sym_table[self.scope]['turn'] == 0 and self.sym_table[self.scope]['x'] == 1 and\
-                    self.sym_table[self.scope]['y'] == 12:
-                print("F")
             condition = self.interpreter_node(node.child['condition'])
             condition = self.converse.converse('boolean', condition).value
             if condition:

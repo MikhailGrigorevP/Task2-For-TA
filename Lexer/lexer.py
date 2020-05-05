@@ -57,6 +57,11 @@ class lexer(object):
               'R_QBRACKET', 'L_QBRACKET',
               'CONTINUE', 'COMMA', 'COMMENT', 'NEWLINE'] + list(reserved.values())
 
+    precedence = (
+        ('left', 'LESS', 'GREATER'), 
+        ('left', 'PLUS', 'MINUS'),
+    )
+
     t_ASSIGNMENT = r'\:\='
     t_PLUS = r'\+'
     t_MINUS = r'\-'

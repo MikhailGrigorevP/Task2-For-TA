@@ -31,6 +31,11 @@ function of integer app2() begin
 end
 
 function of integer app3() begin
+    app4()
+    return 1
+end
+
+function of integer app4() begin
     app3()
     return 1
 end

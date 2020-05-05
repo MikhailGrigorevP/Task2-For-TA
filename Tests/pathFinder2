@@ -169,12 +169,13 @@ function of integer findPath() begin
                 a := stack_x pop front
                 b := stack_y pop front
                 need_turn := stack_t pop front
-                if a <> x then back else if b <> y then back
                 do begin
                     rotate_right
                     turn := turn + 1
                     if turn = 4 then turn := 0
                 end until turn <> need_turn
+                if a <> x then back
+                if b <> y then back
                 x := a
                 y := b
                 lost := true
