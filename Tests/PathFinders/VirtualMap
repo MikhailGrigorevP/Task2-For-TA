@@ -2,8 +2,9 @@ function of integer application() begin
     return findPath()
 end
 function of integer findPath() begin
-    vector of vector of boolean vm, vm_t, vm_f
+    vector of vector of boolean vm, vm_t, vm_f, vm_r
     vm[0][0] push back true
+    vm_r[0][0] push back true
     vm_t[0][0] push back true
     vm_f[0][0] push back false
     integer x := 0, y := 0, steps
@@ -17,10 +18,12 @@ function of integer findPath() begin
     vector of boolean v_true, v_false, empty
     v_true push back true
     v_false push back false
-    integer turn := 0, a, b, need_turn
+    integer turn := 0, a, b
+    integer need_turn
     integer numOfTurns := 0
     boolean willTurn := true
     boolean testv := false
+    boolean drillMode := false
     boolean exit := false, nvisited, lost := false
     integer free, i, j
     do begin
@@ -28,6 +31,17 @@ function of integer findPath() begin
         i := 0
         nvisited := false
         free := 0
+        if st = 0 then if drillMode = false then begin
+            vm := vm_r
+            integer numOfTurns := 0
+            size_x := 1
+            size_y := 1
+            drillMode := true
+            stack_x push back x
+            stack_y push back y
+            stack_t push back turn
+            st := 1
+        end
         if reflect = "EXIT" then exit := true else if st = 0 then exit := true else begin
             if lms <> 0 then begin
                 willTurn := false
@@ -37,6 +51,16 @@ function of integer findPath() begin
                 if turn = 0 then free := size_x - 1 - x else if turn = 1 then free := size_y - 1 - y else if turn = 2 then free := x else if turn = 3 then free := y
                 if free < i then i := free
                 if i = 0 then willTurn := true
+            end else if drillMode = true then begin
+                if drill = 0 then drillMode := false else if lms <> 0 then begin
+                    willTurn := false
+                    nvisited := true
+                    i := lms
+                    free := lms
+                    if turn = 0 then free := size_x - 1 - x else if turn = 1 then free := size_y - 1 - y else if turn = 2 then free := x else if turn = 3 then free := y
+                    if free < i then i := free
+                    if i = 0 then willTurn := true
+                end
             end
             do begin
                 forward
@@ -64,7 +88,7 @@ function of integer findPath() begin
                     nvisited := false
                 end
             end until i <> 0
-            # walkRight
+            # walkWithExpand
             if lms then begin if nvisited = true then begin
                 if turn = 0 then begin
                     a := x + lms
@@ -169,6 +193,10 @@ function of integer findPath() begin
                 a := stack_x pop front
                 b := stack_y pop front
                 need_turn := stack_t pop front
+                if x < a then need_turn := 2
+                if a < x then need_turn := 0
+                if y < b then need_turn := 3
+                if b < y then need_turn := 1
                 do begin
                     rotate_right
                     turn := turn + 1

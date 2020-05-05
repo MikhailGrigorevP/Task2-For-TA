@@ -30,7 +30,6 @@ class Cell:
 
     def __repr__(self):
         return self.solidity
-        return f'{self.x} {self.y} : {self.type}, {self.solidity}'
 
 
 class Robot:
@@ -200,6 +199,7 @@ class Robot:
     def drill(self):
         if self.turn == 0:
             if self.x == len(self.map[0])-2:
+                self.power = 0
                 return 0
             if self.power > self.scan_next(0).solidity[0]:
                 self.power -= self.scan_next(0).solidity[0]
@@ -214,6 +214,7 @@ class Robot:
             return self.power
         if self.turn == 1:
             if self.y == len(self.map)-2:
+                self.power = 0
                 return 0
             if self.power > self.scan_next(1).solidity[0]:
                 self.power -= self.scan_next(1).solidity[0]
@@ -228,6 +229,7 @@ class Robot:
             return self.power
         if self.turn == 2:
             if self.x == 1:
+                self.power = 0
                 return 0
             if self.power > self.scan_next(2).solidity[0]:
                 self.power -= self.scan_next(2).solidity[0]
@@ -242,6 +244,7 @@ class Robot:
             return self.power
         if self.turn == 3:
             if self.y == 1:
+                self.power = 0
                 return 0
             if self.power > self.scan_next(3).solidity[0]:
                 self.power -= self.scan_next(3).solidity[0]

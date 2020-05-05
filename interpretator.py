@@ -11,7 +11,6 @@ from Errors.errors import InterpreterRedeclarationError
 from Errors.errors import InterpreterIndexError
 from Errors.errors import InterpreterApplicationCall
 
-
 # Item of symbol table
 class Variable:
     def __init__(self, var_type='integer', var_value=None):
@@ -139,7 +138,8 @@ class Interpreter:
             'ValueError': 7,
             'ApplicationCall': 8,
             'WrongParameters': 9,
-            'Recursion': 10
+            'Recursion': 10,
+            'TypeError': 11
         }
 
     def interpreter(self, _robot=None, program=None):
@@ -168,17 +168,20 @@ class Interpreter:
 
     def interpreter_node(self, node):
         # log robot
-        # print(self.robot.x, self.robot.y, self.robot.turn, self.robot.power)
         if 'free' in self.sym_table[self.scope]:
-            print("stack_x:", self.sym_table[self.scope]['stack_x'])
-            print("stack_y:", self.sym_table[self.scope]['stack_y'])
-            print("stack_t:", self.sym_table[self.scope]['stack_t'])
-            # # # print("size:", self.sym_table[self.scope]['st'])
-            # #print("vm:", self.sym_table[self.scope]['vm'])
-            # # # print(self.robot.lms(), self.sym_table[self.scope]['turn'], self.sym_table[self.scope]['numOfTurns'])
-            # print(self.robot.lms(), "-", self.sym_table[self.scope]['free'].value)
+        #    print("stack_x:", self.sym_table[self.scope]['stack_x'])
+        #    print("stack_y:", self.sym_table[self.scope]['stack_y'])
+        #    print("stack_t:", self.sym_table[self.scope]['stack_t'])
+        #    print("size:", self.sym_table[self.scope]['st'])
+        #    print("vm:", self.sym_table[self.scope]['vm'])
+        #    print(self.robot.lms(), self.sym_table[self.scope]['turn'], self.sym_table[self.scope]['numOfTurns'])
+        #    print(self.robot.lms(), "-", self.sym_table[self.scope]['free'].value)
             print("real:", self.robot.turn, self.robot.x, self.robot.y)
-            print("x,y:", self.sym_table[self.scope]['turn'].value, self.sym_table[self.scope]['x'].value, self.sym_table[self.scope]['y'].value)
+            print("drill:", self.robot.power)
+            print("x,y:", self.sym_table[self.scope]['turn'].value, self.sym_table[self.scope]['x'].value,
+                  self.sym_table[self.scope]['y'].value)
+            if self.sym_table[self.scope]['x'].value == 17 and self.robot.power == 0 and self.sym_table[self.scope]['y'].value == 17:
+                  print("Fs")
         # nothing
         if node is None:
             return
@@ -462,18 +465,21 @@ class Interpreter:
 
         # expression -> math_expression
         elif node.type == 'binary_expression':
-            if node.value == '+':
-                return self.bin_plus(node.child[0], node.child[1])
-            elif node.value == '-':
-                return self.bin_minus(node.child[0], node.child[1])
-            elif node.value == '>':
-                return self.bin_gr(node.child[0], node.child[1])
-            elif node.value == '<':
-                return self.bin_ls(node.child[0], node.child[1])
-            elif node.value == '=':
-                return self.bin_eq(node.child[0], node.child[1])
-            elif node.value == '<>':
-                return self.bin_not_eq(node.child[0], node.child[1])
+            try:
+                if node.value == '+':
+                    return self.bin_plus(node.child[0], node.child[1])
+                elif node.value == '-':
+                    return self.bin_minus(node.child[0], node.child[1])
+                elif node.value == '>':
+                    return self.bin_gr(node.child[0], node.child[1])
+                elif node.value == '<':
+                    return self.bin_ls(node.child[0], node.child[1])
+                elif node.value == '=':
+                    return self.bin_eq(node.child[0], node.child[1])
+                elif node.value == '<>':
+                    return self.bin_not_eq(node.child[0], node.child[1])
+            except TypeError:
+                self.error.call(self.error_types['TypeError'], node)
         # expression -> const
         elif node.type == 'const':
             return self.const_val(node.value)
@@ -645,7 +651,7 @@ class Interpreter:
                 raise InterpreterNameError
             if isinstance(expression, list):
                 if _type == expression[0]:
-                    self.sym_table[self.scope][variable] = expression
+                    self.sym_table[self.scope][variable] = expression.copy()
                 else:
                     raise InterpreterConverseError
             elif _type == expression.type:
@@ -840,7 +846,10 @@ class Interpreter:
             raise InterpreterNameError
         else:
             if self.sym_table[self.scope][_value][2] != 1:
-                self.sym_table[self.scope][_value][1].append([val.value])
+                if isinstance(val.value, list):
+                    self.sym_table[self.scope][_value][1].append([val.value.copy()])
+                else:
+                    self.sym_table[self.scope][_value][1].append([val.value])
             elif val.type in self.sym_table[self.scope][_value][0].split(" "):
                 self.sym_table[self.scope][_value][1].append(val.value)
             else:
@@ -1054,7 +1063,7 @@ def create_robot(descriptor):
     # > Y X TURN POWER
     # Second line - MAP SIZE
     # > N M
-    # Next lines - map
+    # Next lines - correct_map
     # ' ' - empty
     # c - 'CONCRETE'
     # w - 'WOOD'
@@ -1101,17 +1110,17 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            with open("Tests/bubbleSorting") as f:
+            with open("Tests/errors") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
         elif inputType == "robot":
             # print("Enter input file:")
             # in_file = input()
-            # print("Enter map file:")
+            # print("Enter correct_map file:")
             # map_file = input()
             isRobot = True
-            with open("Tests/pathFinder2") as f:
+            with open("Tests/PathFinders/VirtualMap") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -1123,7 +1132,7 @@ if __name__ == '__main__':
     # prepare
     parser = parser()
     tree, func_table, correctness = parser.parse(text)
-    robot = create_robot("Tests/map")
+    robot = create_robot("Tests/Maps/no_exit_map")
     if correctness:
 
         interpreter = Interpreter()

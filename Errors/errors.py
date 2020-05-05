@@ -17,7 +17,8 @@ class Error_handler:
                       'ValueError',
                       'ApplicationCall',
                       'WrongParameters',
-                      'Recursion']
+                      'Recursion',
+                      'TypeError']
 
     def call(self, err_type, node=None):
         self.type = err_type
@@ -88,6 +89,13 @@ class Error_handler:
                                  f' {self.node.child[0].lineno} line\n')
             else:
                 sys.stderr.write(f'function calls itself too many times: "{self.node.value}" at'
+                                 f' {self.node.lineno} line\n')
+        elif self.type == 10:
+            if node.type == 'assignment':
+                sys.stderr.write(f'type error: "{self.node.child[0].value}" at'
+                                 f' {self.node.child[0].lineno} line\n')
+            else:
+                sys.stderr.write(f'type error: "{self.node.value}" at'
                                  f' {self.node.lineno} line\n')
 
 
