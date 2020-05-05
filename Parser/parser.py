@@ -85,20 +85,30 @@ class parser(object):
 
     @staticmethod
     def p_statement_error(p):
-        """statement : errors NEWLINE"""
+        """statement : error NEWLINE"""
         # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
         # p[0] = node('error', no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('error', val="Wrong syntax", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong syntax\n')
 
     @staticmethod
     def p_statement_error_no_nl(p):
-        """statement : errors"""
+        """statement : error"""
         # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
-        p[0] = node('error', no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('error', val="Wrong syntax", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong syntax\n')
+
 
     @staticmethod
     def p_declaration(p):
         """declaration : type variables"""
         p[0] = node('declaration', val=p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
+
+    @staticmethod
+    def p_declaration_error(p):
+        """declaration : type error"""
+        p[0] = node('declaration', val=p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong name of declarated value\n')
 
     @staticmethod
     def p_comment(p):
@@ -131,7 +141,8 @@ class parser(object):
     def p_type_error(p):
         """type : errors"""
         # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
-        p[0] = node('error', no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('error', val="Wrong type", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong type\n')
 
     @staticmethod
     def p_variables(p):
@@ -148,6 +159,12 @@ class parser(object):
     def p_assignment(p):
         """assignment : variable ASSIGNMENT expression"""
         p[0] = node('assignment', ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
+
+    @staticmethod
+    def p_assignment_err(p):
+        """assignment : variable ASSIGNMENT error"""
+        p[0] = node('error', val="Wrong assignment", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong assignment\n')
 
     @staticmethod
     def p_variable(p):
@@ -252,6 +269,18 @@ class parser(object):
             p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
+    def p_function_err1(p):
+        """function : FUNCTION OF type error"""
+        p[0] = node('error', val="Wrong function name", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong function name\n')
+
+    @staticmethod
+    def p_function_err2(p):
+        """function : FUNCTION OF type VARIABLE error"""
+        p[0] = node('error', val="Wrong function body", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong function body\n')
+
+    @staticmethod
     def p_command(p):
         """command : vector_command
                    | robot_command"""
@@ -278,6 +307,12 @@ class parser(object):
         """vector_command : variable PUSH BACK expression
                           | variable PUSH FRONT expression"""
         p[0] = node('vector', p[2] + p[3], ch=[p[1], p[4]], no=p.lineno(1), pos=p.lexpos(1))
+
+    @staticmethod
+    def p_vector_command_err(p):
+        """vector_command : variable PUSH BACK error"""
+        p[0] = node('error', val="Wrong pushing expression", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong pushing expression\n')
 
     @staticmethod
     def p_vector_command_pop(p):

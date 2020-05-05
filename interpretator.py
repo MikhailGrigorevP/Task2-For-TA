@@ -1101,7 +1101,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            with open("Tests/errors") as f:
+            with open("Tests/bubbleSorting") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')

@@ -25,7 +25,7 @@ class Error_handler:
         sys.stderr.write(f'Error {self.types[int(err_type)]}: ')
         if self.type == 0:
             sys.stderr.write(f' incorrect syntax at '
-                                 f'{self.node.child[0].lineno} line \n')
+                                 f'{self.node.child[0].lineno} line: {self.node.child[0].value} \n')
             return
         if self.type == 1:
             sys.stderr.write(f'no "application" function detected\n')
