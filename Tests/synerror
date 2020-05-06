@@ -1,0 +1,34 @@
+function of integer application() begin
+    vector of integer v
+    integer f := v[1]
+    integer <2
+    f := do run
+    do <
+    integer a := 2
+    do a < 3 -
+    do a<3 until -
+    if afdasd
+    right 234
+    sdf push front 23
+    a push back if gdf
+    run(-)
+end
+
+function of integer app() begin
+    integer c := 42
+    integer e := 42
+end
+
+function of integer app2() begin
+    application()
+end
+
+function of integer app3() begin
+    app4()
+    return 1
+end
+
+function of integer app4() begin
+    app3()
+    return 1
+end

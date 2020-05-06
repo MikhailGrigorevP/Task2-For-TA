@@ -1108,15 +1108,11 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            with open("Tests/errors") as f:
+            with open("Tests/vectorsTestErrors") as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
         elif inputType == "robot":
-            # print("Enter input file:")
-            # in_file = input()
-            # print("Enter correct_map file:")
-            # map_file = input()
             isRobot = True
             with open("Tests/PathFinders/VirtualMap") as f:
                 text = f.read()

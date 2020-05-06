@@ -84,17 +84,8 @@ class parser(object):
             p[0] = p[1]
 
     @staticmethod
-    def p_statement_error(p):
-        """statement : error NEWLINE"""
-        # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
-        # p[0] = node('error', no=p.lineno(1), pos=p.lexpos(1))
-        p[0] = node('error', val="Wrong syntax", no=p.lineno(1), pos=p.lexpos(1))
-        sys.stderr.write(f'>>> Wrong syntax\n')
-
-    @staticmethod
     def p_statement_error_no_nl(p):
         """statement : error"""
-        # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
         p[0] = node('error', val="Wrong syntax", no=p.lineno(1), pos=p.lexpos(1))
         sys.stderr.write(f'>>> Wrong syntax\n')
 
@@ -108,7 +99,7 @@ class parser(object):
     def p_declaration_error(p):
         """declaration : type error"""
         p[0] = node('declaration', val=p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
-        sys.stderr.write(f'>>> Wrong name of declarated value\n')
+        sys.stderr.write(f'>>> Wrong name of declared value\n')
 
     @staticmethod
     def p_comment(p):
@@ -136,13 +127,6 @@ class parser(object):
         else:
             p[0] = node('type', val=str(p[1]) + ' ' + str(p[2]) + ' ' + str(p[3]), ch=[], no=p.lineno(1),
                         pos=p.lexpos(1))
-
-    @staticmethod
-    def p_type_error(p):
-        """type : errors"""
-        # sys.stderr.write(f'Syntax error: "{p[1][0].value}" at {p[1][0].lineno}:{p[1][0].lexpos}\n')
-        p[0] = node('error', val="Wrong type", no=p.lineno(1), pos=p.lexpos(1))
-        sys.stderr.write(f'>>> Wrong type\n')
 
     @staticmethod
     def p_variables(p):
@@ -250,13 +234,26 @@ class parser(object):
         p[0] = node('while', ch={'condition': p[4], 'body': p[2]})
 
     @staticmethod
+    def p_while_err(p):
+        """while : DO error"""
+        p[0] = node('error', val="Wrong while", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong while\n')
+
+    @staticmethod
     def p_if(p):
-        """if : IF expression THEN statements_group
-              | IF expression THEN statements_group ELSE statements_group"""
-        if len(p) == 7:
-            p[0] = node('if', ch={'condition': p[2], 'body': p[4], 'else': p[6]}, no=p.lineno(1), pos=p.lexpos(1))
-        else:
-            p[0] = node('if', ch={'condition': p[2], 'body': p[4]}, no=p.lineno(1), pos=p.lexpos(1))
+        """if : IF expression THEN statements_group """
+        p[0] = node('if', ch={'condition': p[2], 'body': p[4]}, no=p.lineno(1), pos=p.lexpos(1))
+
+    @staticmethod
+    def p_if_else(p):
+        """if : IF expression THEN statements_group ELSE statements_group"""
+        p[0] = node('if', ch={'condition': p[2], 'body': p[4], 'else': p[6]}, no=p.lineno(1), pos=p.lexpos(1))
+
+    @staticmethod
+    def p_if_err(p):
+        """if : IF error"""
+        p[0] = node('error', val="Wrong while", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong if\n')
 
     def p_function(self, p):
         """function : FUNCTION OF type VARIABLE LBRACKET parameters RBRACKET statements_group
@@ -269,22 +266,24 @@ class parser(object):
             p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
-    def p_function_err1(p):
-        """function : FUNCTION OF type error"""
+    def p_function_err(p):
+        """function : FUNCTION error"""
         p[0] = node('error', val="Wrong function name", no=p.lineno(1), pos=p.lexpos(1))
         sys.stderr.write(f'>>> Wrong function name\n')
-
-    @staticmethod
-    def p_function_err2(p):
-        """function : FUNCTION OF type VARIABLE error"""
-        p[0] = node('error', val="Wrong function body", no=p.lineno(1), pos=p.lexpos(1))
-        sys.stderr.write(f'>>> Wrong function body\n')
 
     @staticmethod
     def p_command(p):
         """command : vector_command
                    | robot_command"""
         p[0] = p[1]
+
+    @staticmethod
+    def p_command_error(p):
+        """command : vector_command error
+                   | robot_command error"""
+        p[0] = node('error', val="Wrong command instruction", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Wrong command instruction\n')
+
 
     @staticmethod
     def p_converting_command(p):
@@ -310,7 +309,8 @@ class parser(object):
 
     @staticmethod
     def p_vector_command_err(p):
-        """vector_command : variable PUSH BACK error"""
+        """vector_command : variable PUSH BACK error
+                          | variable PUSH FRONT error"""
         p[0] = node('error', val="Wrong pushing expression", no=p.lineno(1), pos=p.lexpos(1))
         sys.stderr.write(f'>>> Wrong pushing expression\n')
 
@@ -343,6 +343,13 @@ class parser(object):
             p[0] = node('call', p[1], ch=[], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
+    def p_call_err(p):
+        """call : VARIABLE LBRACKET error RBRACKET"""
+        p[0] = node('error', val="Function call error", no=p.lineno(1), pos=p.lexpos(1))
+        sys.stderr.write(f'>>> Function call error\n')
+
+
+    @staticmethod
     def p_empty(p):
         """empty : """
         pass
@@ -365,15 +372,6 @@ class parser(object):
             p[0] = node('parameter', p[1], no=p.lineno(1), pos=p.lexpos(1))
         else:
             p[0] = node('parameter', p[1], ch=p[3], no=p.lineno(1), pos=p.lexpos(1))
-
-    @staticmethod
-    def p_errors(p):
-        """errors : errors error
-                    | error"""
-        if len(p) == 2:
-            p[0] = [p[1]]
-        else:
-            p[0] = p[1] + p[2]
 
     def p_error(self, p):
         try:

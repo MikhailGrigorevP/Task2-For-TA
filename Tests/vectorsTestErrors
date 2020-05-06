@@ -1,0 +1,47 @@
+function of integer application() begin
+    vector of vector of vector of integer triple_int
+    triple_int[0][0][0] push back 1
+    triple_int[0][0][0] push back 4 to vector
+    triple_int[0][0][0] push back 3
+    triple_int[0] push back 9 to vector of vector
+    vector of integer ones
+    ones push back 2
+    ones push back 3
+    ones push back 4
+    ones push back 9
+    vector of vector of vector of integer triple_int_2
+    vector of vector of vector of boolean triple_bool
+    vector of vector of vector of vector of string triple_str
+    string str
+    str := "825"
+    integer a
+    a := 1
+    integer c
+    c := 2
+    boolean b
+    b := false
+    str := a to string
+    str := b to string
+    string str1
+    str1 := "825"
+    a := str1 to integer
+    string str2
+    str2 := "false"
+    boolean bool
+    bool := true
+    bool := str2 to boolean
+    vector of integer v1
+    vector of integer v2
+    v1 push back 1
+    v2 push back 2
+    a := c
+    v1 := a to vector of integer
+    str := 1 to "ff"
+    triple_str := "heeeey" to vector of vector of vector of vector
+    string stri0
+    stri0 := triple_str[0][0][0][0]
+    integer in0 := ones[1]
+    vector of vector of string v_s, d_s
+    d_s[0] push back "rer"
+    v_s[0] := triple_str[0][0][0]
+end

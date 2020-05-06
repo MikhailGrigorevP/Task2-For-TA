@@ -61,6 +61,7 @@ class lexer(object):
         ('left', 'TO'),
         ('left', 'LESS', 'GREATER', 'EQ', 'NOTEQ'),
         ('left', 'PLUS', 'MINUS'),
+        ('right', 'THEN', 'ELSE')
     )
 
     t_ASSIGNMENT = r'\:\='
