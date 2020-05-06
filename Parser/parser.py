@@ -93,12 +93,12 @@ class parser(object):
     @staticmethod
     def p_declaration(p):
         """declaration : type variables"""
-        p[0] = node('declaration', val=p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('declaration', val=p[1], ch=p[2], no=p.lineno(2), pos=p.lexpos(2))
 
     @staticmethod
     def p_declaration_error(p):
         """declaration : type error"""
-        p[0] = node('declaration', val=p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('declaration', val=p[1], ch=p[2], no=p.lineno(2), pos=p.lexpos(2))
         sys.stderr.write(f'>>> Wrong name of declared value\n')
 
     @staticmethod
@@ -157,16 +157,16 @@ class parser(object):
         if len(p) == 2:
             p[0] = node('variable', p[1], no=p.lineno(1), pos=p.lexpos(1))
         else:
-            p[0] = node('indexing', p[1], ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
+            p[0] = node('indexing', p[1], ch=p[2], no=p.lineno(2), pos=p.lexpos(2))
 
     @staticmethod
     def p_indexing(p):
         """indexing : L_QBRACKET expression R_QBRACKET indexing
                     | L_QBRACKET expression R_QBRACKET"""
         if len(p) == 5:
-            p[0] = node('indexing', ch=[p[2], p[4]], no=p.lineno(1), pos=p.lexpos(1))
+            p[0] = node('indexing', ch=[p[2], p[4]], no=p.lineno(2), pos=p.lexpos(2))
         else:
-            p[0] = node('indexing', ch=p[2], no=p.lineno(1), pos=p.lexpos(1))
+            p[0] = node('indexing', ch=p[2], no=p.lineno(2), pos=p.lexpos(2))
 
     @staticmethod
     def p_expression(p):
@@ -231,28 +231,28 @@ class parser(object):
     @staticmethod
     def p_while(p):
         """while : DO statements_group UNTIL expression"""
-        p[0] = node('while', ch={'condition': p[4], 'body': p[2]})
+        p[0] = node('while', ch={'condition': p[4], 'body': p[2]}, no=p.lineno(2), pos=p.lexpos(1))
 
     @staticmethod
     def p_while_err(p):
         """while : DO error"""
-        p[0] = node('error', val="Wrong while", no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('error', val="Wrong while", no=p.lineno(2), pos=p.lexpos(2))
         sys.stderr.write(f'>>> Wrong while\n')
 
     @staticmethod
     def p_if(p):
         """if : IF expression THEN statements_group """
-        p[0] = node('if', ch={'condition': p[2], 'body': p[4]}, no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('if', ch={'condition': p[2], 'body': p[4]}, no=p.lineno(2), pos=p.lexpos(2))
 
     @staticmethod
     def p_if_else(p):
         """if : IF expression THEN statements_group ELSE statements_group"""
-        p[0] = node('if', ch={'condition': p[2], 'body': p[4], 'else': p[6]}, no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('if', ch={'condition': p[2], 'body': p[4], 'else': p[6]}, no=p.lineno(2), pos=p.lexpos(2))
 
     @staticmethod
     def p_if_err(p):
         """if : IF error"""
-        p[0] = node('error', val="Wrong while", no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('error', val="Wrong while", no=p.lineno(2), pos=p.lexpos(2))
         sys.stderr.write(f'>>> Wrong if\n')
 
     def p_function(self, p):
@@ -268,7 +268,7 @@ class parser(object):
     @staticmethod
     def p_function_err(p):
         """function : FUNCTION error"""
-        p[0] = node('error', val="Wrong function name", no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('error', val="Wrong function name", no=p.lineno(2), pos=p.lexpos(2))
         sys.stderr.write(f'>>> Wrong function name\n')
 
     @staticmethod
@@ -281,7 +281,7 @@ class parser(object):
     def p_command_error(p):
         """command : vector_command error
                    | robot_command error"""
-        p[0] = node('error', val="Wrong command instruction", no=p.lineno(1), pos=p.lexpos(1))
+        p[0] = node('error', val="Wrong command instruction", no=p.lineno(2), pos=p.lexpos(2))
         sys.stderr.write(f'>>> Wrong command instruction\n')
 
 

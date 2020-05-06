@@ -31,22 +31,19 @@ function of integer findPath() begin
         i := 0
         nvisited := false
         free := 0
-        if st = 0 then if numOfTurns = 3 then if drillMode = false then begin
-            turn := 0
-            rotate_right
-            vm := vm_r
-            numOfTurns := 0
-            size_x := 1
-            size_y := 1
-            drillMode := true
-            stack_x push back x
-            stack_y push back y
-            stack_t push back turn
-            st := 1
-        end
-        if st = 0 then if drillMode = true then exit := true
-        if reflect = "EXIT" then exit := true else if exit = true then exit := true else begin
+        if reflect = "EXIT" then exit := true else if st = 0 then exit := true else begin
             i := 0
+            if st = 0 then if drillMode = false then begin
+                vm := vm_r
+                numOfTurns := 0
+                size_x := 1
+                size_y := 1
+                drillMode := true
+                stack_x push back x
+                stack_y push back y
+                stack_t push back turn
+                st := 1
+            end
             if lms <> 0 then begin
                 willTurn := false
                 nvisited := true
@@ -92,7 +89,8 @@ function of integer findPath() begin
                 end
             end until i <> 0
             # walkWithExpand
-            if lms then begin if nvisited = true then begin if lost = true then begin
+            if lms then begin if nvisited = true then begin
+                if lost = true then begin
                     stack_t push front t_t
                     stack_x push front t_x
                     stack_y push front t_y
@@ -132,7 +130,7 @@ function of integer findPath() begin
                            j := j + 1
                         end until steps <> j
                     end
-               end else if turn = 2 then begin
+                end else if turn = 2 then begin
                     if x - lms < 0 then begin
                         steps := lms - x
                         a := steps

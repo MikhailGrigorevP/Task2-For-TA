@@ -31,9 +31,7 @@ function of integer findPath() begin
         i := 0
         nvisited := false
         free := 0
-        if st = 0 then if numOfTurns = 3 then if drillMode = false then begin
-            turn := 0
-            rotate_right
+        if st = 0 then if drillMode = false then begin
             vm := vm_r
             numOfTurns := 0
             size_x := 1
@@ -44,8 +42,7 @@ function of integer findPath() begin
             stack_t push back turn
             st := 1
         end
-        if st = 0 then if drillMode = true then exit := true
-        if reflect = "EXIT" then exit := true else if exit = true then exit := true else begin
+        if reflect = "EXIT" then exit := true else if st = 0 then exit := true else begin
             i := 0
             if lms <> 0 then begin
                 willTurn := false
@@ -92,13 +89,7 @@ function of integer findPath() begin
                 end
             end until i <> 0
             # walkWithExpand
-            if lms then begin if nvisited = true then begin if lost = true then begin
-                    stack_t push front t_t
-                    stack_x push front t_x
-                    stack_y push front t_y
-                    st := st + 1
-                    lost := false
-                 end
+            if lms then begin if nvisited = true then begin
                 if turn = 0 then begin
                     a := x + lms
                     b := size_x - 1
@@ -132,21 +123,19 @@ function of integer findPath() begin
                            j := j + 1
                         end until steps <> j
                     end
-               end else if turn = 2 then begin
+                end else if turn = 2 then begin
                     if x - lms < 0 then begin
                         steps := lms - x
-                        a := steps
-                        b := 0
                         size_x := size_x + steps
                         do begin
-                            i := size_y - 1
+                            integer i := size_y - 1
                             do begin
                                 if i = y then vm[i] push front v_true else vm[i] push front v_false
                                 i := i - 1
                             end until i <> 0-1
                             steps := steps - 1
-                        end until steps <> 0
-                        steps := a
+                            end until steps <> 0
+                        steps := lms - x
                         x := x + steps
                         i := 0
                         do begin
@@ -157,9 +146,6 @@ function of integer findPath() begin
                 end else if turn = 3 then begin
                     if y - lms < 0 then begin
                         steps := lms - y
-                        a := steps
-                        b := 0
-                        j := 0
                         size_y := size_y + steps
                         do begin
                            i := 0
@@ -171,7 +157,7 @@ function of integer findPath() begin
                            end until i <> size_x
                            j := j + 1
                         end until steps <> j
-                        steps := a
+                        steps := lms - y
                         y := y + steps
                         i := 0
                         do begin

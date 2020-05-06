@@ -119,7 +119,7 @@ class Interpreter:
         self.parser = _parser
         self.converse = _converse
         # DELETE ME
-        self.sym_table = [dict()]
+        self.sym_table = None
         self.scope = 0
         self.program = None
         self.fatal_error = False
@@ -170,17 +170,17 @@ class Interpreter:
     def interpreter_node(self, node):
         # log robot
         # if 'free' in self.sym_table[self.scope]:
-        # #    print("stack_x:", self.sym_table[self.scope]['stack_x'])
-        # #    print("stack_y:", self.sym_table[self.scope]['stack_y'])
-        # #    print("stack_t:", self.sym_table[self.scope]['stack_t'])
-        # #    print("size:", self.sym_table[self.scope]['st'])
-        # #    print("vm:", self.sym_table[self.scope]['vm'])
-        # #    print(self.robot.lms(), self.sym_table[self.scope]['turn'], self.sym_table[self.scope]['numOfTurns'])
-        # #    print(self.robot.lms(), "-", self.sym_table[self.scope]['free'].value)
-        #     print("real:", self.robot.turn, self.robot.x, self.robot.y)
-        #     print("drill:", self.robot.power)
-        #     print("x,y:", self.sym_table[self.scope]['turn'].value, self.sym_table[self.scope]['x'].value,
-        #           self.sym_table[self.scope]['y'].value)
+        # print("stack_x:", self.sym_table[self.scope]['stack_x'])
+        # print("stack_y:", self.sym_table[self.scope]['stack_y'])
+        # print("stack_t:", self.sym_table[self.scope]['stack_t'])
+        # print("size:", self.sym_table[self.scope]['st'])
+        # print("vm:", self.sym_table[self.scope]['vm'])
+        # print(self.robot.lms(), self.sym_table[self.scope]['turn'], self.sym_table[self.scope]['numOfTurns'])
+        # print(self.robot.lms(), "-", self.sym_table[self.scope]['free'].value)
+        #    if self.sym_table[self.scope]['st'] == 0:
+        #        print("real:", self.robot.x, self.robot.y, ":", self.robot.turn)
+        #      print("drill:", self.robot.power)
+        #   print("x,y:", self.sym_table[self.scope]['x'].value, self.sym_table[self.scope]['y'].value)
         #
         # if self.sym_table[self.scope]['x'].value == 17 and self.robot.power == 0 and self.sym_table[self.scope][
         # 'y'].value == 17 and self.robot.power == 0: print("Fs") nothing
@@ -340,10 +340,18 @@ class Interpreter:
             if node.value == 'pushfront':
                 try:
                     expression = self.interpreter_node(node.child[1])
+                    if isinstance(expression, list) and len(expression) > 1:
+                        expression = Variable(expression[0], expression[1])
+                    elif isinstance(expression, list):
+                        _type = self.sym_table[self.scope][node.child[1].value][0].split()[2]
+                        expression = Variable(_type, expression[0])
                     if node.child[0].type == 'indexing':
                         var = self.interpreter_node(node.child[0])
                         self.vector_push_front_2(var, expression)
-                        self.sym_table[self.scope]['#result'] = expression.value
+                        if isinstance(expression, Variable):
+                            self.sym_table[self.scope]['#result'] = expression.value
+                        else:
+                            self.sym_table[self.scope]['#result'] = expression[1]
                     else:
                         self.vector_push_front(node.child[0], expression)
                 except InterpreterConverseError:
@@ -857,7 +865,9 @@ class Interpreter:
     def vector_push_back_2(_value, val: Variable):
         try:
             if not isinstance(_value, Variable):
-                if isinstance(val.value, list):
+                if isinstance(val, list):
+                    _value.insert(0, val[1].copy())
+                elif isinstance(val.value, list):
                     _value.append(val.value.copy())
                 else:
                     _value.append(val.value)
@@ -870,7 +880,12 @@ class Interpreter:
             raise InterpreterNameError
         else:
             if self.sym_table[self.scope][_value][2] != 1:
-                self.sym_table[self.scope][_value][1].insert(0, [val.value])
+                if isinstance(val, list):
+                    self.sym_table[self.scope][_value][1].insert(0, [val[0].copy()])
+                elif isinstance(val.value, list):
+                    self.sym_table[self.scope][_value][1].insert(0, [val.value.copy()])
+                else:
+                    self.sym_table[self.scope][_value][1].insert(0, [val.value])
             elif val.type in self.sym_table[self.scope][_value][0].split(" "):
                 self.sym_table[self.scope][_value][1].insert(0, val.value)
             else:
@@ -880,7 +895,9 @@ class Interpreter:
     def vector_push_front_2(_value, val: Variable):
         try:
             if not isinstance(_value, Variable):
-                if isinstance(val.value, list):
+                if isinstance(val, list):
+                    _value.insert(0, val[1].copy())
+                elif isinstance(val.value, list):
                     _value.insert(0, val.value.copy())
                 else:
                     _value.append(val.value)
@@ -1126,7 +1143,7 @@ if __name__ == '__main__':
     # prepare
     parser = parser()
     tree, func_table, correctness = parser.parse(text)
-    robot = create_robot("Tests/Maps/correct_map")
+    robot = create_robot("Tests/Maps/invert_expand")
     if correctness:
 
         interpreter = Interpreter()
