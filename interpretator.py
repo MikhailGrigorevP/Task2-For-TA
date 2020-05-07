@@ -170,17 +170,22 @@ class Interpreter:
 
     def interpreter_node(self, node):
         # log robot
+        #if 'free' in self.sym_table[self.scope]:
+        # print("real:", self.robot.x, self.robot.y, "turn:", self.robot.turn)
         # if 'free' in self.sym_table[self.scope]:
-        # print("stack_x:", self.sym_table[self.scope]['stack_x'])
-        # print("stack_y:", self.sym_table[self.scope]['stack_y'])
+        #   print("stack_x:", self.sym_table[self.scope]['stack_x'])
+        #   print("stack_y:", self.sym_table[self.scope]['stack_y'])
+        # print("drill:", self.sym_table[self.scope]['drillMode'])
+        # print("wT:", self.sym_table[self.scope]['willTurn'])
+        # print("i:", self.sym_table[self.scope]['i'])
         # print("stack_t:", self.sym_table[self.scope]['stack_t'])
         # print("size:", self.sym_table[self.scope]['st'])
         # print("vm:", self.sym_table[self.scope]['vm'])
         # print(self.robot.lms(), self.sym_table[self.scope]['turn'], self.sym_table[self.scope]['numOfTurns'])
         # print(self.robot.lms(), "-", self.sym_table[self.scope]['free'].value)
         #    if self.sym_table[self.scope]['st'] == 0:
-        #        print("real:", self.robot.x, self.robot.y, ":", self.robot.turn)
-        #      print("drill:", self.robot.power)
+        #  print("real:", self.robot.x, self.robot.y, ":", self.robot.turn)
+        #  print("drill:", self.robot.power)
         #   print("x,y:", self.sym_table[self.scope]['x'].value, self.sym_table[self.scope]['y'].value)
         #
         # if self.sym_table[self.scope]['x'].value == 17 and self.robot.power == 0 and self.sym_table[self.scope][

@@ -32,6 +32,8 @@ function of integer findPath() begin
         nvisited := false
         free := 0
         if st = 0 then if numOfTurns = 3 then if drillMode = false then begin
+            x := 0
+            y := 0
             turn := 0
             rotate_right
             vm := vm_r
@@ -58,6 +60,7 @@ function of integer findPath() begin
             end else if drillMode = true then begin
                 if drill <> 0 then if lms <> 0 then begin
                     willTurn := false
+                    nvisited := true
                     i := lms
                     free := lms
                     if turn = 0 then free := size_x - 1 - x else if turn = 1 then free := size_y - 1 - y else if turn = 2 then free := x else if turn = 3 then free := y
