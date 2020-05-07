@@ -1,4 +1,5 @@
 import sys
+import os
 import copy
 from Parser.parser import parser
 from Tree.syntaxTree import node as Node
@@ -1078,7 +1079,7 @@ def create_robot(descriptor):
     # > Y X TURN POWER
     # Second line - MAP SIZE
     # > N M
-    # Next lines - correct_map
+    # Next lines - yes_simple
     # ' ' - empty
     # c - 'CONCRETE'
     # w - 'WOOD'
@@ -1118,6 +1119,11 @@ if __name__ == '__main__':
     correct = False
     text = None
     isRobot = False
+    file_num = 0
+    directory = 'Tests/Maps'
+    files = os.listdir(directory)
+    directoryBase = 'Tests'
+    filesBase = os.listdir(directoryBase)
     while not correct:
         print("Input type? (console, file, robot)")
         inputType = input()
@@ -1125,7 +1131,15 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            with open("Tests/vectorsTestErrors") as f:
+            print("Select test file (write num):")
+            for i in range(len(filesBase)):
+                print(i, ":", filesBase[i])
+            print("Warning: incorrect num = zero")
+            file_num = int(input())
+            if (file_num < 0) or (file_num > len(files)):
+                file_num = 0
+                print("You are wrong num set to 0")
+            with open(directoryBase+"/"+filesBase[file_num]) as f:
                 text = f.read()
             f.close()
             print(f'Your file:\n {text}')
@@ -1134,7 +1148,15 @@ if __name__ == '__main__':
             with open("Tests/PathFinders/VirtualMap") as f:
                 text = f.read()
             f.close()
-            print(f'Your file:\n {text}')
+            # print(f'Your file:\n {text}')
+            print("Select map (write num):")
+            for i in range(len(files)):
+                print(i, ":", files[i])
+            print("Warning: incorrect num = zero")
+            file_num = int(input())
+            if (file_num < 0) or (file_num > len(files)):
+                file_num = 0
+                print("You are wrong num set to 0")
 
         else:
             print("I think, you're wrong :)")
@@ -1143,7 +1165,7 @@ if __name__ == '__main__':
     # prepare
     parser = parser()
     tree, func_table, correctness = parser.parse(text)
-    robot = create_robot("Tests/Maps/invert_expand")
+    robot = create_robot(directory+"/"+files[file_num])
     if correctness:
 
         interpreter = Interpreter()
