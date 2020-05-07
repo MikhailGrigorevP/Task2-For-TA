@@ -49,7 +49,12 @@ class Robot:
     def show(self):
         for row in self.map:
             for cell in row:
-                print(cell.solidity, end=' ')
+                if cell.solidity == [0]:
+                    print(" ", end=' ')
+                elif cell.solidity == [100]:
+                    print("*", end='')
+                else:
+                    print("x", end=' ')
             print()
 
     def scan_next(self, turn=0):

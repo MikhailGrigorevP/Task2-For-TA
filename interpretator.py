@@ -170,7 +170,7 @@ class Interpreter:
 
     def interpreter_node(self, node):
         # log robot
-        #if 'free' in self.sym_table[self.scope]:
+        # if 'free' in self.sym_table[self.scope]:
         # print("real:", self.robot.x, self.robot.y, "turn:", self.robot.turn)
         # if 'free' in self.sym_table[self.scope]:
         #   print("stack_x:", self.sym_table[self.scope]['stack_x'])
