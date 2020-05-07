@@ -12,7 +12,7 @@ cell_type = {'EMPTY': 0,
              'PLASTIC': 2,
              'GLASS': 1,
              'STEEL': 5,
-             'EXIT': 100, }
+             'EXIT': 42, }
 
 look = {'0': 'right',
         '1': 'down',
@@ -51,7 +51,7 @@ class Robot:
             for cell in row:
                 if cell.solidity == [0]:
                     print(" ", end=' ')
-                elif cell.solidity == [100]:
+                elif cell.solidity == [42]:
                     print("*", end='')
                 else:
                     print("x", end=' ')
