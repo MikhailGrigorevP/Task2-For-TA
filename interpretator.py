@@ -979,19 +979,38 @@ class Interpreter:
         func_name = node.value
         param = node.child
         func_param = None
+        inf_parameters = False
+        named = True
         try:
             while isinstance(param, Node):
                 if func_param is None:
                     func_param = []
                 if len(param.child) > 1:
-                    func_param.append(self.interpreter_node(param.child[1].value))
+                    if param.child[1].child:
+                        if not named:
+                            raise InterpreterValueError
+                        func_param.append([param.child[1].value, self.interpreter_node(param.child[1].child)])
+                    else:
+                        named = False
+                        func_param.append(self.interpreter_node(param.child[1].value))
                 elif len(param.child) == 0:
                     break
                 else:
-                    func_param.append(self.interpreter_node(param.child[0].value))
+                    if param.child[0].child:
+                        if not named:
+                            raise InterpreterValueError
+                        func_param.append([param.child[0].value, self.interpreter_node(param.child[0].child)])
+                    else:
+                        named = False
+                        func_param.append(self.interpreter_node(param.child[0].value))
                 param = param.child[0]
                 if not isinstance(param.child, list):
-                    func_param.append(self.interpreter_node(param.value))
+                    if param.child:
+                        if not named:
+                            raise InterpreterValueError
+                        func_param.append([param.value, self.interpreter_node(param.child)])
+                    else:
+                        func_param.append(self.interpreter_node(param.value))
                     func_param.reverse()
                     break
         except InterpreterConverseError:
@@ -1020,20 +1039,22 @@ class Interpreter:
             raise RecursionError from None
         func_subtree = self.funcs[func_name] or self.sym_table[self.scope - 1][func_name]
         get = func_subtree.child['parameters']
+        if 'continue' in func_subtree.child:
+            inf_parameters = True
         func_get = None
         while isinstance(get, Node):
             if func_get is None:
                 func_get = []
             if len(get.child) > 1:
                 try:
-                    func_get.append([get.child[1].value, self.interpreter_node(get.child[1].child).value])
+                    func_get.append([get.child[1].value, self.interpreter_node(get.child[1].child)])
                 except AttributeError:
                     self.error.call(self.error_types['WrongParameters'], node)
                     return None
             get = get.child[0]
             if isinstance(get.child, Node):
                 try:
-                    func_get.append([get.value, self.interpreter_node(get.child).value])
+                    func_get.append([get.value, self.interpreter_node(get.child)])
                 except AttributeError:
                     self.error.call(self.error_types['WrongParameters'], node)
                     return None
@@ -1042,11 +1063,20 @@ class Interpreter:
         if func_param:
             func_param.reverse()
             try:
-                for i in range(len(func_get)):
-                    if i < len(func_param):
-                        self.sym_table[self.scope][func_get[i][0]] = func_param[i]
+                for j in range(len(func_get)):
+                    if j < len(func_param):
+                        if isinstance(func_param[j], Variable):
+                            self.sym_table[self.scope][func_get[j][0]] = func_param[j]
+                        else:
+                            self.sym_table[self.scope][func_get[j][0]] = func_get[j][1]
                     else:
-                        self.sym_table[self.scope][func_get[i][0]] = func_get[i][1]
+                        self.sym_table[self.scope][func_get[j][0]] = func_get[j][1]
+                for j in range(len(func_param)):
+                    if isinstance(func_param[j], list):
+                        if func_param[j][0] in self.sym_table[self.scope] or inf_parameters:
+                            self.sym_table[self.scope][func_param[j][0]] = func_param[j][1]
+                        else:
+                            raise TypeError
             except TypeError:
                 self.error.call(self.error_types['WrongParameters'], node)
                 self.scope -= 1

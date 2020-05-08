@@ -89,7 +89,6 @@ class parser(object):
         p[0] = node('error', val="Wrong syntax", no=p.lineno(1), pos=p.lexpos(1))
         sys.stderr.write(f'>>> Wrong syntax\n')
 
-
     @staticmethod
     def p_declaration(p):
         """declaration : type variables"""
@@ -265,6 +264,18 @@ class parser(object):
             self._functions[p[4]] = node('function', ch={'type': p[3], 'body': p[6], 'parameters': None})
             p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
 
+    def p_function_continue(self, p):
+        """function : FUNCTION OF type VARIABLE LBRACKET parameters CONTINUE RBRACKET statements_group
+                    | FUNCTION OF type VARIABLE LBRACKET CONTINUE RBRACKET statements_group"""
+        if len(p) == 10:
+            self._functions[p[4]] = node('function',
+                                         ch={'type': p[3], 'parameters': p[6], 'body': p[9], 'continue': True})
+            p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
+        else:
+            self._functions[p[4]] = node('function',
+                                         ch={'type': p[3], 'body': p[8], 'continue': True, 'parameters': None})
+            p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
+
     @staticmethod
     def p_function_err(p):
         """function : FUNCTION error"""
@@ -283,7 +294,6 @@ class parser(object):
                    | robot_command error"""
         p[0] = node('error', val="Wrong command instruction", no=p.lineno(2), pos=p.lexpos(2))
         sys.stderr.write(f'>>> Wrong command instruction\n')
-
 
     @staticmethod
     def p_converting_command(p):
@@ -348,7 +358,6 @@ class parser(object):
         p[0] = node('error', val="Function call error", no=p.lineno(1), pos=p.lexpos(1))
         sys.stderr.write(f'>>> Function call error\n')
 
-
     @staticmethod
     def p_empty(p):
         """empty : """
@@ -357,8 +366,7 @@ class parser(object):
     @staticmethod
     def p_parameters(p):
         """parameters : parameters COMMA parameter
-                      | parameter
-                      | CONTINUE"""
+                      | parameter"""
         if len(p) == 2:
             p[0] = node('parameters', ch=[p[1]], no=p.lineno(1), pos=p.lexpos(1))
         elif len(p) == 4:
@@ -394,7 +402,7 @@ if __name__ == '__main__':
         if inputType == "console":
             text = sys.stdin.read()
         elif inputType == "file":
-            f = open("../Tests/fibonacci")
+            f = open("../Tests/bubbleSorting")
             text = f.read()
             f.close()
             print(f'Your file:\n {text}')
