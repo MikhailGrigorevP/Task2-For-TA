@@ -1,0 +1,20 @@
+function of integer application() begin
+    boolean res1 := func1()
+    boolean res2 := func2()
+end
+function of boolean func1() begin
+    integer a := 1
+    integer b := 2
+    integer c := 3
+    integer d := 4
+    boolean f := a + b < c + d
+    return f
+end
+function of boolean func2() begin
+    integer a := 1
+    integer b := 2
+    integer c := 3
+    integer d := 4
+    boolean f := a + b + c = d
+    return f
+end

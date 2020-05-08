@@ -1,0 +1,23 @@
+function of integer application() begin
+    integer res1 := func1(par = 2)
+    integer res2 := func2(b = 2, f = 13)
+    boolean res3 := func3(b = true)
+    string res4 := func4("Stay", "At", "Home")
+    integer res5 := func5()
+end
+function of integer func1(...) begin
+    return par
+end
+function of integer func2(a = 3, b = 1 ...) begin
+    return b + f
+end
+function of boolean func3(a = true ...) begin
+    return a + b
+end
+function of string func4(a = "its", b = "my", c = "life") begin
+    return a + b + c
+end
+function of integer func5(a = 1234) begin
+    integer b := 13666
+    b := a
+end

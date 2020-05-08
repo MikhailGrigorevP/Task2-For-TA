@@ -116,7 +116,7 @@ class lexer(object):
 
 
 if __name__ == '__main__':
-    f = open('../Tests/bubbleSorting')
+    f = open('../Tests/Math/bubbleSorting')
     data = f.read()
     f.close()
     lexer = lexer()
