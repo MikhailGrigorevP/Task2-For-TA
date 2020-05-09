@@ -643,7 +643,7 @@ class Interpreter:
                 self.error.call(self.error_types['UndeclaredError'], node)
 
     def declare(self, _type, _value):
-        if _value in self.sym_table[self.scope].keys():
+        if _value in self.sym_table[self.scope].keys() or _value in self.funcs:
             raise InterpreterRedeclarationError
         if _type in ['integer', 'boolean', 'string']:
             self.sym_table[self.scope][_value] = Variable(_type, None)

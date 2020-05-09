@@ -14,6 +14,7 @@ function of integer application() begin
     b_a := "fsd"
     string str_a := "fsfsd"
     str_a := 2
+    integer app
     app(5)
     app2()
     integer res
