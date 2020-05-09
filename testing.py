@@ -1,9 +1,10 @@
 import unittest
 from interpretator import Interpreter
+from interpretator import create_robot
 from Parser.parser import parser
 
 
-class MyTestCase(unittest.TestCase):
+class BasicTests(unittest.TestCase):
 
     def test_bubbleSorting(self):
         with open("Tests/bubbleSorting") as f:
@@ -81,6 +82,90 @@ class MyTestCase(unittest.TestCase):
         interpreter6.interpreter(program=text)
         self.assertEqual(interpreter6.sym_table[0]['res1'].value, True)
         self.assertEqual(interpreter6.sym_table[0]['res2'].value, False)
+
+
+class MapTests(unittest.TestCase):
+
+    def test_no_expand_drill(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/no_expand_drill")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, False)
+
+    def test_no_simple(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/no_simple")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, False)
+
+    def test_no_simple_drill(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/no_simple_drill")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, False)
+
+    def test_yes_expand(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/yes_expand")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, True)
+
+    def test_yes_expand_drill(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/yes_expand_drill")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, True)
+
+    def test_yes_expand_alt(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/yes_expand_alt")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, True)
+
+    def test_yes_simple(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/yes_simple")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, True)
+
+    def test_yes_simple_drill(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/yes_simple_drill")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, True)
+
+    def test_yes_expand_huge(self):
+        with open("Tests/PathFinders/VirtualMap") as f:
+            text = f.read()
+        f.close()
+        robot = create_robot("Tests/Maps/yes_expand_huge")
+        interpreter1 = Interpreter(parser())
+        interpreter1.interpreter(program=text, _robot=robot)
+        self.assertEqual(interpreter1.find_exit, True)
 
 
 if __name__ == '__main__':

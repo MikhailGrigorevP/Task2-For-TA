@@ -1,4 +1,8 @@
 function of integer application() begin
+    integer vaktest
+    integer a
+    a := vaktest
+    integer db := func(f2)
     vector of integer v
     integer f := v[1]
     integer a
@@ -20,6 +24,19 @@ function of integer application() begin
     integer res
     res := app3()
     integer str_a := 2
+end
+
+function of integer func(funct = f1) begin
+    integer v := funct()
+    return v
+end
+
+function of integer f2() begin
+    return 2
+end
+
+function of integer f1() begin
+    return 1
 end
 
 function of integer app() begin

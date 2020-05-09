@@ -269,7 +269,7 @@ class Interpreter:
                                     self.sym_table[self.scope]['#result'] = expression.value
                                 else:
                                     current_var = current_var[index]
-                    return self.sym_table[self.scope][var][1]
+                    return
                 except InterpreterConverseError:
                     self.error.call(self.error_types['ConserveError'], node)
                 except InterpreterValueError:
@@ -503,8 +503,11 @@ class Interpreter:
         elif node.type == 'variable':
             var = node.value
             if var not in self.sym_table[self.scope].keys():
-                self.error.call(self.error_types['UndeclaredError'], node)
-                return
+                if var not in self.funcs:
+                    self.error.call(self.error_types['UndeclaredError'], node)
+                    return
+                else:
+                    return var
             return self.sym_table[self.scope][var]
         # variable -> indexing
         elif node.type == 'get_indexing':
@@ -691,10 +694,10 @@ class Interpreter:
 
     # binary plus
     def bin_plus(self, _val1, _val2):
-        if isinstance(_val1, Variable):
+        if isinstance(_val1, Node):
             if _val1.type == "indexing":
                 _val1.type = "get_indexing"
-        if isinstance(_val2, Variable):
+        if isinstance(_val2, Node):
             if _val2.type == "indexing":
                 _val2.type = "get_indexing"
         if isinstance(_val1, Node):
@@ -709,8 +712,8 @@ class Interpreter:
                     return Variable('string', _val1.value + _val2.value)
             else:
                 _val = copy.deepcopy(_val1)
-                for i in range(len(_val[1])):
-                    _val[1][i] = self.bin_plus(_val1[1][i], _val2[1][i])
+                for k in range(len(_val[1])):
+                    _val[1][k] = self.bin_plus(_val1[1][k], _val2[1][k])
                 return _val
         else:
             if isinstance(_val1, list):
@@ -728,10 +731,10 @@ class Interpreter:
 
     # binary minus
     def bin_minus(self, _val1, _val2):
-        if isinstance(_val1, Variable):
+        if isinstance(_val1, Node):
             if _val1.type == "indexing":
                 _val1.type = "get_indexing"
-        if isinstance(_val2, Variable):
+        if isinstance(_val2, Node):
             if _val2.type == "indexing":
                 _val2.type = "get_indexing"
         if isinstance(_val1, Node):
@@ -765,10 +768,10 @@ class Interpreter:
 
     # binary greater
     def bin_gr(self, _val1, _val2):
-        if isinstance(_val1, Variable):
+        if isinstance(_val1, Node):
             if _val1.type == "indexing":
                 _val1.type = "get_indexing"
-        if isinstance(_val2, Variable):
+        if isinstance(_val2, Node):
             if _val2.type == "indexing":
                 _val2.type = "get_indexing"
         expression1 = self.interpreter_node(_val1)
@@ -782,10 +785,10 @@ class Interpreter:
 
     # binary less
     def bin_ls(self, _val1, _val2):
-        if isinstance(_val1, Variable):
+        if isinstance(_val1, Node):
             if _val1.type == "indexing":
                 _val1.type = "get_indexing"
-        if isinstance(_val2, Variable):
+        if isinstance(_val2, Node):
             if _val2.type == "indexing":
                 _val2.type = "get_indexing"
         expression1 = self.interpreter_node(_val1)
@@ -799,10 +802,10 @@ class Interpreter:
 
     # binary equal
     def bin_eq(self, _val1, _val2):
-        if isinstance(_val1, Variable):
+        if isinstance(_val1, Node):
             if _val1.type == "indexing":
                 _val1.type = "get_indexing"
-        if isinstance(_val2, Variable):
+        if isinstance(_val2, Node):
             if _val2.type == "indexing":
                 _val2.type = "get_indexing"
         expression1 = self.interpreter_node(_val1)
@@ -816,10 +819,10 @@ class Interpreter:
 
     # binary not equal
     def bin_not_eq(self, _val1, _val2):
-        if isinstance(_val1, Variable):
+        if isinstance(_val1, Node):
             if _val1.type == "indexing":
                 _val1.type = "get_indexing"
-        if isinstance(_val2, Variable):
+        if isinstance(_val2, Node):
             if _val2.type == "indexing":
                 _val2.type = "get_indexing"
         expression1 = self.interpreter_node(_val1)
@@ -971,6 +974,8 @@ class Interpreter:
     def op_if(self, node):
         try:
             condition = self.interpreter_node(node.child['condition'])
+            if not isinstance(condition, Variable):
+                print("WHY")
             condition = self.converse.converse('boolean', condition).value
             if condition:
                 self.interpreter_node(node.child['body'])
@@ -990,8 +995,6 @@ class Interpreter:
 
     def function_call(self, node):
         func_name = node.value
-        if func_name == "func5":
-            print("D")
         param = node.child
         func_param = None
         inf_parameters = False
@@ -1052,7 +1055,10 @@ class Interpreter:
             self.sym_table[0]['#func'] += 1
         if self.sym_table[0]['#func'] > 1000:
             raise RecursionError from None
-        func_subtree = self.funcs[func_name] or self.sym_table[self.scope - 1][func_name]
+        try:
+            func_subtree = self.funcs[func_name] or self.funcs[self.sym_table[self.scope - 1][func_name]]
+        except KeyError:
+            func_subtree = self.funcs[self.sym_table[self.scope - 1][func_name]]
         get = func_subtree.child['parameters']
         if 'continue' in func_subtree.child:
             inf_parameters = True
@@ -1084,7 +1090,7 @@ class Interpreter:
                 if func_get:
                     for j in range(len(func_get)):
                         if j < len(func_param):
-                            if isinstance(func_param[j], Variable):
+                            if isinstance(func_param[j], Variable) or isinstance(func_param[j], str):
                                 self.sym_table[self.scope][func_get[j][0]] = func_param[j]
                             else:
                                 self.sym_table[self.scope][func_get[j][0]] = func_get[j][1]
@@ -1200,7 +1206,6 @@ if __name__ == '__main__':
             print(f'Your file:\n {text}')
         elif inputType == "robot":
             isRobot = True
-            robot = create_robot(directory + "/" + files[file_num])
             with open("Tests/PathFinders/VirtualMap") as f:
                 text = f.read()
             f.close()
@@ -1210,6 +1215,7 @@ if __name__ == '__main__':
                 print(i, ":", files[i])
             print("Warning: incorrect num = zero")
             file_num = int(input())
+            robot = create_robot(directory + "/" + files[file_num])
             if (file_num < 0) or (file_num > len(files)):
                 file_num = 0
                 print("You are wrong num set to 0")
