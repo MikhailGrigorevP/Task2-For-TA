@@ -257,30 +257,38 @@ class parser(object):
     def p_function(self, p):
         """function : FUNCTION OF type VARIABLE LBRACKET parameters RBRACKET statements_group
                     | FUNCTION OF type VARIABLE BRACKETS statements_group"""
-        if len(p) == 9:
-            self._functions[p[4]] = node('function', ch={'type': p[3], 'parameters': p[6], 'body': p[8]})
-            p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
+        if p[4] in self._functions:
+            sys.stderr.write(f'>>> function name duplicate at {p.lineno(4)} line\n')
+            self.ok = False
         else:
-            self._functions[p[4]] = node('function', ch={'type': p[3], 'body': p[6], 'parameters': None})
-            p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
+            if len(p) == 9:
+                self._functions[p[4]] = node('function', ch={'type': p[3], 'parameters': p[6], 'body': p[8]})
+                p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
+            else:
+                self._functions[p[4]] = node('function', ch={'type': p[3], 'body': p[6], 'parameters': None})
+                p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
 
     def p_function_continue(self, p):
         """function : FUNCTION OF type VARIABLE LBRACKET parameters CONTINUE RBRACKET statements_group
                     | FUNCTION OF type VARIABLE LBRACKET CONTINUE RBRACKET statements_group"""
-        if len(p) == 10:
-            self._functions[p[4]] = node('function',
-                                         ch={'type': p[3], 'parameters': p[6], 'body': p[9], 'continue': True})
-            p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
+        if p[4] in self._functions:
+            sys.stderr.write(f'>>> function name duplicate at {p.lineno(4)} line\\n')
+            self.ok = False
         else:
-            self._functions[p[4]] = node('function',
-                                         ch={'type': p[3], 'body': p[8], 'continue': True, 'parameters': None})
-            p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
+            if len(p) == 10:
+                self._functions[p[4]] = node('function',
+                                             ch={'type': p[3], 'parameters': p[6], 'body': p[9], 'continue': True})
+                p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
+            else:
+                self._functions[p[4]] = node('function',
+                                             ch={'type': p[3], 'body': p[8], 'continue': True, 'parameters': None})
+                p[0] = node('function_description', val=p[4], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod
     def p_function_err(p):
         """function : FUNCTION error"""
         p[0] = node('error', val="Wrong function name", no=p.lineno(2), pos=p.lexpos(2))
-        sys.stderr.write(f'>>> Wrong function name\n')
+        sys.stderr.write(f'>>> Wrong function name at {p.lineno(2)} line\\n')
 
     @staticmethod
     def p_command(p):

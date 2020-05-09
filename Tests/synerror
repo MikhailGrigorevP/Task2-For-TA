@@ -32,3 +32,8 @@ function of integer app4() begin
     app3()
     return 1
 end
+
+function of integer app() begin
+    integer c := 42
+    integer e := 42
+end
