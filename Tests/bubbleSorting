@@ -8,9 +8,9 @@ function of integer application() begin
     my_vector push front 4
     integer size := 6
     integer break := size - 1
-    integer temp := 0
+    integer temp
     integer i := fu (0, 6, i = 0)
-    integer j := 0
+    integer j := temp := 0
     do begin j := 0
         do begin if my_vector[j] > my_vector[j+1] then begin temp := my_vector[j+1]
         my_vector[j+1] := my_vector[j]

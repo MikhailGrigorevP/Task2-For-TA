@@ -140,7 +140,8 @@ class parser(object):
 
     @staticmethod
     def p_assignment(p):
-        """assignment : variable ASSIGNMENT expression"""
+        """assignment : variable ASSIGNMENT expression
+                      | variable ASSIGNMENT assignment"""
         p[0] = node('assignment', ch=[p[1], p[3]], no=p.lineno(1), pos=p.lexpos(1))
 
     @staticmethod

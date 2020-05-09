@@ -269,7 +269,7 @@ class Interpreter:
                                     self.sym_table[self.scope]['#result'] = expression.value
                                 else:
                                     current_var = current_var[index]
-                    return
+                    return self.sym_table[self.scope][var][1]
                 except InterpreterConverseError:
                     self.error.call(self.error_types['ConserveError'], node)
                 except InterpreterValueError:
@@ -300,6 +300,7 @@ class Interpreter:
                 try:
                     self.assign(_type, variable, expression)
                     self.sym_table[self.scope]['#result'] = expression
+                    return expression
                 except InterpreterNameError:
                     self.error.call(self.error_types['UndeclaredError'], node)
                 except InterpreterConverseError:
