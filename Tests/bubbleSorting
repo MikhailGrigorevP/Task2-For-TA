@@ -22,5 +22,5 @@ function of integer application() begin
     end until i < break
     end
 function of integer fu (b = 2, c = 3, d = 4, e = "standart"...) begin
-    integer a := i
+    integer a := c := d := i
     end
