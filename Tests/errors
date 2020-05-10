@@ -9,6 +9,7 @@ function of integer application() begin
     integer b
     integer c
     p := 9
+    integer ret := funcRet()
     integer a
     integer d := 3
     integer c := "fsd"
@@ -24,6 +25,10 @@ function of integer application() begin
     integer res
     res := app3()
     integer str_a := 2
+end
+
+function of integer funcRet() begin
+    return true
 end
 
 function of integer func(funct = f1) begin

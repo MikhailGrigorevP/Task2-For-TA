@@ -1115,6 +1115,8 @@ class Interpreter:
             self.interpreter_node(func_subtree.child['body'])
             if '#result' in self.sym_table[self.scope].keys():
                 result = self.sym_table[self.scope]['#result']
+                if result.type != func_subtree.child['type'].value:
+                    raise InterpreterValueError('wrong type')
         except RecursionError:
             raise RecursionError from None
         except InterpreterApplicationCall:
