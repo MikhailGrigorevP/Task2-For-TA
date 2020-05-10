@@ -4427,7 +4427,6 @@ state 144
     (96) converting_command -> expression . TO vector_of
 
     NEWLINE         reduce using rule 95 (converting_command -> expression TO expression .)
-    TO              reduce using rule 95 (converting_command -> expression TO expression .)
     THEN            reduce using rule 95 (converting_command -> expression TO expression .)
     COMMA           reduce using rule 95 (converting_command -> expression TO expression .)
     UNTIL           reduce using rule 95 (converting_command -> expression TO expression .)
@@ -4442,6 +4441,7 @@ state 144
     NOTEQ           shift and go to state 106
     PLUS            shift and go to state 107
     MINUS           shift and go to state 108
+    TO              shift and go to state 109
 
   ! LESS            [ reduce using rule 95 (converting_command -> expression TO expression .) ]
   ! GREATER         [ reduce using rule 95 (converting_command -> expression TO expression .) ]
@@ -4449,7 +4449,7 @@ state 144
   ! NOTEQ           [ reduce using rule 95 (converting_command -> expression TO expression .) ]
   ! PLUS            [ reduce using rule 95 (converting_command -> expression TO expression .) ]
   ! MINUS           [ reduce using rule 95 (converting_command -> expression TO expression .) ]
-  ! TO              [ shift and go to state 109 ]
+  ! TO              [ reduce using rule 95 (converting_command -> expression TO expression .) ]
 
 
 state 145

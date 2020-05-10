@@ -504,6 +504,13 @@ class Interpreter:
             var = node.value
             if var not in self.sym_table[self.scope].keys():
                 if var not in self.funcs:
+                    i_is = -1
+                    for i in range(len(self.sym_table) - 1, -1):
+                        if var in self.sym_table[i].keys():
+                            _is = i
+                            break
+                    if i_is > -1:
+                        return self.sym_table[i_is][var]
                     self.error.call(self.error_types['UndeclaredError'], node)
                     return
                 else:
@@ -1104,10 +1111,12 @@ class Interpreter:
                             raise TypeError
             except TypeError:
                 self.error.call(self.error_types['WrongParameters'], node)
+                self.sym_table.pop()
                 self.scope -= 1
                 return None
         if not inf_parameters and func_param and func_get and len(func_get) < len(func_param):
             self.error.call(self.error_types['WrongParameters'], node)
+            self.sym_table.pop()
             self.scope -= 1
             return None
         result = None

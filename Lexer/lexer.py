@@ -59,7 +59,7 @@ class lexer(object):
 
     precedence = (
         ('right', 'ASSIGNMENT'),
-        ('left', 'TO'),
+        ('nonassoc', 'TO'),
         ('left', 'LESS', 'GREATER', 'EQ', 'NOTEQ'),
         ('left', 'PLUS', 'MINUS'),
         ('right', 'THEN', 'ELSE')
